@@ -12,13 +12,13 @@ final class TypeSerializable<T> {
   const TypeSerializable(this.type, this.serialize);
 }
 
-final class StoryblokSerializer {
+final class StoryblokWidgetSerializer {
   final Set<TypeSerializable> types;
   final Reflectable reflectable;
 
-  StoryblokSerializer(this.types, this.reflectable);
+  StoryblokWidgetSerializer(this.types, this.reflectable);
 
-  StoryblokWidgetable serializeJson(JSONMap json) {
+  StoryblokWidget serializeJson(JSONMap json) {
     final key = json["component"] as String;
     print(key);
 
@@ -49,17 +49,17 @@ final class StoryblokSerializer {
         print("Unrecognized key: $key");
         continue;
       } //
-      else if (!fieldMirror.hasReflectedType && fieldMirror.dynamicReflectedType is Serializable) {
+      else if (!fieldMirror.hasReflectedType && fieldMirror.dynamicReflectedType is FieldType) {
         final t = reflectable.reflectType(fieldMirror.dynamicReflectedType) as ClassMirror;
         newMap[key] = t.newInstance("", [value]);
       } //
-      else if (fieldMirror.type.isAssignableTo(reflectable.reflectType(SerializableBlocks))) {
-        final t = reflectable.reflectType(SerializableBlocks) as ClassMirror;
+      else if (fieldMirror.type.isAssignableTo(reflectable.reflectType(FieldTypeBlocks))) {
+        final t = reflectable.reflectType(FieldTypeBlocks) as ClassMirror;
         final jsonBlocks = List<JSONMap>.from(json[key]);
         final args = jsonBlocks.map((e) => serializeJson(Map.from(e))).toList();
         newMap[key] = t.newInstance("", [args]);
       } //
-      else if (fieldMirror.type.isAssignableTo(reflectable.reflectType(Serializable))) {
+      else if (fieldMirror.type.isAssignableTo(reflectable.reflectType(FieldType))) {
         final t = fieldMirror.type as ClassMirror;
         if (t.typeArguments.isNotEmpty) {
           final a = t.typeArguments.whereType<ClassMirror>().toList().map((e) => e.newInstance("", [value])).toList();
@@ -79,7 +79,7 @@ final class StoryblokSerializer {
   }
 }
 
-abstract class StoryblokWidgetable {
-  const StoryblokWidgetable();
+abstract class StoryblokWidget {
+  const StoryblokWidget();
   Widget buildWidget(BuildContext context);
 }

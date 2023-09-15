@@ -1,16 +1,20 @@
-# example
+## Web
 
-A new Flutter project.
+### Publish to web
 
-## Getting Started
+Building for web compiles the Dart code to JavaScript using `Dart2Js`.
 
-This project is a starting point for a Flutter application.
+`flutter build web` runs in `--release` mode per default which destroys reflection due to minificiation.
 
-A few resources to get you started if this is your first Flutter project:
+Run `flutter build web --profile` to disable minification.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### HTTPS localhost
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Install localhost SSL certificate
+1. `brew install mkcert`
+2. `mkcert -install`
+3. `mkcert localhost`
+
+#### Install http-server
+1. `npm install -g http-server`
+2. Run server `http-server build/web --cors --ssl --cert ~/localhost.pem --key ~/localhost-key.pem`

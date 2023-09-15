@@ -10,14 +10,14 @@ import 'package:flutter_storyblok/utils.dart';
 
 @reflector
 @Name("ArticleListPage")
-final class ArticleListPage extends StoryblokWidgetable {
-  final SerializableText header;
-  final SerializableBlocks<ArticleItem> articleItems;
+final class ArticleListPage extends StoryblokWidget {
+  final FieldTypeText header;
+  final FieldTypeBlocks<ArticleItem> articleItems;
   const ArticleListPage(this.header, this.articleItems);
 
   factory ArticleListPage.fromJson(JSONMap json) => ArticleListPage(
         json["header"],
-        SerializableBlocks.from(json["articleItems"]),
+        FieldTypeBlocks.from(json["articleItems"]),
       );
 
   @override
@@ -49,14 +49,14 @@ final class ArticleListPage extends StoryblokWidgetable {
 }
 
 @reflector
-final class ArticlePage extends StoryblokWidgetable {
-  final SerializableText header;
-  final SerializableBlocks body;
+final class ArticlePage extends StoryblokWidget {
+  final FieldTypeText header;
+  final FieldTypeBlocks body;
   const ArticlePage(this.header, this.body);
 
   factory ArticlePage.fromJson(JSONMap json) => ArticlePage(
         json["header"],
-        SerializableBlocks.from(json["body"]),
+        FieldTypeBlocks.from(json["body"]),
       );
 
   @override
@@ -79,13 +79,13 @@ final class ArticlePage extends StoryblokWidgetable {
 
 @reflector
 @Name("Column")
-final class StoryblokColumn extends StoryblokWidgetable {
-  final SerializableSingleValue<MainAlignment>? mainAxisAlignment;
-  final SerializableBlocks children;
+final class StoryblokColumn extends StoryblokWidget {
+  final FieldTypeValue<MainAlignment>? mainAxisAlignment;
+  final FieldTypeBlocks children;
   const StoryblokColumn(this.mainAxisAlignment, this.children);
 
   factory StoryblokColumn.fromJson(JSONMap json) => StoryblokColumn(
-        SerializableSingleValue.from(json["mainAxisAlignment"]),
+        FieldTypeValue.from(json["mainAxisAlignment"]),
         json["children"],
       );
 
@@ -100,13 +100,13 @@ final class StoryblokColumn extends StoryblokWidgetable {
 
 @reflector
 @Name("Row")
-final class StoryblokRow implements StoryblokWidgetable {
-  final SerializableSingleValue<MainAlignment>? mainAxisAlignment;
-  final SerializableBlocks children;
+final class StoryblokRow implements StoryblokWidget {
+  final FieldTypeValue<MainAlignment>? mainAxisAlignment;
+  final FieldTypeBlocks children;
   const StoryblokRow(this.mainAxisAlignment, this.children);
 
   factory StoryblokRow.fromJson(JSONMap json) => StoryblokRow(
-        SerializableSingleValue.from(json["mainAxisAlignment"]),
+        FieldTypeValue.from(json["mainAxisAlignment"]),
         json["children"],
       );
 
@@ -121,8 +121,8 @@ final class StoryblokRow implements StoryblokWidgetable {
 
 @reflector
 @Name("Text")
-final class StoryblokText implements StoryblokWidgetable {
-  final SerializableText text;
+final class StoryblokText implements StoryblokWidget {
+  final FieldTypeText text;
   const StoryblokText(this.text);
 
   factory StoryblokText.fromJson(JSONMap json) => StoryblokText(
@@ -137,9 +137,9 @@ final class StoryblokText implements StoryblokWidgetable {
 
 @reflector
 @Name("Image")
-final class StoryblokImage implements StoryblokWidgetable {
+final class StoryblokImage implements StoryblokWidget {
   @Name("image")
-  final SerializableAsset asset;
+  final FieldTypeAsset asset;
   const StoryblokImage(this.asset);
 
   factory StoryblokImage.fromJson(JSONMap json) => StoryblokImage(
@@ -153,10 +153,10 @@ final class StoryblokImage implements StoryblokWidgetable {
 }
 
 @reflector
-final class ArticleItem implements StoryblokWidgetable {
-  final SerializableText title;
-  final SerializableText subtitle;
-  final SerializableLink articleLink;
+final class ArticleItem implements StoryblokWidget {
+  final FieldTypeText title;
+  final FieldTypeText subtitle;
+  final FieldTypeLink articleLink;
   const ArticleItem(this.title, this.subtitle, this.articleLink);
 
   factory ArticleItem.fromJson(JSONMap json) => ArticleItem(
@@ -186,7 +186,7 @@ final class ArticleItem implements StoryblokWidgetable {
 }
 
 @reflector
-final class MainAlignment extends SerializableSingleValueType {
+final class MainAlignment {
   final MainAxisAlignment mainAxisAlignment;
   MainAlignment(String name) : mainAxisAlignment = MainAxisAlignment.values.byName(name);
 }

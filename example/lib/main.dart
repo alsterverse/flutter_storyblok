@@ -10,7 +10,7 @@ final storyblokClient = StoryblokClient(
   accessToken: "cLvisb6uENGw0BOhOOx0wQtt",
   version: StoryblokVersion.draft,
 );
-final storyblokSerializer = StoryblokSerializer(
+final storyblokSerializer = StoryblokWidgetSerializer(
   const {
     TypeSerializable(ArticleListPage, ArticleListPage.fromJson),
     TypeSerializable(ArticlePage, ArticlePage.fromJson),

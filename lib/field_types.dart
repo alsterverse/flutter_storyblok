@@ -3,46 +3,45 @@ import 'package:flutter_storyblok/serializer.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 @reflector
-// TODO: Rename to FieldType
-sealed class Serializable {
-  const Serializable();
+sealed class FieldType {
+  const FieldType();
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableText extends Serializable {
+final class FieldTypeText extends FieldType {
   final String text;
-  const SerializableText(this.text);
+  const FieldTypeText(this.text);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableTextArea extends SerializableText {
-  const SerializableTextArea(super.text);
+final class FieldTypeTextArea extends FieldTypeText {
+  const FieldTypeTextArea(super.text);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableMarkdown extends SerializableText {
-  const SerializableMarkdown(super.text);
+final class FieldTypeMarkdown extends FieldTypeText {
+  const FieldTypeMarkdown(super.text);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableNumber extends Serializable {
+final class FieldTypeNumber extends FieldType {
   final num value;
-  const SerializableNumber(this.value);
+  const FieldTypeNumber(this.value);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableBoolean extends Serializable {
+final class FieldTypeBoolean extends FieldType {
   final bool value;
-  const SerializableBoolean(this.value);
+  const FieldTypeBoolean(this.value);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableLink extends Serializable {
+final class FieldTypeLink extends FieldType {
   final String uuid;
   final String linkType;
   final String fieldType;
   final Uri? url;
-  SerializableLink(JSONMap json)
+  FieldTypeLink(JSONMap json)
       : uuid = json["id"],
         linkType = json["linktype"],
         fieldType = json["fieldtype"],
@@ -50,34 +49,34 @@ final class SerializableLink extends Serializable {
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
-final class SerializableDateTime extends Serializable {
+final class FieldTypeDateTime extends FieldType {
   final DateTime dateTime;
-  SerializableDateTime(String value) : dateTime = DateTime.parse(value);
+  FieldTypeDateTime(String value) : dateTime = DateTime.parse(value);
 }
 
 @reflector
-final class SerializableAsset extends Serializable {
+final class FieldTypeAsset extends FieldType {
   final String fileName;
-  SerializableAsset(JSONMap json) : fileName = json["filename"];
+  FieldTypeAsset(JSONMap json) : fileName = json["filename"];
 }
 
 @reflector
-final class SerializableSingleValue<T> extends Serializable {
+final class FieldTypeValue<T> extends FieldType {
   final T value;
-  SerializableSingleValue(this.value);
-  factory SerializableSingleValue.from(SerializableSingleValue<dynamic> other) {
-    return SerializableSingleValue(other.value);
+  FieldTypeValue(this.value);
+  factory FieldTypeValue.from(FieldTypeValue<dynamic> other) {
+    return FieldTypeValue(other.value);
   }
 }
 
-@reflector
-class SerializableSingleValueType {}
+// @reflector
+// class SerializableSingleValueType {}
 
 @reflector
-final class SerializableBlocks<T extends StoryblokWidgetable> extends Serializable {
+final class FieldTypeBlocks<T extends StoryblokWidget> extends FieldType {
   final List<T> blocks;
-  const SerializableBlocks(this.blocks);
-  factory SerializableBlocks.from(SerializableBlocks<dynamic> other) {
-    return SerializableBlocks(List.from(other.blocks));
+  const FieldTypeBlocks(this.blocks);
+  factory FieldTypeBlocks.from(FieldTypeBlocks<dynamic> other) {
+    return FieldTypeBlocks(List.from(other.blocks));
   }
 }
