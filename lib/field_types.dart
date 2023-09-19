@@ -25,8 +25,8 @@ final class FieldTypeMarkdown extends FieldTypeText {
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
 final class FieldTypeNumber extends FieldType {
-  final num value;
-  const FieldTypeNumber(this.value);
+  final int value;
+  FieldTypeNumber(String strValue) : value = int.parse(strValue);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work

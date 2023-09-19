@@ -2,9 +2,9 @@ import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/field_types.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/metadata.dart';
 import 'package:flutter_storyblok/reflector.dart';
+import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/serializer.dart';
 import 'package:flutter_storyblok/utils.dart';
 
@@ -189,4 +189,22 @@ final class ArticleItem implements StoryblokWidget {
 final class MainAlignment {
   final MainAxisAlignment mainAxisAlignment;
   MainAlignment(String name) : mainAxisAlignment = MainAxisAlignment.values.byName(name);
+}
+
+@reflector
+@Name("Flex")
+final class StoryblokFlex implements StoryblokWidget {
+  final FieldTypeNumber flex;
+  final FieldTypeBlocks child;
+  const StoryblokFlex(this.flex, this.child);
+
+  factory StoryblokFlex.fromJson(JSONMap json) => StoryblokFlex(
+        json["flex"],
+        FieldTypeBlocks.from(json["child"]),
+      );
+
+  @override
+  Widget buildWidget(BuildContext context) {
+    return Flexible(flex: flex.value.toInt(), child: child.blocks.first.buildWidget(context));
+  }
 }

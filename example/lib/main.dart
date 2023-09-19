@@ -1,10 +1,13 @@
 import 'package:example/story_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:flutter_storyblok/serializer.dart';
 import 'package:flutter_storyblok/reflector.dart';
+import 'package:go_router/go_router.dart';
 import 'main.reflectable.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 final storyblokClient = StoryblokClient(
   accessToken: "cLvisb6uENGw0BOhOOx0wQtt",
@@ -19,33 +22,42 @@ final storyblokSerializer = StoryblokWidgetSerializer(
     TypeSerializable(StoryblokText, StoryblokText.fromJson),
     TypeSerializable(StoryblokImage, StoryblokImage.fromJson),
     TypeSerializable(ArticleItem, ArticleItem.fromJson),
+    TypeSerializable(StoryblokFlex, StoryblokFlex.fromJson),
   },
   reflector,
 );
 
 void main() {
   initializeReflectable();
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+final router = GoRouter(routes: [
+  GoRoute(
+    path: "/",
+    builder: (context, state) {
+      final slug = state.uri.queryParameters["slug"];
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+      if (slug != null) {
+        return FutureBuilder(
+          future: storyblokClient.getStory(StoryIdentifierFullSlug(slug)),
+          builder: (context, snapshot) {
+            final data = snapshot.data;
+            if (data != null) {
+              return storyblokSerializer.serializeJson(data.content).buildWidget(context);
+            }
+            if (snapshot.hasError) {
+              print(snapshot.error);
+              print(snapshot.stackTrace);
+            }
+            return Text("...");
+          },
+        );
+      }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: FutureBuilder(
-        future: storyblokClient.getStories("bottomnavigationpages"),
+      return FutureBuilder(
+        future: storyblokClient.getStories(startsWith: "bottomnavigationpages"),
         builder: (context, snapshot) {
           final stories = snapshot.data;
           if (stories != null) {
@@ -57,6 +69,22 @@ class _MyAppState extends State<MyApp> {
           }
           return const Text("...");
         },
+      );
+    },
+  ),
+]);
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: router,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
     );
   }

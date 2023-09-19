@@ -1,7 +1,10 @@
 library flutter_storyblok;
 
 import 'dart:convert';
+import 'package:flutter_storyblok/datasource.dart';
+import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
+import 'package:flutter_storyblok/tag.dart';
 import 'package:flutter_storyblok/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +15,11 @@ enum StoryblokVersion {
 
 final class StoryblokClient {
   static const _apiHost = "api.storyblok.com";
+
+  static const _pathStories = "v2/cdn/stories";
+  static const _pathTags = "v2/cdn/tags";
+  static const _pathDatasources = "v2/cdn/datasources";
+  static const _pathDatasourceEntries = "v2/cdn/datasource_entries";
 
   StoryblokClient({
     required this.accessToken,
@@ -25,52 +33,94 @@ final class StoryblokClient {
   final Map<String, String> baseParameters;
 
   Future<Story> getStory(StoryIdentifier id) async {
-    const basePath = "v2/cdn/stories";
-    final Uri url = switch (id) {
-      StoryIdentifierID(id: final id) => Uri.https(_apiHost, "$basePath/$id", baseParameters),
-      StoryIdentifierUUID(uuid: final uuid) =>
-        Uri.https(_apiHost, "$basePath/$uuid", {...baseParameters, "find_by": "uuid"}),
+    final json = await switch (id) {
+      StoryIdentifierID(id: final id) => _getRequest(
+          path: "$_pathStories/$id",
+        ),
+      StoryIdentifierUUID(uuid: final uuid) => _getRequest(
+          path: "$_pathStories/$uuid",
+          queryParameters: {
+            "find_by": "uuid",
+          },
+        ),
+      StoryIdentifierFullSlug(slug: final slug) => _getRequest(
+          path: "$_pathStories/$slug",
+        ),
     };
+    return Story.fromJson(json["story"]);
+  }
 
-    final response = await http.get(url);
+  Future<List<Story>> getStories({String? startsWith, Pagination? pagination}) async {
+    final json = await _getRequest(
+      path: _pathStories,
+      queryParameters: {
+        if (startsWith != null) "starts_with": startsWith,
+        if (pagination != null) ...pagination.toParameters(),
+      },
+    );
+    return List<JSONMap>.from(json["stories"]).map(Story.fromJson).toList();
+  }
+
+  Future<List<Datasource>> getDatasources({Pagination? pagination}) async {
+    final json = await _getRequest(
+      path: _pathDatasources,
+      queryParameters: {
+        if (pagination != null) ...pagination.toParameters(),
+      },
+    );
+    return List<JSONMap>.from(json["datasources"]).map(Datasource.fromJson).toList();
+  }
+
+  Future<List<DatasourceEntry>> getDatasourceEntries({
+    String? datasource,
+    String? dimension,
+    Pagination? pagination,
+  }) async {
+    final json = await _getRequest(
+      path: _pathDatasourceEntries,
+      queryParameters: {
+        if (datasource != null) "datasource": datasource,
+        if (dimension != null) "dimension": dimension,
+        if (pagination != null) ...pagination.toParameters(),
+      },
+    );
+    return List<JSONMap>.from(json["datasources"]).map(DatasourceEntry.fromJson).toList();
+  }
+
+  Future<List<Tag>> getTags({String? startsWith}) async {
+    final json = await _getRequest(
+      path: _pathTags,
+      queryParameters: {
+        if (startsWith != null) "starts_with": startsWith,
+      },
+    );
+    return List<JSONMap>.from(json["tags"]).map(Tag.fromJson).toList();
+  }
+
+  Future<JSONMap> _getRequest({
+    required String path,
+    Map<String, String>? queryParameters,
+  }) async {
+    final uri = Uri.https(
+      _apiHost,
+      path,
+      {
+        ...baseParameters,
+        if (queryParameters != null) ...queryParameters,
+      },
+    );
+
+    final response = await http.get(uri, headers: {
+      "Accept": "application/json",
+    });
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as JSONMap;
-      return Story.fromJson(json["story"]);
+      return json;
     } else {
       throw "Error code ${response.statusCode}, ${response.body}";
     }
   }
-
-  Future<List<Story>> getStories(String startsWith) async {
-    const basePath = "v2/cdn/stories";
-    final url = Uri.https(_apiHost, basePath, {...baseParameters, "starts_with": startsWith});
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as JSONMap;
-      return List<JSONMap>.from(json["stories"]).map(Story.fromJson).toList();
-    } else {
-      throw "Error code ${response.statusCode}, ${response.body}";
-    }
-  }
 }
-
-sealed class StoryIdentifier {}
-
-final class StoryIdentifierID extends StoryIdentifier {
-  final int id;
-  StoryIdentifierID(this.id);
-}
-
-final class StoryIdentifierUUID extends StoryIdentifier {
-  final String uuid;
-  StoryIdentifierUUID(this.uuid);
-}
-
-// final class StoryIdentifierFullSlug {
-//   final String slug;
-//   StoryIdentifierFullSlug(this.slug);
-// }
 
 /*
 final class Component {

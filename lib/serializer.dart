@@ -68,9 +68,6 @@ final class StoryblokWidgetSerializer {
           newMap[key] = t.newInstance("", [value]);
         }
       } //
-      else if (value is List<dynamic>) {
-        newMap[key] = value.map((e) => serializeJson(Map.from(e))).toList();
-      } //
       else {
         newMap[key] = value;
       }
