@@ -208,3 +208,28 @@ final class StoryblokFlex implements StoryblokWidget {
     return Flexible(flex: flex.value.toInt(), child: child.blocks.first.buildWidget(context));
   }
 }
+
+@reflector
+@Name("IconButton")
+final class StoryblokIconButton implements StoryblokWidget {
+  final FieldTypeText label;
+  final FieldTypeText tooltip;
+  const StoryblokIconButton(this.label, this.tooltip);
+
+  factory StoryblokIconButton.fromJson(JSONMap json) => StoryblokIconButton(
+        json["label"],
+        json["tooltip"],
+      );
+
+  @override
+  Widget buildWidget(BuildContext context) {
+    return Column(children: <Widget>[
+      IconButton(
+        icon: const Icon(Icons.volcano),
+        tooltip: tooltip.text,
+        onPressed: null,
+      ),
+      Text(label.text),
+    ]);
+  }
+}

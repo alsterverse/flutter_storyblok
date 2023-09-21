@@ -23,6 +23,7 @@ final storyblokSerializer = StoryblokWidgetSerializer(
     TypeSerializable(StoryblokImage, StoryblokImage.fromJson),
     TypeSerializable(ArticleItem, ArticleItem.fromJson),
     TypeSerializable(StoryblokFlex, StoryblokFlex.fromJson),
+    TypeSerializable(StoryblokIconButton, StoryblokIconButton.fromJson),
   },
   reflector,
 );
