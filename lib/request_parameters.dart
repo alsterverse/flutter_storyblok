@@ -1,3 +1,10 @@
+//
+
+enum StoryblokVersion {
+  draft,
+  published,
+}
+
 sealed class StoryIdentifier {
   const StoryIdentifier();
 }

@@ -8,10 +8,7 @@ import 'package:flutter_storyblok/tag.dart';
 import 'package:flutter_storyblok/utils.dart';
 import 'package:http/http.dart' as http;
 
-enum StoryblokVersion {
-  draft,
-  published,
-}
+
 
 final class StoryblokClient {
   static const _apiHost = "api.storyblok.com";
@@ -32,7 +29,10 @@ final class StoryblokClient {
   final StoryblokVersion version;
   final Map<String, String> baseParameters;
 
-  Future<Story> getStory(StoryIdentifier id) async {
+  Future<Story> getStory({
+    required StoryIdentifier id,
+    StoryblokVersion version = StoryblokVersion.published,
+  }) async {
     final json = await switch (id) {
       StoryIdentifierID(id: final id) => _getRequest(
           path: "$_pathStories/$id",

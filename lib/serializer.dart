@@ -76,7 +76,7 @@ final class StoryblokWidgetSerializer {
   }
 }
 
-abstract class StoryblokWidget {
+abstract class StoryblokWidget extends Block {
   const StoryblokWidget();
   Widget buildWidget(BuildContext context);
 }

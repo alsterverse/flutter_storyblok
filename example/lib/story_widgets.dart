@@ -2,6 +2,7 @@ import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/field_types.dart';
+import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/metadata.dart';
 import 'package:flutter_storyblok/reflector.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
@@ -31,7 +32,7 @@ final class ArticleListPage extends StoryblokWidget {
         padding: const EdgeInsets.all(20),
         children: articleItems.blocks
             .map<Widget>((e) => GestureDetector(
-                  onTap: () => _openStory(context, e.articleLink.uuid),
+                  onTap: () => _openStory(context, (e.articleLink.linkType as LinkTypeStory).uuid),
                   child: e.buildWidget(context),
                 ))
             .separatedBy(() => const SizedBox(height: 20))
@@ -42,7 +43,7 @@ final class ArticleListPage extends StoryblokWidget {
 
   Future _openStory(BuildContext context, String uuid) async {
     final navigator = Navigator.of(context);
-    final story = await storyblokClient.getStory(StoryIdentifierUUID(uuid));
+    final story = await storyblokClient.getStory(id: StoryIdentifierUUID(uuid));
     final w = storyblokSerializer.serializeJson(story.content);
     navigator.push(MaterialPageRoute(builder: ((context) => w.buildWidget(context))));
   }
@@ -51,7 +52,7 @@ final class ArticleListPage extends StoryblokWidget {
 @reflector
 final class ArticlePage extends StoryblokWidget {
   final FieldTypeText header;
-  final FieldTypeBlocks body;
+  final FieldTypeBlocks<StoryblokWidget> body;
   const ArticlePage(this.header, this.body);
 
   factory ArticlePage.fromJson(JSONMap json) => ArticlePage(
@@ -81,7 +82,7 @@ final class ArticlePage extends StoryblokWidget {
 @Name("Column")
 final class StoryblokColumn extends StoryblokWidget {
   final FieldTypeValue<MainAlignment>? mainAxisAlignment;
-  final FieldTypeBlocks children;
+  final FieldTypeBlocks<StoryblokWidget> children;
   const StoryblokColumn(this.mainAxisAlignment, this.children);
 
   factory StoryblokColumn.fromJson(JSONMap json) => StoryblokColumn(
@@ -102,7 +103,7 @@ final class StoryblokColumn extends StoryblokWidget {
 @Name("Row")
 final class StoryblokRow implements StoryblokWidget {
   final FieldTypeValue<MainAlignment>? mainAxisAlignment;
-  final FieldTypeBlocks children;
+  final FieldTypeBlocks<StoryblokWidget> children;
   const StoryblokRow(this.mainAxisAlignment, this.children);
 
   factory StoryblokRow.fromJson(JSONMap json) => StoryblokRow(
@@ -195,7 +196,7 @@ final class MainAlignment {
 @Name("Flex")
 final class StoryblokFlex implements StoryblokWidget {
   final FieldTypeNumber flex;
-  final FieldTypeBlocks child;
+  final FieldTypeBlocks<StoryblokWidget> child;
   const StoryblokFlex(this.flex, this.child);
 
   factory StoryblokFlex.fromJson(JSONMap json) => StoryblokFlex(

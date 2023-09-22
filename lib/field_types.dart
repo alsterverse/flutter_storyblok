@@ -1,5 +1,5 @@
+import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/reflector.dart';
-import 'package:flutter_storyblok/serializer.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 @reflector
@@ -37,15 +37,8 @@ final class FieldTypeBoolean extends FieldType {
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
 final class FieldTypeLink extends FieldType {
-  final String uuid;
-  final String linkType;
-  final String fieldType;
-  final Uri? url;
-  FieldTypeLink(JSONMap json)
-      : uuid = json["id"],
-        linkType = json["linktype"],
-        fieldType = json["fieldtype"],
-        url = Uri.tryParse(json["fieldtype"]);
+  final LinkType linkType;
+  FieldTypeLink(JSONMap json) : linkType = LinkType.fromJson(json);
 }
 
 @reflector // Cannot use implements needs to use extends or else the reflector doesnt work
@@ -69,14 +62,33 @@ final class FieldTypeValue<T> extends FieldType {
   }
 }
 
-// @reflector
-// class SerializableSingleValueType {}
-
 @reflector
-final class FieldTypeBlocks<T extends StoryblokWidget> extends FieldType {
+final class FieldTypeBlocks<T extends Block> extends FieldType {
   final List<T> blocks;
   const FieldTypeBlocks(this.blocks);
   factory FieldTypeBlocks.from(FieldTypeBlocks<dynamic> other) {
     return FieldTypeBlocks(List.from(other.blocks));
   }
+}
+
+final class SBAsset {
+  final String alt;
+  final String name;
+  final String focus;
+  final String title;
+  final String copyright;
+  final String fileName;
+  final JSONMap metadata;
+  SBAsset.fromJson(JSONMap json)
+      : alt = json["alt"],
+        name = json["name"],
+        focus = json["focus"],
+        title = json["title"],
+        copyright = json["copyright"],
+        fileName = json["fileName"],
+        metadata = json["metadata"];
+}
+
+abstract class Block {
+  const Block();
 }

@@ -14,6 +14,8 @@ final class Reflector extends Reflectable {
           superclassQuantifyCapability,
           subtypeQuantifyCapability,
           staticInvokeCapability,
+          libraryCapability,
+          libraryDependenciesCapability,
         ]);
 }
 
