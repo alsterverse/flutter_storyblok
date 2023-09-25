@@ -1,6 +1,7 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
@@ -119,17 +120,24 @@ extension BlockWidget on bloks.Blok {
               : AppBar(
                   title: Text(startPage.title!),
                 ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: startPage.content?.map((e) => e.buildWidget(context)).toList() ?? [const Text("Empty")],
+          body: ListView(
+            children: startPage.content.map((e) => e.buildWidget(context)).toList(),
           ),
         ),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => Container(
-          color: Colors.grey,
-          height: 200,
-          child: Center(
-            child: Text(videoItem.title ?? "Title"),
+          decoration: const BoxDecoration(color: Color.fromARGB(19, 0, 0, 0)),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network((videoItem.videoLink as LinkTypeAsset).url.toString()),
+              Text(
+                videoItem.title ?? "-",
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              Text(videoItem.summary ?? "-"),
+            ],
           ),
         ),
       final bloks.VideoPage videoPage => Scaffold(

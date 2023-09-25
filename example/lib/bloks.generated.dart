@@ -56,7 +56,7 @@ final class StartPage extends Blok {
 
   final Icons? icon;
 
-  final List<Blok>? content;
+  final List<Blok> content;
 }
 
 final class TestBlock extends Blok {
@@ -120,14 +120,14 @@ final class TestBlock extends Blok {
 final class VideoItem extends Blok {
   VideoItem.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        videoUrl = LinkType.fromJson(Map<String, dynamic>.from(json["video_url"])),
+        videoLink = LinkType.fromJson(Map<String, dynamic>.from(json["video_link"])),
         description = json["description"],
         summary = json["summary"],
         airDate = DateTime.tryParse(json["air_date"]);
 
   final String? title;
 
-  final LinkType videoUrl;
+  final LinkType videoLink;
 
   final String? description;
 
