@@ -35,3 +35,9 @@ final class Pagination {
         "per_page": perPage.toString(),
       };
 }
+
+enum ResolveLinks {
+  link,
+  url,
+  story,
+}

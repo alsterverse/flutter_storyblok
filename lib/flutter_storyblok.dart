@@ -8,7 +8,7 @@ import 'package:flutter_storyblok/tag.dart';
 import 'package:flutter_storyblok/utils.dart';
 import 'package:http/http.dart' as http;
 
-
+Map<String, Story> resolvedStories = {};
 
 final class StoryblokClient {
   static const _apiHost = "api.storyblok.com";
@@ -31,33 +31,55 @@ final class StoryblokClient {
 
   Future<Story> getStory({
     required StoryIdentifier id,
-    StoryblokVersion version = StoryblokVersion.published,
+    StoryblokVersion version = StoryblokVersion.draft,
+    ResolveLinks resolveLinks = ResolveLinks.story,
   }) async {
+    final Map<String, String> queryParams = {
+      "version": version.name,
+      "resolve_links": resolveLinks.name,
+    };
     final json = await switch (id) {
       StoryIdentifierID(id: final id) => _getRequest(
           path: "$_pathStories/$id",
+          queryParameters: queryParams,
         ),
       StoryIdentifierUUID(uuid: final uuid) => _getRequest(
           path: "$_pathStories/$uuid",
           queryParameters: {
+            ...queryParams,
             "find_by": "uuid",
           },
         ),
       StoryIdentifierFullSlug(slug: final slug) => _getRequest(
           path: "$_pathStories/$slug",
+          queryParameters: queryParams,
         ),
     };
-    return Story.fromJson(json["story"]);
+    if (resolveLinks == ResolveLinks.story) {
+      List<JSONMap>.from(json["links"]).map(Story.fromJson).forEach((story) => resolvedStories[story.uuid] = story);
+    }
+    final story = Story.fromJson(json["story"]);
+    return story;
   }
 
-  Future<List<Story>> getStories({String? startsWith, Pagination? pagination}) async {
+  Future<List<Story>> getStories({
+    String? startsWith,
+    Pagination? pagination,
+    StoryblokVersion version = StoryblokVersion.draft,
+    ResolveLinks resolveLinks = ResolveLinks.story,
+  }) async {
     final json = await _getRequest(
       path: _pathStories,
       queryParameters: {
         if (startsWith != null) "starts_with": startsWith,
         if (pagination != null) ...pagination.toParameters(),
+        "version": version.name,
+        "resolve_links": resolveLinks.name,
       },
     );
+    if (resolveLinks == ResolveLinks.story) {
+      List<JSONMap>.from(json["links"]).map(Story.fromJson).forEach((story) => resolvedStories[story.uuid] = story);
+    }
     return List<JSONMap>.from(json["stories"]).map(Story.fromJson).toList();
   }
 
@@ -109,7 +131,8 @@ final class StoryblokClient {
         if (queryParameters != null) ...queryParameters,
       },
     );
-
+    print(path);
+    print(queryParameters);
     final response = await http.get(uri, headers: {
       "Accept": "application/json",
     });

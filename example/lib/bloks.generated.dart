@@ -11,15 +11,36 @@ sealed class Blok {
   Blok();
 
   factory Blok.fromJson(Map<String, dynamic> json) => switch (json["component"] as String) {
+        "carousel_block" => CarouselBlock.fromJson(json),
         "hardware_button" => HardwareButton.fromJson(json),
         "hero" => Hero.fromJson(json),
         "page" => Page.fromJson(json),
         "start_page" => StartPage.fromJson(json),
         "test_block" => TestBlock.fromJson(json),
+        "text_block" => TextBlock.fromJson(json),
         "video_item" => VideoItem.fromJson(json),
         "video_page" => VideoPage.fromJson(json),
         _ => throw "Unrecognized type ${json["component"]}",
       };
+}
+
+final class CarouselBlock extends Blok {
+  CarouselBlock.fromJson(Map<String, dynamic> json)
+      : heading = json["heading"],
+        link = LinkType.fromJson(Map<String, dynamic>.from(json["link"])),
+        videos = List<Map<String, dynamic>>.from(json["videos"]).map(Blok.fromJson).toList(),
+        showInfo = json["show_info"],
+        isNotable = json["is_notable"];
+
+  final String? heading;
+
+  final LinkType? link;
+
+  final List<Blok>? videos;
+
+  final bool? showInfo;
+
+  final bool? isNotable;
 }
 
 final class HardwareButton extends Blok {
@@ -115,6 +136,16 @@ final class TestBlock extends Blok {
   final LinkType? link1;
 
   final Single2Option? single2;
+}
+
+final class TextBlock extends Blok {
+  TextBlock.fromJson(Map<String, dynamic> json)
+      : heading = json["heading"],
+        body = json["body"];
+
+  final String? heading;
+
+  final String? body;
 }
 
 final class VideoItem extends Blok {

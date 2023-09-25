@@ -1,7 +1,11 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/camera_screen.dart';
+import 'package:example/primary_button.dart';
+import 'package:example/utils.dart';
+import 'package:example/video_item_widget.dart';
+import 'package:example/video_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
-import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
@@ -40,10 +44,14 @@ final router = GoRouter(routes: [
       final slug = state.uri.queryParameters["slug"];
 
       if (slug != null) {
-        return FutureStoryWidget(storyFuture: storyblokClient.getStory(id: StoryIdentifierFullSlug(slug)));
+        return FutureStoryWidget(
+          storyFuture: storyblokClient.getStory(id: StoryIdentifierFullSlug(slug)),
+        );
       }
 
-      return FutureStoryWidget(storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(374000037)));
+      return FutureStoryWidget(
+        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(374000037)),
+      );
 
       // return FutureBuilder(
       //   future: storyblokClient.getStories(startsWith: "bottomnavigationpages"),
@@ -107,7 +115,10 @@ extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return switch (this) {
       final bloks.Hero _ => Container(color: Colors.red, height: 200),
-      final bloks.HardwareButton button => PrimaryButton(button.title, onPressed: () => print(button.sensor.name)),
+      final bloks.HardwareButton button => PrimaryButton(button.title,
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const CameraScreen(),
+              ))),
       final bloks.Page page => Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,75 +132,17 @@ extension BlockWidget on bloks.Blok {
                   title: Text(startPage.title!),
                 ),
           body: ListView(
-            children: startPage.content.map((e) => e.buildWidget(context)).toList(),
+            padding: const EdgeInsets.all(20),
+            children: startPage.content
+                .map((e) => e.buildWidget(context))
+                .separatedBy(() => const SizedBox(height: 20))
+                .toList(),
           ),
         ),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
-      final bloks.VideoItem videoItem => Container(
-          decoration: const BoxDecoration(color: Color.fromARGB(19, 0, 0, 0)),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network((videoItem.videoLink as LinkTypeAsset).url.toString()),
-              Text(
-                videoItem.title ?? "-",
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Text(videoItem.summary ?? "-"),
-            ],
-          ),
-        ),
-      final bloks.VideoPage videoPage => Scaffold(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(videoPage.videoTitle),
-              Text(videoPage.videoDescription),
-              Text(videoPage.publishedAt.toIso8601String()),
-            ],
-          ),
-        ),
+      final bloks.VideoItem videoItem => VideoItemWidget(videoItem: videoItem),
+      final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
+      _ => const SizedBox.shrink(), // TODO Remove
     };
-  }
-}
-
-class PrimaryButton extends StatelessWidget {
-  const PrimaryButton(
-    this.text, {
-    super.key,
-    this.wrapContentWidth = false,
-    required this.onPressed,
-  });
-
-  final String text;
-  final bool wrapContentWidth;
-  final VoidCallback? onPressed;
-  final Color backgroundColor = Colors.blue;
-
-  bool get _isEnabled => onPressed != null;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        fixedSize: const Size(double.infinity, 48),
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        backgroundColor: _isEnabled ? backgroundColor : backgroundColor.withOpacity(0.1),
-        shape: const StadiumBorder(),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: wrapContentWidth ? MainAxisSize.min : MainAxisSize.max,
-        children: [
-          Text(
-            text,
-            maxLines: 1,
-            style: const TextStyle(color: Colors.white),
-          ),
-        ],
-      ),
-    );
   }
 }

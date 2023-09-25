@@ -1,3 +1,5 @@
+import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/story.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 sealed class LinkType {
@@ -40,9 +42,14 @@ final class LinkTypeEmail extends LinkType {
 final class LinkTypeStory extends LinkType {
   final String uuid;
   final String? cachedUrl;
-  const LinkTypeStory(this.uuid, this.cachedUrl);
-  factory LinkTypeStory.fromJson(JSONMap json) => LinkTypeStory(
-        json["id"],
-        json["cached_url"],
-      );
+  final Story? resolvedStory;
+  const LinkTypeStory(this.uuid, this.cachedUrl, this.resolvedStory);
+  factory LinkTypeStory.fromJson(JSONMap json) {
+    String uuid = json["id"];
+    return LinkTypeStory(
+      uuid,
+      json["cached_url"],
+      resolvedStories[uuid],
+    );
+  }
 }
