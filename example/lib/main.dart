@@ -1,35 +1,33 @@
-import 'package:example/story_widgets.dart';
+import 'package:example/bloks.generated.dart' as bloks;
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
-import 'package:flutter_storyblok/serializer.dart';
-import 'package:flutter_storyblok/reflector.dart';
 import 'package:go_router/go_router.dart';
-import 'main.reflectable.dart';
+// import 'main.reflectable.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 final storyblokClient = StoryblokClient(
-  accessToken: "cLvisb6uENGw0BOhOOx0wQtt",
+  accessToken: "2aurFHe7gdoL2yxIyk1APgtt",
   version: StoryblokVersion.draft,
 );
-final storyblokSerializer = StoryblokWidgetSerializer(
-  const {
-    TypeSerializable(ArticleListPage, ArticleListPage.fromJson),
-    TypeSerializable(ArticlePage, ArticlePage.fromJson),
-    TypeSerializable(StoryblokColumn, StoryblokColumn.fromJson),
-    TypeSerializable(StoryblokRow, StoryblokRow.fromJson),
-    TypeSerializable(StoryblokText, StoryblokText.fromJson),
-    TypeSerializable(StoryblokImage, StoryblokImage.fromJson),
-    TypeSerializable(ArticleItem, ArticleItem.fromJson),
-    TypeSerializable(StoryblokFlex, StoryblokFlex.fromJson),
-    TypeSerializable(StoryblokIconButton, StoryblokIconButton.fromJson),
-  },
-  reflector,
-);
+// final storyblokSerializer = StoryblokWidgetSerializer(
+//   const {
+//     TypeSerializable(ArticleListPage, ArticleListPage.fromJson),
+//     TypeSerializable(ArticlePage, ArticlePage.fromJson),
+//     TypeSerializable(StoryblokColumn, StoryblokColumn.fromJson),
+//     TypeSerializable(StoryblokRow, StoryblokRow.fromJson),
+//     TypeSerializable(StoryblokText, StoryblokText.fromJson),
+//     TypeSerializable(StoryblokImage, StoryblokImage.fromJson),
+//     TypeSerializable(ArticleItem, ArticleItem.fromJson),
+//     TypeSerializable(StoryblokFlex, StoryblokFlex.fromJson),
+//     TypeSerializable(StoryblokIconButton, StoryblokIconButton.fromJson),
+//   },
+//   reflector,
+// );
 
 void main() {
-  initializeReflectable();
+  // initializeReflectable();
   usePathUrlStrategy();
   runApp(const MyApp());
 }
@@ -41,36 +39,25 @@ final router = GoRouter(routes: [
       final slug = state.uri.queryParameters["slug"];
 
       if (slug != null) {
-        return FutureBuilder(
-          future: storyblokClient.getStory(StoryIdentifierFullSlug(slug)),
-          builder: (context, snapshot) {
-            final data = snapshot.data;
-            if (data != null) {
-              return storyblokSerializer.serializeJson(data.content).buildWidget(context);
-            }
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              print(snapshot.stackTrace);
-            }
-            return Text("...");
-          },
-        );
+        return FutureStoryWidget(storyFuture: storyblokClient.getStory(id: StoryIdentifierFullSlug(slug)));
       }
 
-      return FutureBuilder(
-        future: storyblokClient.getStories(startsWith: "bottomnavigationpages"),
-        builder: (context, snapshot) {
-          final stories = snapshot.data;
-          if (stories != null) {
-            return BottomNavigationPage(stories: stories);
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            print(snapshot.stackTrace);
-            return Text(snapshot.error.toString());
-          }
-          return const Text("...");
-        },
-      );
+      return FutureStoryWidget(storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(374000037)));
+
+      // return FutureBuilder(
+      //   future: storyblokClient.getStories(startsWith: "bottomnavigationpages"),
+      //   builder: (context, snapshot) {
+      //     final stories = snapshot.data;
+      //     if (stories != null) {
+      //       return BottomNavigationPage(stories: stories);
+      //     } else if (snapshot.hasError) {
+      //       print(snapshot.error);
+      //       print(snapshot.stackTrace);
+      //       return Text(snapshot.error.toString());
+      //     }
+      //     return const Text("...");
+      //   },
+      // );
     },
   ),
 ]);
@@ -91,47 +78,110 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class BottomNavigationPage extends StatefulWidget {
-  final List<Story> stories;
-  const BottomNavigationPage({super.key, required this.stories});
-
-  @override
-  State<BottomNavigationPage> createState() => _BottomNavigationPageState();
-}
-
-class _BottomNavigationPageState extends State<BottomNavigationPage> {
-  int _selectedIndex = 0;
-
-  void _onTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class FutureStoryWidget extends StatelessWidget {
+  final Future<Story> storyFuture;
+  const FutureStoryWidget({super.key, required this.storyFuture});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.lightBlue,
-        onTap: (value) => _onTap(value),
-        items: widget.stories
-            .map((story) => BottomNavigationBarItem(
-                  icon: const Icon(Icons.abc),
-                  label: story.name,
-                ))
-            .toList(),
-        currentIndex: _selectedIndex,
+    return FutureBuilder(
+      future: storyFuture,
+      builder: (context, snapshot) {
+        final story = snapshot.data;
+        if (story != null) {
+          return bloks.Blok.fromJson(story.content).buildWidget(context);
+        } else if (snapshot.hasError) {
+          print(snapshot.error);
+          print(snapshot.stackTrace);
+          return Scaffold(body: Center(child: Text(snapshot.error.toString())));
+        }
+        return const Scaffold(body: Center(child: Text("Loading...")));
+      },
+    );
+  }
+}
+
+// TODO Generate resolver with lambdas for each blok
+extension BlockWidget on bloks.Blok {
+  Widget buildWidget(BuildContext context) {
+    return switch (this) {
+      final bloks.Hero _ => Container(color: Colors.red, height: 200),
+      final bloks.HardwareButton button => PrimaryButton(button.title, onPressed: () => print(button.sensor.name)),
+      final bloks.Page page => Scaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: page.blocks?.map((e) => e.buildWidget(context)).toList() ?? [const Text("Empty")],
+          ),
+        ),
+      final bloks.StartPage startPage => Scaffold(
+          appBar: startPage.title == null
+              ? null
+              : AppBar(
+                  title: Text(startPage.title!),
+                ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: startPage.content?.map((e) => e.buildWidget(context)).toList() ?? [const Text("Empty")],
+          ),
+        ),
+      final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
+      final bloks.VideoItem videoItem => Container(
+          color: Colors.grey,
+          height: 200,
+          child: Center(
+            child: Text(videoItem.title ?? "Title"),
+          ),
+        ),
+      final bloks.VideoPage videoPage => Scaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(videoPage.videoTitle),
+              Text(videoPage.videoDescription),
+              Text(videoPage.publishedAt.toIso8601String()),
+            ],
+          ),
+        ),
+    };
+  }
+}
+
+class PrimaryButton extends StatelessWidget {
+  const PrimaryButton(
+    this.text, {
+    super.key,
+    this.wrapContentWidth = false,
+    required this.onPressed,
+  });
+
+  final String text;
+  final bool wrapContentWidth;
+  final VoidCallback? onPressed;
+  final Color backgroundColor = Colors.blue;
+
+  bool get _isEnabled => onPressed != null;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        fixedSize: const Size(double.infinity, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        backgroundColor: _isEnabled ? backgroundColor : backgroundColor.withOpacity(0.1),
+        shape: const StadiumBorder(),
       ),
-      body: IndexedStack(
-          index: _selectedIndex,
-          children: widget.stories
-              .map(
-                (e) => storyblokSerializer.serializeJson(e.content).buildWidget(context),
-              )
-              .toList()),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: wrapContentWidth ? MainAxisSize.min : MainAxisSize.max,
+        children: [
+          Text(
+            text,
+            maxLines: 1,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
     );
   }
 }

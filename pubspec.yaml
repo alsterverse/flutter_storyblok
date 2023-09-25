@@ -14,9 +14,12 @@ dependencies:
   reflectable: ^4.0.5
 
 dev_dependencies:
-  # flutter_test:
-  #   sdk: flutter
-  # flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  code_builder: ^4.6.0
+  dart_casing: ^2.0.0
+  http: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
