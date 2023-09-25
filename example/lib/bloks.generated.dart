@@ -5,6 +5,8 @@ enum Icons { start }
 
 enum PhoneHardware { camera, vibration, accelerometer }
 
+enum Single2Option { hello, world }
+
 sealed class Blok {
   Blok();
 
@@ -75,7 +77,8 @@ final class TestBlock extends Blok {
         single1 = Icons.values.byName(json["single1"]),
         asset1 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset1"])),
         asset2 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset2"])),
-        link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"]));
+        link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"])),
+        single2 = Single2Option.values.byName(json["single2"]);
 
   final List<Blok>? bloks1;
 
@@ -110,6 +113,8 @@ final class TestBlock extends Blok {
   final SBAsset? asset2;
 
   final LinkType? link1;
+
+  final Single2Option? single2;
 }
 
 final class VideoItem extends Blok {
