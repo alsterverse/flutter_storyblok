@@ -5,6 +5,7 @@ import 'package:example/carousel_block_widget.dart';
 import 'package:example/hero.dart';
 import 'package:example/primary_button.dart';
 import 'package:example/search_page.dart';
+import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:example/video_page.dart';
@@ -40,21 +41,6 @@ final router = GoRouter(routes: [
       return FutureStoryWidget(
         storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(376648209)),
       );
-
-      // return FutureBuilder(
-      //   future: storyblokClient.getStories(startsWith: "bottomnavigationpages"),
-      //   builder: (context, snapshot) {
-      //     final stories = snapshot.data;
-      //     if (stories != null) {
-      //       return BottomNavigationPage(stories: stories);
-      //     } else if (snapshot.hasError) {
-      //       print(snapshot.error);
-      //       print(snapshot.stackTrace);
-      //       return Text(snapshot.error.toString());
-      //     }
-      //     return const Text("...");
-      //   },
-      // );
     },
   ),
 ]);
@@ -69,6 +55,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter x Storyblok',
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
       ),
     );
   }
@@ -114,42 +105,9 @@ extension BlockWidget on bloks.Blok {
             children: page.blocks?.map((e) => e.buildWidget(context)).toList() ?? [const Text("Empty")],
           ),
         ),
-      final bloks.StartPage startPage => Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: startPage.title == null
-              ? null
-              : AppBar(
-                  backgroundColor: Colors.black,
-                  elevation: 0,
-                  title: const CircleAvatar(
-                    backgroundColor: Colors.deepPurpleAccent,
-                    child: Text(
-                      "ATV",
-                      style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
-                    ),
-                  ),
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(1.0),
-                    child: Container(
-                      color: Colors.deepPurpleAccent.withOpacity(.25),
-                      height: 3,
-                    ),
-                  ),
-                ),
-          body: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            children: startPage.content
-                .map((e) {
-                  final widget = e.buildWidget(context);
-                  if (e is bloks.CarouselBlock) return widget;
-                  return Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: widget);
-                })
-                .separatedBy(() => const SizedBox(height: 20))
-                .toList(),
-          ),
-        ),
+      final bloks.StartPage startPage => StartPage(startPage: startPage),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
-      final bloks.VideoItem videoItem => VideoItemWidget(videoItem: videoItem),
+      final bloks.VideoItem videoItem => IntrinsicHeight(child: VideoItemWidget.fromVideoItem(videoItem)),
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),

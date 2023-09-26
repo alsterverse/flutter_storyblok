@@ -21,7 +21,6 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
     _videoPlayerController = VideoPlayerController.networkUrl((videoPage.videoUrl as LinkTypeURL).url)
       ..initialize().then((_) {
         if (!mounted) return;
-        _videoPlayerController.seekTo(Duration(seconds: 2));
         _videoPlayerController.play();
         setState(() {});
       });
@@ -52,12 +51,16 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _videoPlayerController.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _videoPlayerController.value.aspectRatio,
-                  child: VideoPlayer(_videoPlayerController),
-                )
-              : Container(),
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: !_videoPlayerController.value.isInitialized
+                ? const SizedBox.shrink()
+                : GestureDetector(
+                    onTap: () => _videoPlayerController.value.isPlaying
+                        ? _videoPlayerController.pause()
+                        : _videoPlayerController.play(),
+                    child: VideoPlayer(_videoPlayerController)),
+          ),
           Padding(
             padding: const EdgeInsets.all(26),
             child: Column(
@@ -67,18 +70,18 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                   children: [
                     Text(
                       videoPage.videoTitle,
-                      style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700),
+                      style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       videoPage.publishedAt.toString().split(" ")[0],
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   videoPage.videoDescription,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),

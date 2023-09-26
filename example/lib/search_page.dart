@@ -21,15 +21,19 @@ class _SearchPageState extends State<SearchPage> {
         title: Text(widget.searchPage.header),
       ),
       body: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: [
           SearchBar(
             onSubmitted: _search,
-            leading: Icon(Icons.search),
+            leading: const Icon(Icons.search),
+            hintText: "Search a video",
           ),
           if (results != null) ...[
             const SizedBox(height: 40),
-            ...results.map((e) => Text(e.videoTitle)),
+            ...results.map((e) => Text(
+                  e.videoTitle,
+                  style: const TextStyle(color: Colors.white),
+                )),
           ],
         ],
       ),

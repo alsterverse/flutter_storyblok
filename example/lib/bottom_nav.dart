@@ -22,7 +22,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         showUnselectedLabels: true,
