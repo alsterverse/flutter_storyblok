@@ -146,10 +146,10 @@ extension BlockWidget on bloks.Blok {
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
-      final bloks.Hero hero => HeroWidget(video: hero.video[0] as bloks.VideoItem),
-      _ => const SizedBox.shrink(), // TODO Remove
+      final bloks.Hero hero => HeroWidget(video: hero.video as bloks.VideoItem),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
+      _ => const SizedBox.shrink(), // TODO Remove
     };
   }
 }
