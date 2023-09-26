@@ -1,7 +1,7 @@
 import 'package:flutter_storyblok/field_types.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
-enum Icons { start }
+enum Icons { start, search }
 
 enum PhoneHardware { camera, vibration, accelerometer }
 
@@ -12,10 +12,12 @@ sealed class Blok {
 
   factory Blok.fromJson(Map<String, dynamic> json) => switch (json["component"] as String) {
         "bottom_navigation" => BottomNavigation.fromJson(json),
+        "Bottom nav page" => BottomNavPage.fromJson(json),
         "carousel_block" => CarouselBlock.fromJson(json),
         "hardware_button" => HardwareButton.fromJson(json),
         "hero" => Hero.fromJson(json),
         "page" => Page.fromJson(json),
+        "Search page" => SearchPage.fromJson(json),
         "start_page" => StartPage.fromJson(json),
         "test_block" => TestBlock.fromJson(json),
         "text_block" => TextBlock.fromJson(json),
@@ -30,6 +32,19 @@ final class BottomNavigation extends Blok {
       : pages = List<Map<String, dynamic>>.from(json["pages"]).map(Blok.fromJson).toList();
 
   final List<Blok> pages;
+}
+
+final class BottomNavPage extends Blok {
+  BottomNavPage.fromJson(Map<String, dynamic> json)
+      : label = json["label"],
+        icon = Icons.values.byName(json["icon"]),
+        block = List<Map<String, dynamic>>.from(json["block"]).map(Blok.fromJson).toList().first;
+
+  final String label;
+
+  final Icons icon;
+
+  final Blok block;
 }
 
 final class CarouselBlock extends Blok {
@@ -60,9 +75,9 @@ final class HardwareButton extends Blok {
 
 final class Hero extends Blok {
   Hero.fromJson(Map<String, dynamic> json)
-      : video = List<Map<String, dynamic>>.from(json["video"]).map(Blok.fromJson).toList();
+      : video = List<Map<String, dynamic>>.from(json["video"]).map(Blok.fromJson).toList().first;
 
-  final List<Blok> video;
+  final Blok video;
 }
 
 final class Page extends Blok {
@@ -70,6 +85,10 @@ final class Page extends Blok {
       : blocks = List<Map<String, dynamic>>.from(json["blocks"]).map(Blok.fromJson).toList();
 
   final List<Blok>? blocks;
+}
+
+final class SearchPage extends Blok {
+  SearchPage.fromJson(Map<String, dynamic> json);
 }
 
 final class StartPage extends Blok {

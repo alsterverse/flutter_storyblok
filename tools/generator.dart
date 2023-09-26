@@ -216,14 +216,19 @@ abstract class _BaseField {
 }
 
 final class _Bloks extends _BaseField {
-  _Bloks.fromJson(super.data, super.name) : super.fromJson();
+  final int? maximum;
+  _Bloks.fromJson(super.data, super.name)
+      : maximum = data["maximum"],
+        super.fromJson();
 
   @override
-  String symbol() => "List<Blok>"; // TODO If only one whitelisted blok type
+  String symbol() => maximum == 1 ? "Blok" : "List<Blok>"; // TODO If only one whitelisted blok type
 
   @override
   String generateInitializerCode(String valueCode) {
-    return "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList()";
+    return maximum == 1
+        ? "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList().first"
+        : "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList()";
   }
 }
 

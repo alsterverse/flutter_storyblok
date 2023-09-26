@@ -130,8 +130,31 @@ extension BlockWidget on bloks.Blok {
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
-      // TODO: Handle this case.
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
+      final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
+      final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
     };
+  }
+}
+
+class BottomNavigationPage extends StatelessWidget {
+  final bloks.BottomNavPage bottomNavPage;
+  const BottomNavigationPage({super.key, required this.bottomNavPage});
+
+  @override
+  Widget build(BuildContext context) {
+    return bottomNavPage.block.buildWidget(context);
+  }
+}
+
+class SearchPage extends StatelessWidget {
+  final bloks.SearchPage searchPage;
+  const SearchPage({super.key, required this.searchPage});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: Text("Search...")),
+    );
   }
 }
