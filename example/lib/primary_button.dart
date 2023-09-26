@@ -11,7 +11,7 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final bool wrapContentWidth;
   final VoidCallback? onPressed;
-  final Color backgroundColor = Colors.blue;
+  final Color backgroundColor = Colors.deepOrangeAccent;
 
   bool get _isEnabled => onPressed != null;
 
@@ -21,6 +21,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         fixedSize: const Size(double.infinity, 48),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(horizontal: 24),
         backgroundColor: _isEnabled ? backgroundColor : backgroundColor.withOpacity(0.1),
         shape: const StadiumBorder(),

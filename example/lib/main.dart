@@ -2,6 +2,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
+import 'package:example/hero.dart';
 import 'package:example/primary_button.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
@@ -66,7 +67,6 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       title: 'Flutter x Storyblok',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
     );
@@ -84,13 +84,16 @@ class FutureStoryWidget extends StatelessWidget {
       builder: (context, snapshot) {
         final story = snapshot.data;
         if (story != null) {
-          return bloks.Blok.fromJson(story.content).buildWidget(context);
+          return Scaffold(
+            body: bloks.Blok.fromJson(story.content).buildWidget(context),
+            backgroundColor: Colors.black,
+          );
         } else if (snapshot.hasError) {
           print(snapshot.error);
           print(snapshot.stackTrace);
           return Scaffold(body: Center(child: Text(snapshot.error.toString())));
         }
-        return const Scaffold(body: Center(child: Text("Loading...")));
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }
@@ -100,7 +103,6 @@ class FutureStoryWidget extends StatelessWidget {
 extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return switch (this) {
-      final bloks.Hero _ => Container(color: Colors.red, height: 200),
       final bloks.HardwareButton button => PrimaryButton(button.title,
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const CameraScreen(),
@@ -112,7 +114,20 @@ extension BlockWidget on bloks.Blok {
           ),
         ),
       final bloks.StartPage startPage => Scaffold(
-          appBar: AppBar(title: Text(startPage.title)),
+          backgroundColor: Colors.transparent,
+          appBar: startPage.title == null
+              ? null
+              : AppBar(
+                  backgroundColor: Colors.black,
+                  elevation: 0,
+                  title: const CircleAvatar(
+                    backgroundColor: Colors.deepOrangeAccent,
+                    child: Text(
+                      "ATV",
+                      style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+                    ),
+                  ),
+                ),
           body: ListView(
             padding: const EdgeInsets.symmetric(vertical: 20),
             children: startPage.content
@@ -131,6 +146,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
+      final bloks.Hero hero => HeroWidget(video: hero.video[0] as bloks.VideoItem),
+      _ => const SizedBox.shrink(), // TODO Remove
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
     };
