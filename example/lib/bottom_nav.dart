@@ -50,3 +50,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
     );
   }
 }
+
+class BottomNavigationPage extends StatelessWidget {
+  final bloks.BottomNavPage bottomNavPage;
+  const BottomNavigationPage({super.key, required this.bottomNavPage});
+
+  @override
+  Widget build(BuildContext context) {
+    return bottomNavPage.block.buildWidget(context);
+  }
+}

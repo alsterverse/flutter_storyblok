@@ -20,6 +20,7 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
     super.initState();
     _videoPlayerController = VideoPlayerController.networkUrl((videoPage.videoUrl as LinkTypeURL).url)
       ..initialize().then((_) {
+        if (!mounted) return;
         _videoPlayerController.seekTo(Duration(seconds: 2));
         _videoPlayerController.play();
         setState(() {});

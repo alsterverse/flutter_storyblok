@@ -222,7 +222,7 @@ final class _Bloks extends _BaseField {
         super.fromJson();
 
   @override
-  String symbol() => maximum == 1 ? "Blok" : "List<Blok>"; // TODO If only one whitelisted blok type
+  String symbol() => maximum == 1 ? "Blok" : "List<Blok>";
 
   @override
   String generateInitializerCode(String valueCode) {

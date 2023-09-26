@@ -3,6 +3,7 @@ import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
 import 'package:example/primary_button.dart';
+import 'package:example/search_page.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:example/video_page.dart';
@@ -134,27 +135,5 @@ extension BlockWidget on bloks.Blok {
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
     };
-  }
-}
-
-class BottomNavigationPage extends StatelessWidget {
-  final bloks.BottomNavPage bottomNavPage;
-  const BottomNavigationPage({super.key, required this.bottomNavPage});
-
-  @override
-  Widget build(BuildContext context) {
-    return bottomNavPage.block.buildWidget(context);
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  final bloks.SearchPage searchPage;
-  const SearchPage({super.key, required this.searchPage});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Search...")),
-    );
   }
 }

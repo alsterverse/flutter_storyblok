@@ -88,7 +88,9 @@ final class Page extends Blok {
 }
 
 final class SearchPage extends Blok {
-  SearchPage.fromJson(Map<String, dynamic> json);
+  SearchPage.fromJson(Map<String, dynamic> json) : header = json["header"];
+
+  final String header;
 }
 
 final class StartPage extends Blok {
