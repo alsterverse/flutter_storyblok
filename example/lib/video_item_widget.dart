@@ -28,9 +28,10 @@ class VideoItemWidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+            SizedBox(height: 8),
             Text(
               linkedVideoPage.videoTitle,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             Text(
               videoItem.summary ?? linkedVideoPage.videoDescription,

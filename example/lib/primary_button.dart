@@ -11,7 +11,7 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final bool wrapContentWidth;
   final VoidCallback? onPressed;
-  final Color backgroundColor = Colors.deepOrangeAccent;
+  final Color backgroundColor = Colors.deepPurpleAccent;
 
   bool get _isEnabled => onPressed != null;
 

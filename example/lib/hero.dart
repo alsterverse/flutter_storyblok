@@ -37,7 +37,7 @@ class HeroWidget extends StatelessWidget {
                   ),
                   Text(
                     video.title.toString(),
-                    style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700),
+                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700),
                   ),
                   Text(
                     video.description.toString(),

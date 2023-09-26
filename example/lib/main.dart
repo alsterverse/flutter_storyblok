@@ -121,7 +121,7 @@ extension BlockWidget on bloks.Blok {
                   backgroundColor: Colors.black,
                   elevation: 0,
                   title: const CircleAvatar(
-                    backgroundColor: Colors.deepOrangeAccent,
+                    backgroundColor: Colors.deepPurpleAccent,
                     child: Text(
                       "ATV",
                       style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),

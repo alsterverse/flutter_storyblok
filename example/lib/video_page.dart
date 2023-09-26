@@ -35,7 +35,19 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const CircleAvatar(
+          backgroundColor: Colors.deepPurpleAccent,
+          child: Text(
+            "ATV",
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          ),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -45,9 +57,34 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                   child: VideoPlayer(_videoPlayerController),
                 )
               : Container(),
-          Text(videoPage.videoTitle),
-          Text(videoPage.videoDescription),
-          Text(videoPage.publishedAt.toIso8601String()),
+          Padding(
+            padding: const EdgeInsets.all(26),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      videoPage.videoTitle,
+                      style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700),
+                    ),
+                    Text(
+                      videoPage.publishedAt.toString().split(" ")[0],
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  videoPage.videoDescription,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
