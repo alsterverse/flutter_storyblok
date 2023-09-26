@@ -16,7 +16,7 @@ class VideoItemWidget extends StatelessWidget {
         MaterialPageRoute(builder: (context) => linkedVideoPage.buildWidget(context)),
       ),
       child: Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(19, 0, 0, 0)),
+        decoration: BoxDecoration(color: Colors.grey.shade800),
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,11 +28,15 @@ class VideoItemWidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+            SizedBox(height: 8),
             Text(
               linkedVideoPage.videoTitle,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
-            // Text(videoItem.summary ?? linkedVideoPage.videoDescription),
+            Text(
+              videoItem.summary ?? linkedVideoPage.videoDescription,
+              style: const TextStyle(color: Colors.white),
+            ),
           ],
         ),
       ),

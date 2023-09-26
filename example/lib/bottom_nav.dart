@@ -22,11 +22,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.lightBlue,
+        selectedItemColor: Colors.deepPurpleAccent,
+        unselectedItemColor: Colors.white,
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.pages.map((page) {
           final sp = (page as bloks.BottomNavPage);
