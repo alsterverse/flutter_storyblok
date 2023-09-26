@@ -128,6 +128,13 @@ extension BlockWidget on bloks.Blok {
                       style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
                     ),
                   ),
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(1.0),
+                    child: Container(
+                      color: Colors.deepPurpleAccent.withOpacity(.25),
+                      height: 3,
+                    ),
+                  ),
                 ),
           body: ListView(
             padding: const EdgeInsets.symmetric(vertical: 20),

@@ -21,7 +21,7 @@ class HeroWidget extends StatelessWidget {
         MaterialPageRoute(builder: (context) => linkedVideoPage.buildWidget(context)),
       ),
       child: Container(
-        decoration: BoxDecoration(color: Colors.grey.shade800),
+        decoration: BoxDecoration(color: Colors.deepPurpleAccent.withOpacity(.25)),
         child: Column(
           children: [
             // Image.network(video.videoLink.toString()),
