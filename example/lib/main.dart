@@ -1,5 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/camera_screen.dart';
+import 'package:example/carousel_block_widget.dart';
 import 'package:example/primary_button.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
@@ -132,9 +133,13 @@ extension BlockWidget on bloks.Blok {
                   title: Text(startPage.title!),
                 ),
           body: ListView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             children: startPage.content
-                .map((e) => e.buildWidget(context))
+                .map((e) {
+                  final widget = e.buildWidget(context);
+                  if (e is bloks.CarouselBlock) return widget;
+                  return Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: widget);
+                })
                 .separatedBy(() => const SizedBox(height: 20))
                 .toList(),
           ),
@@ -142,7 +147,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => VideoItemWidget(videoItem: videoItem),
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
-      _ => const SizedBox.shrink(), // TODO Remove
+      final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
+      final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
     };
   }
 }

@@ -27,16 +27,13 @@ sealed class Blok {
 final class CarouselBlock extends Blok {
   CarouselBlock.fromJson(Map<String, dynamic> json)
       : heading = json["heading"],
-        link = LinkType.fromJson(Map<String, dynamic>.from(json["link"])),
         videos = List<Map<String, dynamic>>.from(json["videos"]).map(Blok.fromJson).toList(),
         showInfo = json["show_info"],
         isNotable = json["is_notable"];
 
-  final String? heading;
+  final String heading;
 
-  final LinkType? link;
-
-  final List<Blok>? videos;
+  final List<Blok> videos;
 
   final bool? showInfo;
 
@@ -54,7 +51,10 @@ final class HardwareButton extends Blok {
 }
 
 final class Hero extends Blok {
-  Hero.fromJson(Map<String, dynamic> json);
+  Hero.fromJson(Map<String, dynamic> json)
+      : video = List<Map<String, dynamic>>.from(json["video"]).map(Blok.fromJson).toList();
+
+  final List<Blok> video;
 }
 
 final class Page extends Blok {

@@ -30,9 +30,9 @@ class VideoItemWidget extends StatelessWidget {
             ),
             Text(
               linkedVideoPage.videoTitle,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            Text(videoItem.summary ?? linkedVideoPage.videoDescription),
+            // Text(videoItem.summary ?? linkedVideoPage.videoDescription),
           ],
         ),
       ),
