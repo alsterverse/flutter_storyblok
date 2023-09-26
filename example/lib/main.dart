@@ -1,4 +1,5 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
 import 'package:example/primary_button.dart';
@@ -10,30 +11,14 @@ import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
-// import 'main.reflectable.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 final storyblokClient = StoryblokClient(
   accessToken: "2aurFHe7gdoL2yxIyk1APgtt",
   version: StoryblokVersion.draft,
 );
-// final storyblokSerializer = StoryblokWidgetSerializer(
-//   const {
-//     TypeSerializable(ArticleListPage, ArticleListPage.fromJson),
-//     TypeSerializable(ArticlePage, ArticlePage.fromJson),
-//     TypeSerializable(StoryblokColumn, StoryblokColumn.fromJson),
-//     TypeSerializable(StoryblokRow, StoryblokRow.fromJson),
-//     TypeSerializable(StoryblokText, StoryblokText.fromJson),
-//     TypeSerializable(StoryblokImage, StoryblokImage.fromJson),
-//     TypeSerializable(ArticleItem, ArticleItem.fromJson),
-//     TypeSerializable(StoryblokFlex, StoryblokFlex.fromJson),
-//     TypeSerializable(StoryblokIconButton, StoryblokIconButton.fromJson),
-//   },
-//   reflector,
-// );
 
 void main() {
-  // initializeReflectable();
   usePathUrlStrategy();
   runApp(const MyApp());
 }
@@ -51,7 +36,7 @@ final router = GoRouter(routes: [
       }
 
       return FutureStoryWidget(
-        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(374000037)),
+        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(376648209)),
       );
 
       // return FutureBuilder(
@@ -127,11 +112,7 @@ extension BlockWidget on bloks.Blok {
           ),
         ),
       final bloks.StartPage startPage => Scaffold(
-          appBar: startPage.title == null
-              ? null
-              : AppBar(
-                  title: Text(startPage.title!),
-                ),
+          appBar: AppBar(title: Text(startPage.title)),
           body: ListView(
             padding: const EdgeInsets.symmetric(vertical: 20),
             children: startPage.content
@@ -149,6 +130,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
+      // TODO: Handle this case.
+      final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
     };
   }
 }

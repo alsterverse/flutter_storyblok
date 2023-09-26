@@ -11,6 +11,7 @@ sealed class Blok {
   Blok();
 
   factory Blok.fromJson(Map<String, dynamic> json) => switch (json["component"] as String) {
+        "bottom_navigation" => BottomNavigation.fromJson(json),
         "carousel_block" => CarouselBlock.fromJson(json),
         "hardware_button" => HardwareButton.fromJson(json),
         "hero" => Hero.fromJson(json),
@@ -22,6 +23,13 @@ sealed class Blok {
         "video_page" => VideoPage.fromJson(json),
         _ => throw "Unrecognized type ${json["component"]}",
       };
+}
+
+final class BottomNavigation extends Blok {
+  BottomNavigation.fromJson(Map<String, dynamic> json)
+      : pages = List<Map<String, dynamic>>.from(json["pages"]).map(Blok.fromJson).toList();
+
+  final List<Blok> pages;
 }
 
 final class CarouselBlock extends Blok {
@@ -71,11 +79,11 @@ final class StartPage extends Blok {
         icon = Icons.values.byName(json["icon"]),
         content = List<Map<String, dynamic>>.from(json["content"]).map(Blok.fromJson).toList();
 
-  final String? title;
+  final String title;
 
-  final String? label;
+  final String label;
 
-  final Icons? icon;
+  final Icons icon;
 
   final List<Blok> content;
 }

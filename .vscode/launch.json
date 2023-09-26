@@ -5,35 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-<<<<<<< HEAD
-            "name": "flutter_storyblok",
-=======
-            "name": "storyblok_flutter",
->>>>>>> 4184cbf (Add web support)
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-<<<<<<< HEAD
-            "name": "flutter_storyblok (profile mode)",
-=======
-            "name": "storyblok_flutter (profile mode)",
->>>>>>> 4184cbf (Add web support)
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-<<<<<<< HEAD
-            "name": "flutter_storyblok (release mode)",
-=======
-            "name": "storyblok_flutter (release mode)",
->>>>>>> 4184cbf (Add web support)
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-        {
             "name": "example",
             "cwd": "example",
             "request": "launch",

@@ -1,17 +1,16 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/story.dart';
 
-class BottomNavigationPage extends StatefulWidget {
-  final List<Story> stories;
-  const BottomNavigationPage({super.key, required this.stories});
+class BottomNavigation extends StatefulWidget {
+  final bloks.BottomNavigation bottomNav;
+  const BottomNavigation({super.key, required this.bottomNav});
 
   @override
-  State<BottomNavigationPage> createState() => _BottomNavigationPageState();
+  State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
-class _BottomNavigationPageState extends State<BottomNavigationPage> {
+class _BottomNavigationState extends State<BottomNavigation> {
   int _selectedIndex = 0;
 
   void _onTap(int index) {
@@ -29,19 +28,22 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.lightBlue,
         onTap: (value) => _onTap(value),
-        items: widget.stories
-            .map((story) => BottomNavigationBarItem(
-                  icon: const Icon(Icons.abc),
-                  label: story.name,
-                ))
-            .toList(),
+        items: widget.bottomNav.pages.map((page) {
+          final sp = (page as bloks.StartPage);
+          return BottomNavigationBarItem(
+            icon: switch (sp.icon) {
+              bloks.Icons.start => const Icon(Icons.start),
+            },
+            label: sp.label,
+          );
+        }).toList(),
         currentIndex: _selectedIndex,
       ),
       body: IndexedStack(
           index: _selectedIndex,
-          children: widget.stories
+          children: widget.bottomNav.pages
               .map(
-                (e) => bloks.Blok.fromJson(e.content).buildWidget(context),
+                (e) => e.buildWidget(context),
               )
               .toList()),
     );
