@@ -1,7 +1,7 @@
 import 'package:flutter_storyblok/field_types.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
-enum Icons { start, search }
+enum Icons { start, search, blocks }
 
 enum PhoneHardware { camera, vibration, accelerometer }
 
@@ -60,7 +60,7 @@ final class CarouselBlock extends Blok {
 
   final bool? showInfo;
 
-  final bool? isNotable;
+  final bool isNotable;
 }
 
 final class HardwareButton extends Blok {

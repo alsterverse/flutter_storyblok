@@ -1,4 +1,5 @@
 import 'package:example/bloks.generated.dart';
+import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:video_player/video_player.dart';
@@ -68,23 +69,17 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    TextATV.title(
                       videoPage.videoTitle,
-                      style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700),
                     ),
-                    Text(
+                    TextATV.subtitle(
                       videoPage.publishedAt.toString().split(" ")[0],
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
+                TextATV.body(
                   videoPage.videoDescription,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
                 ),
               ],
             ),

@@ -6,7 +6,7 @@ import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
 import 'package:example/hero.dart';
-import 'package:example/primary_button.dart';
+import 'package:example/components/primary_button.dart';
 import 'package:example/search_page.dart';
 import 'package:example/start_page.dart';
 import 'package:example/utils.dart';

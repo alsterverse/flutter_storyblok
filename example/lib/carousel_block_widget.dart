@@ -1,4 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +19,17 @@ class CarouselBlockWidget extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(carouselBlock.heading),
+          child: TextATV.subtitle(carouselBlock.heading),
         ),
+        const SizedBox(height: 8),
         SizedBox(
-          height: 150,
+          height: carouselBlock.isNotable ? 300 : 150,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: List<bloks.VideoItem>.from(carouselBlock.videos)
-                  .map<Widget>((e) => VideoItemWidget.fromVideoItem(e, true))
+                  .map<Widget>((e) => VideoItemWidget.fromVideoItem(e, true, carouselBlock.isNotable))
                   .separatedBy(() => const SizedBox(width: 20))
                   .toList(),
             ),
