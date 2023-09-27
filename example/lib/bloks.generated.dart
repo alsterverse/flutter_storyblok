@@ -84,7 +84,7 @@ final class Page extends Blok {
   Page.fromJson(Map<String, dynamic> json)
       : blocks = List<Map<String, dynamic>>.from(json["blocks"]).map(Blok.fromJson).toList();
 
-  final List<Blok>? blocks;
+  final List<Blok> blocks;
 }
 
 final class SearchPage extends Blok {

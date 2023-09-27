@@ -19,8 +19,6 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     if (kIsWeb) return;
 
     availableCameras().then((cameras) async {
-      print("AAAAAAAAAA");
-      print(cameras);
       controller = CameraController(cameras.first, ResolutionPreset.max);
       await controller!.initialize();
       setState(() {});

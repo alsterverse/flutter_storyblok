@@ -33,33 +33,35 @@ class VideoItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: videoPageBuilder),
-      ),
-      child: Container(
-        decoration: BoxDecoration(color: Colors.grey.shade800),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Image.network(thumbnailUrl.toString(), fit: BoxFit.cover),
+    return IntrinsicHeight(
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: videoPageBuilder),
+        ),
+        child: Container(
+          decoration: BoxDecoration(color: Colors.grey.shade800),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Image.network(thumbnailUrl.toString(), fit: BoxFit.cover),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            if (description != null)
+              const SizedBox(height: 8),
               Text(
-                description!,
-                style: const TextStyle(color: Colors.white),
+                title,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
               ),
-          ],
+              if (description != null)
+                Text(
+                  description!,
+                  style: const TextStyle(color: Colors.white),
+                ),
+            ],
+          ),
         ),
       ),
     );

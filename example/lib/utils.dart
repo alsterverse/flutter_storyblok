@@ -1,3 +1,5 @@
+import 'dart:math';
+
 extension IterableUtils<E> on Iterable<E> {
   /// Inserts [separator] between every element of [this]
   Iterable<E> separatedBy(E Function() separator) => separatedByIndexed((_) => separator());
@@ -16,3 +18,11 @@ extension IterableUtils<E> on Iterable<E> {
 }
 
 T? tryCast<T>(dynamic object) => object is T ? object : null;
+
+extension DoubleExtensions on double {
+  double roundToDecimals(int decimals) {
+    assert(decimals >= 0);
+    final n = pow(10, decimals);
+    return (this * n).roundToDouble() / n;
+  }
+}

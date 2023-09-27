@@ -19,17 +19,19 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.searchPage.header),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          SearchBar(
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(56),
+          child: SearchBar(
             onSubmitted: _search,
             leading: const Icon(Icons.search),
             hintText: "Search a video",
           ),
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
           if (results != null) ...[
-            const SizedBox(height: 40),
             ...results.map((e) => Text(
                   e.videoTitle,
                   style: const TextStyle(color: Colors.white),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:example/accelerometer_screen.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
@@ -9,7 +12,9 @@ import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:example/video_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
@@ -96,18 +101,25 @@ extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return switch (this) {
       final bloks.HardwareButton button => PrimaryButton(button.title,
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const CameraScreen(),
-              ))),
+          onPressed: () => switch (button.sensor) {
+                bloks.PhoneHardware.camera =>
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CameraScreen())),
+                bloks.PhoneHardware.accelerometer =>
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AccelerometerScreen())),
+                bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
+              }),
       final bloks.Page page => Scaffold(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: page.blocks?.map((e) => e.buildWidget(context)).toList() ?? [const Text("Empty")],
-          ),
+          appBar: AppBar(title: const Text("Blocks")),
+          body: ListView(
+              padding: const EdgeInsets.all(20),
+              children: page.blocks
+                  .map((e) => e.buildWidget(context))
+                  .separatedBy(() => const SizedBox(height: 20))
+                  .toList()),
         ),
       final bloks.StartPage startPage => StartPage(startPage: startPage),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
-      final bloks.VideoItem videoItem => IntrinsicHeight(child: VideoItemWidget.fromVideoItem(videoItem)),
+      final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
@@ -115,7 +127,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.Hero hero => HeroWidget(video: hero.video as bloks.VideoItem),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
-      _ => const SizedBox.shrink(), // TODO Remove
+      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(), // TODO Remove
     };
   }
 }

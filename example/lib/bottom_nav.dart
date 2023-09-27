@@ -35,6 +35,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             icon: switch (sp.icon) {
               bloks.Icons.start => const Icon(Icons.table_rows_rounded),
               bloks.Icons.search => const Icon(Icons.search),
+              bloks.Icons.blocks => const Icon(Icons.square),
             },
             label: sp.label,
           );
