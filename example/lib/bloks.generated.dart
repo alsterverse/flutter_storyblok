@@ -53,7 +53,7 @@ final class BottomNavigation extends Blok {
 final class BottomNavPage extends Blok {
   BottomNavPage.fromJson(Map<String, dynamic> json)
       : label = json["label"],
-        icon = Icons.values.byName(json["icon"]),
+        icon = Icons.values.asNameMap()[json["icon"]] ?? Icons.unknown,
         block = List<Map<String, dynamic>>.from(json["block"]).map(Blok.fromJson).toList().first;
 
   final String label;
@@ -67,14 +67,14 @@ final class CarouselBlock extends Blok {
   CarouselBlock.fromJson(Map<String, dynamic> json)
       : heading = json["heading"],
         videos = List<Map<String, dynamic>>.from(json["videos"]).map(Blok.fromJson).toList(),
-        showInfo = json["show_info"],
-        isNotable = json["is_notable"];
+        showInfo = json["show_info"] ?? false,
+        isNotable = json["is_notable"] ?? false;
 
   final String heading;
 
   final List<Blok> videos;
 
-  final bool? showInfo;
+  final bool showInfo;
 
   final bool isNotable;
 }
@@ -82,7 +82,7 @@ final class CarouselBlock extends Blok {
 final class HardwareButton extends Blok {
   HardwareButton.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        sensor = PhoneHardware.values.byName(json["sensor"]);
+        sensor = PhoneHardware.values.asNameMap()[json["sensor"]] ?? PhoneHardware.unknown;
 
   final String title;
 
@@ -113,7 +113,7 @@ final class StartPage extends Blok {
   StartPage.fromJson(Map<String, dynamic> json)
       : title = json["title"],
         label = json["label"],
-        icon = Icons.values.byName(json["icon"]),
+        icon = Icons.values.asNameMap()[json["icon"]] ?? Icons.unknown,
         content = List<Map<String, dynamic>>.from(json["content"]).map(Blok.fromJson).toList();
 
   final String title;
@@ -139,12 +139,12 @@ final class TestBlock extends Blok {
         number2 = int.parse(json["number2"]),
         number3 = double.tryParse(json["number3"]),
         datetime1 = DateTime.tryParse(json["datetime1"]),
-        bool1 = json["bool1"],
-        single1 = Icons.values.byName(json["single1"]),
+        bool1 = json["bool1"] ?? false,
+        single1 = Icons.values.asNameMap()[json["single1"]] ?? Icons.unknown,
         asset1 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset1"])),
         asset2 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset2"])),
         link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"])),
-        single2 = Single2Option.values.byName(json["single2"]);
+        single2 = Single2Option.values.asNameMap()[json["single2"]] ?? Single2Option.unknown;
 
   final List<Blok>? bloks1;
 
@@ -170,7 +170,7 @@ final class TestBlock extends Blok {
 
   final DateTime? datetime1;
 
-  final bool? bool1;
+  final bool bool1;
 
   final Icons? single1;
 

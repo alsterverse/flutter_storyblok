@@ -204,11 +204,13 @@ abstract class _BaseField {
 
   String symbol();
 
+  void buildFieldType(TypeReferenceBuilder t) => t
+    ..symbol = symbol()
+    ..isNullable = !isRequired;
+
   void buildField(FieldBuilder f) {
     f.name = name;
-    f.type = TypeReference((t) => t
-      ..symbol = symbol().toString()
-      ..isNullable = !isRequired);
+    f.type = TypeReference(buildFieldType);
   }
 
   List<Spec>? generateSupportingClasses() => null;
@@ -268,6 +270,15 @@ final class _Boolean extends _BaseField {
 
   @override
   String symbol() => "$bool";
+
+  @override
+  void buildFieldType(TypeReferenceBuilder t) {
+    super.buildFieldType(t);
+    t.isNullable = false;
+  }
+
+  @override
+  String generateInitializerCode(String valueCode) => "$valueCode${isRequired ? "" : " ?? false"}";
 }
 
 // String is the raw value type
@@ -348,10 +359,12 @@ final class _Option extends _BaseField {
   @override
   String generateInitializerCode(String valueCode) {
     return super.generateInitializerCode(switch (source) {
-      _OptionSource.self => "${Casing.pascalCase(enumName)}.values.byName($valueCode)",
+      _OptionSource.self =>
+        "${Casing.pascalCase(enumName)}.values.asNameMap()[$valueCode] ?? ${Casing.pascalCase(enumName)}.unknown",
       _OptionSource.internal_stories => "StoryIdentifierUUID($valueCode)",
       _OptionSource.internal_languages => valueCode,
-      _OptionSource.internal => "${datasourceData[data["datasource_slug"]]!.name}.values.byName($valueCode)",
+      _OptionSource.internal =>
+        "${datasourceData[data["datasource_slug"]]!.name}.values.asNameMap()[$valueCode] ?? ${datasourceData[data["datasource_slug"]]!.name}.unknown",
     });
   }
 }

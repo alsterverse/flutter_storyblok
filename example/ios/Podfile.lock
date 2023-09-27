@@ -2,6 +2,9 @@ PODS:
   - camera_avfoundation (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - sensors_plus (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -10,6 +13,7 @@ PODS:
 DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - Flutter (from `Flutter`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
 
@@ -18,6 +22,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   Flutter:
     :path: Flutter
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   sensors_plus:
     :path: ".symlinks/plugins/sensors_plus/ios"
   video_player_avfoundation:
@@ -26,6 +32,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   sensors_plus: bda64198ccc7d3ccbb49e6ae17d92f67687bee20
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
 
