@@ -1,30 +1,46 @@
 import 'package:flutter_storyblok/field_types.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
-enum Icons { start, search, blocks }
+enum Icons { start, search, blocks, unknown }
 
-enum PhoneHardware { camera, vibration, accelerometer }
+enum PhoneHardware { camera, vibration, accelerometer, unknown }
 
-enum Single2Option { hello, world }
+enum Single2Option { hello, world, unknown }
 
 sealed class Blok {
   Blok();
 
-  factory Blok.fromJson(Map<String, dynamic> json) => switch (json["component"] as String) {
-        "bottom_navigation" => BottomNavigation.fromJson(json),
-        "Bottom nav page" => BottomNavPage.fromJson(json),
-        "carousel_block" => CarouselBlock.fromJson(json),
-        "hardware_button" => HardwareButton.fromJson(json),
-        "hero" => Hero.fromJson(json),
-        "page" => Page.fromJson(json),
-        "Search page" => SearchPage.fromJson(json),
-        "start_page" => StartPage.fromJson(json),
-        "test_block" => TestBlock.fromJson(json),
-        "text_block" => TextBlock.fromJson(json),
-        "video_item" => VideoItem.fromJson(json),
-        "video_page" => VideoPage.fromJson(json),
-        _ => throw "Unrecognized type ${json["component"]}",
-      };
+  factory Blok.fromJson(Map<String, dynamic> json) {
+    switch (json["component"] as String) {
+      case "bottom_navigation":
+        return BottomNavigation.fromJson(json);
+      case "Bottom nav page":
+        return BottomNavPage.fromJson(json);
+      case "carousel_block":
+        return CarouselBlock.fromJson(json);
+      case "hardware_button":
+        return HardwareButton.fromJson(json);
+      case "hero":
+        return Hero.fromJson(json);
+      case "page":
+        return Page.fromJson(json);
+      case "Search page":
+        return SearchPage.fromJson(json);
+      case "start_page":
+        return StartPage.fromJson(json);
+      case "test_block":
+        return TestBlock.fromJson(json);
+      case "text_block":
+        return TextBlock.fromJson(json);
+      case "video_item":
+        return VideoItem.fromJson(json);
+      case "video_page":
+        return VideoPage.fromJson(json);
+      default:
+        print("Unrecognized type ${json["component"]}");
+        return UnrecognizedBlok();
+    }
+  }
 }
 
 final class BottomNavigation extends Blok {
@@ -214,3 +230,5 @@ final class VideoPage extends Blok {
 
   final DateTime publishedAt;
 }
+
+final class UnrecognizedBlok extends Blok {}

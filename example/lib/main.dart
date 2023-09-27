@@ -108,6 +108,7 @@ extension BlockWidget on bloks.Blok {
                 bloks.PhoneHardware.accelerometer =>
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AccelerometerScreen())),
                 bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
+                bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
               }),
       final bloks.Page page => Scaffold(
           appBar: AppBar(title: TextATV.body("Blocks")),
@@ -128,7 +129,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.Hero hero => HeroWidget(video: hero.video as bloks.VideoItem),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
-      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(), // TODO Remove
+      bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }
