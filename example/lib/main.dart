@@ -5,6 +5,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
+import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/primary_button.dart';
 import 'package:example/search_page.dart';
@@ -109,7 +110,7 @@ extension BlockWidget on bloks.Blok {
                 bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
               }),
       final bloks.Page page => Scaffold(
-          appBar: AppBar(title: const Text("Blocks")),
+          appBar: AppBar(title: TextATV.body("Blocks")),
           body: ListView(
               padding: const EdgeInsets.all(20),
               children: page.blocks

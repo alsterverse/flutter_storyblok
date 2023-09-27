@@ -41,42 +41,47 @@ class VideoItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: videoPageBuilder),
-      ),
-      child: Container(
-        decoration: BoxDecoration(color: Colors.grey.shade800),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: portrait ? 9 / 16 : 16 / 9,
-                child: Image.network(thumbnailUrl.toString(), fit: portrait ? BoxFit.cover : BoxFit.cover),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextATV.subtitle(
-                    title,
+    return IntrinsicHeight(
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: videoPageBuilder),
+        ),
+        child: Container(
+          decoration: BoxDecoration(color: AppColors.layer),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: portrait ? 12 / 16 : 16 / 9,
+                  child: Image.network(
+                    thumbnailUrl.toString(),
+                    fit: portrait ? BoxFit.cover : BoxFit.cover,
                   ),
-                  if (description != null)
-                    Column(
-                      children: [
-                        const Divider(),
-                        TextATV.body(
-                          description!,
-                        ),
-                      ],
-                    ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextATV.subtitle(
+                      title,
+                    ),
+                    if (description != null)
+                      Column(
+                        children: [
+                          const Divider(),
+                          TextATV.body(
+                            description!,
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

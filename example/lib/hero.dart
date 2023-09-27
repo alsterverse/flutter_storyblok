@@ -27,9 +27,18 @@ class HeroWidget extends StatelessWidget {
             gradient: LinearGradient(
                 colors: [AppColors.primary, AppColors.accent], begin: Alignment.bottomLeft, end: Alignment.topRight)),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Image.network(video.videoLink.toString()),
-            Image.network("https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"),
+            AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                  ((bloks.Blok.fromJson((video.videoLink as LinkTypeStory).resolvedStory!.content) as bloks.VideoPage)
+                          .videoThumbnail as LinkTypeURL)
+                      .url
+                      .toString(),
+                  fit: BoxFit.cover,
+                )),
+            // "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg")),
             Container(
               padding: const EdgeInsets.all(20),
               child: Column(

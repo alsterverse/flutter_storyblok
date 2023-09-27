@@ -41,16 +41,16 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const CircleAvatar(
+        title: CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
-          child: Text(
+          child: TextATV.hero(
             "ATV",
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+            // style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
