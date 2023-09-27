@@ -39,19 +39,20 @@ void main(List<String> args) async {
             ..name = "json"
             ..type = refer("$JSONMap")),
         )
-        ..lambda = true
         ..body = Code([
           'switch (json["component"] as String) {',
-          ...components.map((e) => '"${e.component.name}" => ${e.builder.name}.fromJson(json),'),
-          '_ => throw "Unrecognized type \$\{json["component"]\}",',
+          ...components.map((e) => 'case "${e.component.name}": return ${e.builder.name}.fromJson(json);'),
+          'default: print("Unrecognized type \$\{json["component"]\}"); return UnrecognizedBlok();',
           '}',
         ].join("\n"))),
     ]);
   });
   lib.body.add(blokClazz);
 
-  lib.body.addAll(components.map((e) {
-    final c = e.builder;
+  lib.body.addAll([
+    ...components.map((e) => e.builder),
+    ClassBuilder()..name = "UnrecognizedBlok",
+  ].map((c) {
     c.modifier = ClassModifier.final$;
     c.extend = refer(blokClazz.name);
     return c.build();
@@ -99,14 +100,7 @@ Future downloadDatasource() async {
 
   for (final (d, entries) in mapped) {
     final name = d.slug;
-    datasourceData[name] = Enum((e) {
-      e.name = Casing.pascalCase(name);
-      e.values.addAll(entries
-          .map(
-            (e) => EnumValue((v) => v..name = Casing.camelCase(e.value)),
-          )
-          .toList());
-    });
+    datasourceData[name] = buildEnum(name, entries.map((e) => e.value));
   }
 }
 
@@ -115,14 +109,20 @@ Future downloadDatasource() async {
 class Component {
   final String name;
   final JSONMap schema;
+  final bool isRoot;
+  final bool isNestable;
   Component.fromJson(JSONMap json)
       : name = json["name"],
+        isRoot = json["is_root"],
+        isNestable = json["is_nestable"],
         schema = JSONMap.from(json["schema"]);
 }
 
 Future<List<({Component component, ClassBuilder builder})>> downloadComponents(LibraryBuilder lib) async {
   final d = await apiGet("components");
-  final components = List<JSONMap>.from(d["components"]).map(Component.fromJson).toList();
+  final components = [
+    ...List<JSONMap>.from(d["components"]).map(Component.fromJson),
+  ];
   return components.map((component) {
     final c = ClassBuilder();
     c.name = Casing.pascalCase(component.name);
@@ -197,6 +197,7 @@ abstract class _BaseField {
   final String name;
   final bool isRequired;
   final int? position;
+  _BaseField(this.data, this.name, this.isRequired, this.position);
   _BaseField.fromJson(this.data, this.name)
       : isRequired = tryCast<bool>(data["required"]) ?? false,
         position = tryCast<int>(data["pos"]);
@@ -227,7 +228,7 @@ final class _Bloks extends _BaseField {
   @override
   String generateInitializerCode(String valueCode) {
     return maximum == 1
-        ? "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList().first"
+        ? "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList().first" // TODO Nullable
         : "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList()";
   }
 }
@@ -321,12 +322,12 @@ final class _Option extends _BaseField {
   final String enumName;
   _Option.fromJson(super.data, super.name)
       : source = _OptionSource.values.byName(tryCast<String>(data["source"]) ?? _OptionSource.self.name),
-        enumName = Casing.pascalCase("${name}_Option"),
+        enumName = "${name}_Option",
         super.fromJson();
 
   @override
   String symbol() => switch (source) {
-        _OptionSource.self => enumName,
+        _OptionSource.self => Casing.pascalCase(enumName),
         _OptionSource.internal_stories => "$StoryIdentifierUUID",
         _OptionSource.internal_languages => "$String", // TODO Language enum
         _OptionSource.internal => datasourceData[data["datasource_slug"]]!.name,
@@ -335,12 +336,7 @@ final class _Option extends _BaseField {
   @override
   List<Spec>? generateSupportingClasses() {
     final e = switch (source) {
-      _OptionSource.self => Enum((e) {
-          e.name = enumName;
-          e.values.addAll(List<JSONMap>.from(data["options"]).map((o) => EnumValue(
-                (e) => e..name = Casing.camelCase(o["value"]),
-              )));
-        }),
+      _OptionSource.self => buildEnum(enumName, List<JSONMap>.from(data["options"]).map((e) => e["value"])),
       _OptionSource.internal_stories => null,
       _OptionSource.internal_languages => null,
       _OptionSource.internal => null
@@ -352,7 +348,7 @@ final class _Option extends _BaseField {
   @override
   String generateInitializerCode(String valueCode) {
     return super.generateInitializerCode(switch (source) {
-      _OptionSource.self => "$enumName.values.byName($valueCode)",
+      _OptionSource.self => "${Casing.pascalCase(enumName)}.values.byName($valueCode)",
       _OptionSource.internal_stories => "StoryIdentifierUUID($valueCode)",
       _OptionSource.internal_languages => valueCode,
       _OptionSource.internal => "${datasourceData[data["datasource_slug"]]!.name}.values.byName($valueCode)",
@@ -381,3 +377,11 @@ enum _OptionSource {
 //   }
 // }
 
+Enum buildEnum(String name, Iterable<String> cases) {
+  cases = [...cases, "unknown"];
+  return Enum((e) => e
+    ..name = Casing.pascalCase(name)
+    ..values.addAll(
+      cases.map((c) => EnumValue((v) => v..name = Casing.camelCase(c))),
+    ));
+}
