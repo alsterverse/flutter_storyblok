@@ -54,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
     final stories = await storyblokClient.getStories(startsWith: query);
     print(stories.map((e) => e.name).toList().join(", "));
     setState(() {
-      results = List<bloks.VideoPage>.from(stories.map((e) => e.contentBlock));
+      results = stories.map((e) => e.content).cast<bloks.VideoPage>().toList();
     });
   }
 }

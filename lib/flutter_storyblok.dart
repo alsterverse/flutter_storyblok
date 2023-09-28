@@ -8,9 +8,9 @@ import 'package:flutter_storyblok/tag.dart';
 import 'package:flutter_storyblok/utils.dart';
 import 'package:http/http.dart' as http;
 
-Map<String, Story> resolvedStories = {};
+final Map<String, Story> resolvedStories = {};
 
-final class StoryblokClient {
+final class StoryblokClient<StoryContent> {
   static const _apiHost = "api.storyblok.com";
 
   static const _pathStories = "v2/cdn/stories";
@@ -21,6 +21,7 @@ final class StoryblokClient {
   StoryblokClient({
     required this.accessToken,
     required this.version,
+    required this.contentBuilder,
   }) : baseParameters = {
           "token": accessToken,
           "version": version.name,
@@ -28,8 +29,9 @@ final class StoryblokClient {
   final String accessToken;
   final StoryblokVersion version;
   final Map<String, String> baseParameters;
+  final StoryContent Function(JSONMap) contentBuilder;
 
-  Future<Story> getStory({
+  Future<Story<StoryContent>> getStory({
     required StoryIdentifier id,
     StoryblokVersion version = StoryblokVersion.draft,
     ResolveLinks resolveLinks = ResolveLinks.story,
@@ -56,13 +58,15 @@ final class StoryblokClient {
         ),
     };
     if (resolveLinks == ResolveLinks.story) {
-      List<JSONMap>.from(json["links"]).map(Story.fromJson).forEach((story) => resolvedStories[story.uuid] = story);
+      List<JSONMap>.from(json["links"])
+          .map((e) => Story.fromJson(e, contentBuilder))
+          .forEach((story) => resolvedStories[story.uuid] = story);
     }
-    final story = Story.fromJson(json["story"]);
+    final story = Story.fromJson(json["story"], contentBuilder);
     return story;
   }
 
-  Future<List<Story>> getStories({
+  Future<List<Story<StoryContent>>> getStories({
     String? startsWith,
     Pagination? pagination,
     StoryblokVersion version = StoryblokVersion.draft,
@@ -78,9 +82,19 @@ final class StoryblokClient {
       },
     );
     if (resolveLinks == ResolveLinks.story) {
-      List<JSONMap>.from(json["links"]).map(Story.fromJson).forEach((story) => resolvedStories[story.uuid] = story);
+      List<JSONMap>.from(json["links"])
+          .map(
+            (e) => Story.fromJson(e, contentBuilder),
+          )
+          .forEach(
+            (story) => resolvedStories[story.uuid] = story,
+          );
     }
-    return List<JSONMap>.from(json["stories"]).map(Story.fromJson).toList();
+    return List<JSONMap>.from(json["stories"])
+        .map(
+          (e) => Story.fromJson(e, contentBuilder),
+        )
+        .toList();
   }
 
   Future<List<Datasource>> getDatasources({Pagination? pagination}) async {

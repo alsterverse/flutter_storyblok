@@ -1,12 +1,12 @@
 import 'package:flutter_storyblok/utils.dart';
 
-final class Story {
+final class Story<Content> {
   final String name; // "Home",
   final DateTime createdAt; // "2023-09-11T11:30:29.377Z",
   final DateTime? publishedAt; // null,
   final int id; // 368394281,
   final String uuid; // "9c66e06d-caa8-49fa-bdcc-f51b66f1d982",
-  final JSONMap content; // {},
+  final Content content; // {},
   final String slug; // "home",
   final String fullSlug; // "home",
   final String? sortByDate; // null,
@@ -49,13 +49,13 @@ final class Story {
     required this.translatedSlugs,
   });
 
-  factory Story.fromJson(JSONMap json) => Story(
+  factory Story.fromJson(JSONMap json, Content Function(JSONMap) contentBuilder) => Story(
         name: json["name"],
         createdAt: DateTime.parse(json["created_at"]),
         publishedAt: mapIfNotNull(json["published_at"] as String?, DateTime.parse),
         id: json["id"],
         uuid: json["uuid"],
-        content: Map.from(json["content"]),
+        content: contentBuilder(JSONMap.from(json["content"])),
         slug: json["slug"],
         fullSlug: json["full_slug"],
         sortByDate: json["sort_by_date"],

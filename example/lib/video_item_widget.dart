@@ -25,7 +25,7 @@ class VideoItemWidget extends StatelessWidget {
 
   factory VideoItemWidget.fromVideoItem(bloks.VideoItem videoItem, [bool small = false, bool portrait = false]) {
     final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
-      final LinkTypeStory storyLink => storyLink.resolvedStory?.contentBlock as bloks.VideoPage?,
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
       LinkTypeURL() => null,
     };
     if (linkedVideoPage == null) throw "Needs resolved story"; // TODO Dont throw

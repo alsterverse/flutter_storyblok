@@ -18,7 +18,7 @@ class HeroWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloks.VideoPage? linkedVideoPage = switch (video.videoLink) {
       LinkTypeURL() => null,
-      final LinkTypeStory storyLink => storyLink.resolvedStory?.contentBlock as bloks.VideoPage?,
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
     };
     return GestureDetector(
       onTap: linkedVideoPage == null
