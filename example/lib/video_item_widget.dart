@@ -3,6 +3,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/link_type.dart';
 
 class VideoItemWidget extends StatelessWidget {
   final Uri thumbnailUrl;
@@ -23,11 +24,19 @@ class VideoItemWidget extends StatelessWidget {
   });
 
   factory VideoItemWidget.fromVideoItem(bloks.VideoItem videoItem, [bool small = false, bool portrait = false]) {
-    final linkedVideoPage = videoItem.videoLink.asStoryType?.resolvedStory?.contentBlock as bloks.VideoPage;
+    final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.contentBlock as bloks.VideoPage?,
+      LinkTypeURL() => null,
+    };
+    if (linkedVideoPage == null) throw "Needs resolved story"; // TODO Dont throw
+
     final title = videoItem.title;
     final description = videoItem.description;
     return VideoItemWidget(
-      thumbnailUrl: linkedVideoPage.videoThumbnail.asUrlType!.url,
+      thumbnailUrl: switch (linkedVideoPage.videoThumbnail) {
+        final LinkTypeURL urlLink => urlLink.url,
+        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+      },
       title: title != null && title.isNotEmpty ? title : linkedVideoPage.videoTitle,
       description: small
           ? null

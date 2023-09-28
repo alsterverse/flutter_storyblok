@@ -11,14 +11,21 @@ sealed class LinkType {
         "story" => LinkTypeStory.fromJson(json),
         _ => throw "Unrecognized linktype: ${json["linktype"]}",
       };
-
-  LinkTypeURL? get asUrlType => this as LinkTypeURL?;
-  LinkTypeAsset? get asAssetType => this as LinkTypeAsset?;
-  LinkTypeEmail? get asEmailType => this as LinkTypeEmail?;
-  LinkTypeStory? get asStoryType => this as LinkTypeStory?;
 }
 
-final class LinkTypeURL extends LinkType {
+sealed class BaseLinkTypes extends LinkType {
+  factory BaseLinkTypes.fromJson(JSONMap json) => LinkType.fromJson(json) as BaseLinkTypes;
+}
+
+sealed class BaseWithEmailLinkTypes extends LinkType {
+  factory BaseWithEmailLinkTypes.fromJson(JSONMap json) => LinkType.fromJson(json) as BaseWithEmailLinkTypes;
+}
+
+sealed class BaseWithAssetLinkTypes extends LinkType {
+  factory BaseWithAssetLinkTypes.fromJson(JSONMap json) => LinkType.fromJson(json) as BaseWithAssetLinkTypes;
+}
+
+final class LinkTypeURL extends LinkType implements BaseLinkTypes {
   final Uri url;
   final String? target;
   const LinkTypeURL(this.url, this.target);
@@ -28,7 +35,7 @@ final class LinkTypeURL extends LinkType {
       );
 }
 
-final class LinkTypeAsset extends LinkType {
+final class LinkTypeAsset extends LinkType implements BaseWithAssetLinkTypes {
   final Uri url;
   const LinkTypeAsset(this.url);
   factory LinkTypeAsset.fromJson(JSONMap json) => LinkTypeAsset(
@@ -36,7 +43,7 @@ final class LinkTypeAsset extends LinkType {
       );
 }
 
-final class LinkTypeEmail extends LinkType {
+final class LinkTypeEmail extends LinkType implements BaseWithEmailLinkTypes {
   final String email;
   const LinkTypeEmail(this.email);
   factory LinkTypeEmail.fromJson(JSONMap json) => LinkTypeEmail(
@@ -44,7 +51,7 @@ final class LinkTypeEmail extends LinkType {
       );
 }
 
-final class LinkTypeStory extends LinkType {
+final class LinkTypeStory extends LinkType implements BaseLinkTypes {
   final String uuid;
   final String? cachedUrl;
   final Story? resolvedStory;

@@ -4,6 +4,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/link_type.dart';
 
 class HeroWidget extends StatelessWidget {
   const HeroWidget({
@@ -15,11 +16,16 @@ class HeroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final linkedVideoPage = video.videoLink.asStoryType?.resolvedStory?.contentBlock as bloks.VideoPage;
+    final bloks.VideoPage? linkedVideoPage = switch (video.videoLink) {
+      LinkTypeURL() => null,
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.contentBlock as bloks.VideoPage?,
+    };
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => linkedVideoPage.buildWidget(context),
-      )),
+      onTap: linkedVideoPage == null
+          ? null
+          : () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => linkedVideoPage.buildWidget(context),
+              )),
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -33,10 +39,15 @@ class HeroWidget extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: Image.network(
-                linkedVideoPage.videoThumbnail.asUrlType!.url.toString(),
-                fit: BoxFit.cover,
-              ),
+              child: linkedVideoPage == null
+                  ? null
+                  : Image.network(
+                      switch (linkedVideoPage.videoThumbnail) {
+                        final LinkTypeURL urlLink => urlLink.url.toString(),
+                        LinkTypeStory() => "",
+                      },
+                      fit: BoxFit.cover,
+                    ),
             ),
             Container(
               padding: const EdgeInsets.all(20),

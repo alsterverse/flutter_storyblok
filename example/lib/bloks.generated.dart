@@ -143,7 +143,7 @@ final class TestBlock extends Blok {
         single1 = Icons.values.asNameMap()[json["single1"]] ?? Icons.unknown,
         asset1 = Asset.fromJson(Map<String, dynamic>.from(json["asset1"])),
         asset2 = Asset.fromJson(Map<String, dynamic>.from(json["asset2"])),
-        link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"])),
+        link1 = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["link1"])),
         single2 = Single2Option.values.asNameMap()[json["single2"]] ?? Single2Option.unknown;
 
   final List<Blok>? bloks1;
@@ -178,7 +178,7 @@ final class TestBlock extends Blok {
 
   final Asset? asset2;
 
-  final LinkType? link1;
+  final BaseLinkTypes? link1;
 
   final Single2Option? single2;
 }
@@ -196,14 +196,14 @@ final class TextBlock extends Blok {
 final class VideoItem extends Blok {
   VideoItem.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        videoLink = LinkType.fromJson(Map<String, dynamic>.from(json["video_link"])),
+        videoLink = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_link"])),
         description = json["description"],
         summary = json["summary"],
         airDate = DateTime.tryParse(json["air_date"]);
 
   final String? title;
 
-  final LinkType videoLink;
+  final BaseLinkTypes videoLink;
 
   final String? description;
 
@@ -215,16 +215,16 @@ final class VideoItem extends Blok {
 final class VideoPage extends Blok {
   VideoPage.fromJson(Map<String, dynamic> json)
       : videoTitle = json["video_title"],
-        videoUrl = LinkType.fromJson(Map<String, dynamic>.from(json["video_url"])),
-        videoThumbnail = LinkType.fromJson(Map<String, dynamic>.from(json["video_thumbnail"])),
+        videoUrl = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_url"])),
+        videoThumbnail = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_thumbnail"])),
         videoDescription = json["video_description"],
         publishedAt = DateTime.parse(json["published_at"]);
 
   final String videoTitle;
 
-  final LinkType videoUrl;
+  final BaseLinkTypes videoUrl;
 
-  final LinkType videoThumbnail;
+  final BaseLinkTypes videoThumbnail;
 
   final String videoDescription;
 
