@@ -83,7 +83,7 @@ class FutureStoryWidget extends StatelessWidget {
         final story = snapshot.data;
         if (story != null) {
           return Scaffold(
-            body: bloks.Blok.fromJson(story.content).buildWidget(context),
+            body: story.contentBlock.buildWidget(context),
             backgroundColor: Colors.black,
           );
         } else if (snapshot.hasError) {
@@ -132,4 +132,8 @@ extension BlockWidget on bloks.Blok {
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
+}
+
+extension BlockStory on Story {
+  bloks.Blok get contentBlock => bloks.Blok.fromJson(content);
 }

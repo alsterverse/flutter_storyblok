@@ -11,6 +11,11 @@ sealed class LinkType {
         "story" => LinkTypeStory.fromJson(json),
         _ => throw "Unrecognized linktype: ${json["linktype"]}",
       };
+
+  LinkTypeURL? get asUrlType => this as LinkTypeURL?;
+  LinkTypeAsset? get asAssetType => this as LinkTypeAsset?;
+  LinkTypeEmail? get asEmailType => this as LinkTypeEmail?;
+  LinkTypeStory? get asStoryType => this as LinkTypeStory?;
 }
 
 final class LinkTypeURL extends LinkType {
