@@ -38,14 +38,19 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
         elevation: 0,
-        title: CircleAvatar(
+        title: const CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
-          child: TextATV.hero(
+          child: Text(
             "ATV",
-            // style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: Colors.deepPurpleAccent.withOpacity(.25),
+            height: 3,
           ),
         ),
       ),
