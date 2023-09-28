@@ -16,7 +16,7 @@ final dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySynta
 void main(List<String> args) async {
   final lib = LibraryBuilder();
   lib.directives.addAll([
-    Directive.import('package:flutter_storyblok/field_types.dart'),
+    Directive.import('package:flutter_storyblok/asset.dart'),
     Directive.import('package:flutter_storyblok/link_type.dart'),
   ]);
 
