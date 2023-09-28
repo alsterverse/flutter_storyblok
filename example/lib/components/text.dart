@@ -93,7 +93,7 @@ TextStyle headingStyle = TextStyle(
 TextStyle bodyStyle = TextStyle(
   fontSize: 15,
   height: 1.3,
-  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w400).fontFamily,
+  fontFamily: GoogleFonts.dmSans(fontWeight: FontWeight.w500).fontFamily,
 );
 
 TextStyle buttonStyle = TextStyle(

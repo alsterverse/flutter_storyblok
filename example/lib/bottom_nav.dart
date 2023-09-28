@@ -27,8 +27,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         backgroundColor: AppColors.black,
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(255, 144, 84, 255),
+        unselectedItemColor: Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.pages.map((page) {
           final sp = (page as bloks.BottomNavPage);
