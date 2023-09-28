@@ -1,11 +1,13 @@
-import 'package:example/bloks.generated.dart';
+import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/link_type.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPageWidget extends StatefulWidget {
-  final VideoPage videoPage;
+  final bloks.VideoPage videoPage;
   const VideoPageWidget({super.key, required this.videoPage});
 
   @override
@@ -14,7 +16,7 @@ class VideoPageWidget extends StatefulWidget {
 
 class _VideoPageWidgetState extends State<VideoPageWidget> {
   late VideoPlayerController _videoPlayerController;
-  VideoPage get videoPage => widget.videoPage;
+  bloks.VideoPage get videoPage => widget.videoPage;
 
   @override
   void initState() {
@@ -38,14 +40,19 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
         elevation: 0,
-        title: CircleAvatar(
+        title: const CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
-          child: TextATV.hero(
+          child: Text(
             "ATV",
-            // style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: Colors.deepPurpleAccent.withOpacity(.25),
+            height: 3,
           ),
         ),
       ),
@@ -63,17 +70,33 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                     child: VideoPlayer(_videoPlayerController)),
           ),
           Padding(
-            padding: const EdgeInsets.all(26),
+            padding: const EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextATV.title(
-                      videoPage.videoTitle,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextATV.subtitle(
+                          videoPage.publishedAt.toString().split(" ")[0],
+                        ),
+                        TextATV.title(
+                          videoPage.videoTitle,
+                        ),
+                      ],
                     ),
-                    TextATV.subtitle(
-                      videoPage.publishedAt.toString().split(" ")[0],
+                    GestureDetector(
+                      onTap: () {
+                        Share.share("Check out ${videoPage.videoTitle} at ATV!",
+                            subject: "Share '${videoPage.videoTitle}'");
+                      },
+                      child: const Icon(
+                        Icons.share,
+                        color: AppColors.white,
+                      ),
                     ),
                   ],
                 ),
