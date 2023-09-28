@@ -1,5 +1,4 @@
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
