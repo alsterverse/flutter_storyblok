@@ -47,7 +47,11 @@ class VideoItemWidget extends StatelessWidget {
           MaterialPageRoute(builder: videoPageBuilder),
         ),
         child: Container(
-          decoration: BoxDecoration(color: AppColors.layer),
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+              color: AppColors.layer,
+              border: Border.all(width: 1, color: AppColors.white.withOpacity(0.05)),
+              borderRadius: BorderRadius.all(Radius.circular(8))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -60,8 +64,8 @@ class VideoItemWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
+              Container(
+                padding: const EdgeInsets.fromLTRB(12, 24, 12, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -71,9 +75,10 @@ class VideoItemWidget extends StatelessWidget {
                     if (description != null)
                       Column(
                         children: [
-                          const Divider(),
+                          const SizedBox(height: 8.0),
                           TextATV.body(
                             description!,
+                            color: AppColors.white.withOpacity(0.6),
                           ),
                         ],
                       ),
