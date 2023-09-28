@@ -1,4 +1,4 @@
-import 'package:flutter_storyblok/field_types.dart';
+import 'package:flutter_storyblok/asset.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
 enum Icons { start, search, blocks, unknown }
@@ -141,8 +141,8 @@ final class TestBlock extends Blok {
         datetime1 = DateTime.tryParse(json["datetime1"]),
         bool1 = json["bool1"] ?? false,
         single1 = Icons.values.asNameMap()[json["single1"]] ?? Icons.unknown,
-        asset1 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset1"])),
-        asset2 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset2"])),
+        asset1 = Asset.fromJson(Map<String, dynamic>.from(json["asset1"])),
+        asset2 = Asset.fromJson(Map<String, dynamic>.from(json["asset2"])),
         link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"])),
         single2 = Single2Option.values.asNameMap()[json["single2"]] ?? Single2Option.unknown;
 
@@ -174,9 +174,9 @@ final class TestBlock extends Blok {
 
   final Icons? single1;
 
-  final SBAsset? asset1;
+  final Asset? asset1;
 
-  final SBAsset? asset2;
+  final Asset? asset2;
 
   final LinkType? link1;
 

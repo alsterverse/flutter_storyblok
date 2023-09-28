@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:flutter_storyblok/field_types.dart';
+import 'package:flutter_storyblok/asset.dart';
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/utils.dart';
@@ -298,7 +298,7 @@ final class _Asset extends _BaseField {
   _Asset.fromJson(super.data, super.name) : super.fromJson();
 
   @override
-  String symbol() => "$SBAsset";
+  String symbol() => "$Asset";
 
   @override
   String generateInitializerCode(String valueCode) {
