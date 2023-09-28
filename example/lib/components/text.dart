@@ -103,3 +103,6 @@ TextStyle buttonStyle = TextStyle(
   letterSpacing: 0.8,
   height: 1.3,
 );
+
+TextStyle dataTextStyle = TextStyle(
+    color: Colors.white, fontSize: 100, fontFamily: GoogleFonts.spaceMono(fontWeight: FontWeight.w700).fontFamily);

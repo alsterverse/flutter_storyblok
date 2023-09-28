@@ -10,7 +10,7 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const black = Color.fromARGB(255, 14, 14, 14);
   static const grey = Color.fromARGB(255, 61, 60, 65);
-  static const layer = Color.fromARGB(31, 255, 255, 255);
+  static const layer = Color.fromARGB(255, 37, 35, 40);
 
   static const primary = purple;
   static const primaryFaded = purpleFaded;

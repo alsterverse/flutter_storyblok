@@ -8,7 +8,7 @@ import 'package:example/carousel_block_widget.dart';
 import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
-import 'package:example/components/primary_button.dart';
+import 'package:example/components/block_button.dart';
 import 'package:example/search_page.dart';
 import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
@@ -102,7 +102,7 @@ class FutureStoryWidget extends StatelessWidget {
 extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return switch (this) {
-      final bloks.HardwareButton button => PrimaryButton(button.title,
+      final bloks.HardwareButton button => BlockButton(button.title,
           onPressed: () => switch (button.sensor) {
                 bloks.PhoneHardware.camera =>
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CameraScreen())),
@@ -112,9 +112,10 @@ extension BlockWidget on bloks.Blok {
                 bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
               }),
       final bloks.Page page => Scaffold(
-          appBar: AppBar(title: TextATV.body("Blocks")),
+          appBar: AppBar(title: TextATV.carouselHeading("Blocks".toUpperCase())),
           body: Center(
             child: ListView(
+                shrinkWrap: true,
                 padding: const EdgeInsets.all(24),
                 children: page.blocks
                     .map((e) => e.buildWidget(context))

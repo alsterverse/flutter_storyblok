@@ -74,6 +74,9 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                         color: AppColors.white.withOpacity(0.6),
                         fontSize: 12,
                         height: 1.2)),
+                SizedBox(
+                  height: 4.0,
+                ),
                 TextATV.title(
                   videoPage.videoTitle,
                 ),

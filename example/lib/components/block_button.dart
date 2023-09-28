@@ -2,8 +2,8 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
 
-class PrimaryButton extends StatelessWidget {
-  const PrimaryButton(
+class BlockButton extends StatelessWidget {
+  const BlockButton(
     this.text, {
     super.key,
     this.wrapContentWidth = false,
@@ -18,7 +18,27 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(24),
+        height: 150,
+        width: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.white.withOpacity(0.1)),
+            color: Color.fromARGB(255, 37, 35, 40)),
+        child: TextATV.button(
+          text,
+        ),
+      ),
+    );
+  }
+}
+/* 
+
+TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
         textStyle: const TextStyle(fontWeight: FontWeight.w600),
@@ -26,16 +46,6 @@ class PrimaryButton extends StatelessWidget {
         backgroundColor: _isEnabled ? AppColors.primary : AppColors.primary.withOpacity(0.1),
         shape: const StadiumBorder(),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // mainAxisSize: wrapContentWidth ? MainAxisSize.min : MainAxisSize.max,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextATV.button(
-            text,
-          ),
-        ],
       ),
     );
-  }
-}
+ */
