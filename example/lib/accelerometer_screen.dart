@@ -41,9 +41,9 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(data?.x.roundToDecimals(2).toString() ?? "-", style: TextStyle(color: Colors.white)),
-                  Text(data?.y.roundToDecimals(2).toString() ?? "-", style: TextStyle(color: Colors.white)),
-                  Text(data?.z.roundToDecimals(2).toString() ?? "-", style: TextStyle(color: Colors.white)),
+                  Text(data?.x.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
+                  Text(data?.y.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
+                  Text(data?.z.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
                 ],
               );
             }),

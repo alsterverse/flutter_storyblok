@@ -126,7 +126,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
-      final bloks.Hero hero => HeroWidget(video: hero.video as bloks.VideoItem),
+      final bloks.Hero hero => HeroWidget(video: hero.video),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),

@@ -32,10 +32,7 @@ class HeroWidget extends StatelessWidget {
             AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Image.network(
-                  ((bloks.Blok.fromJson((video.videoLink as LinkTypeStory).resolvedStory!.content) as bloks.VideoPage)
-                          .videoThumbnail as LinkTypeURL)
-                      .url
-                      .toString(),
+                  (linkedVideoPage.videoThumbnail as LinkTypeURL).url.toString(),
                   fit: BoxFit.cover,
                 )),
             // "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg")),

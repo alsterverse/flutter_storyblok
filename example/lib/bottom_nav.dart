@@ -30,15 +30,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
         unselectedItemColor: Colors.white,
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.pages.map((page) {
-          final sp = (page as bloks.BottomNavPage);
           return BottomNavigationBarItem(
-            icon: switch (sp.icon) {
+            icon: switch (page.icon) {
               bloks.Icons.start => const Icon(Icons.table_rows_rounded),
               bloks.Icons.search => const Icon(Icons.search),
               bloks.Icons.blocks => const Icon(Icons.square),
               bloks.Icons.unknown => const Icon(Icons.abc),
             },
-            label: sp.label,
+            label: page.label,
           );
         }).toList(),
         currentIndex: _selectedIndex,

@@ -45,9 +45,9 @@ sealed class Blok {
 
 final class BottomNavigation extends Blok {
   BottomNavigation.fromJson(Map<String, dynamic> json)
-      : pages = List<Map<String, dynamic>>.from(json["pages"]).map(Blok.fromJson).toList();
+      : pages = List<Map<String, dynamic>>.from(json["pages"]).map(BottomNavPage.fromJson).toList();
 
-  final List<Blok> pages;
+  final List<BottomNavPage> pages;
 }
 
 final class BottomNavPage extends Blok {
@@ -66,13 +66,13 @@ final class BottomNavPage extends Blok {
 final class CarouselBlock extends Blok {
   CarouselBlock.fromJson(Map<String, dynamic> json)
       : heading = json["heading"],
-        videos = List<Map<String, dynamic>>.from(json["videos"]).map(Blok.fromJson).toList(),
+        videos = List<Map<String, dynamic>>.from(json["videos"]).map(VideoItem.fromJson).toList(),
         showInfo = json["show_info"] ?? false,
         isNotable = json["is_notable"] ?? false;
 
   final String heading;
 
-  final List<Blok> videos;
+  final List<VideoItem> videos;
 
   final bool showInfo;
 
@@ -91,9 +91,9 @@ final class HardwareButton extends Blok {
 
 final class Hero extends Blok {
   Hero.fromJson(Map<String, dynamic> json)
-      : video = List<Map<String, dynamic>>.from(json["video"]).map(Blok.fromJson).toList().first;
+      : video = List<Map<String, dynamic>>.from(json["video"]).map(VideoItem.fromJson).toList().first;
 
-  final Blok video;
+  final VideoItem video;
 }
 
 final class Page extends Blok {

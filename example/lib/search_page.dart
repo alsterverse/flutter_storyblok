@@ -20,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: Text(widget.searchPage.header),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56),
+          preferredSize: const Size.fromHeight(56),
           child: SearchBar(
             onSubmitted: _search,
             leading: const Icon(Icons.search),

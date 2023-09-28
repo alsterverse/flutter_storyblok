@@ -28,7 +28,7 @@ class CarouselBlockWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: List<bloks.VideoItem>.from(carouselBlock.videos)
+              children: carouselBlock.videos
                   .map<Widget>((e) => VideoItemWidget.fromVideoItem(e, true, carouselBlock.isNotable))
                   .separatedBy(() => const SizedBox(width: 20))
                   .toList(),

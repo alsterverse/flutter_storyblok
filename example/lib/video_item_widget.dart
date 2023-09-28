@@ -47,7 +47,7 @@ class VideoItemWidget extends StatelessWidget {
           MaterialPageRoute(builder: videoPageBuilder),
         ),
         child: Container(
-          decoration: BoxDecoration(color: AppColors.layer),
+          decoration: const BoxDecoration(color: AppColors.layer),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -220,18 +220,29 @@ abstract class _BaseField {
 
 final class _Bloks extends _BaseField {
   final int? maximum;
+  final bool restrictTypes;
+  final List<String> restrictedTypes;
   _Bloks.fromJson(super.data, super.name)
       : maximum = data["maximum"],
+        restrictTypes = data["restrict_components"] ?? false,
+        restrictedTypes = List.from(data["component_whitelist"] ?? []),
         super.fromJson();
 
+  String _type() {
+    if (restrictTypes && restrictedTypes.length == 1) {
+      return Casing.pascalCase(restrictedTypes.first);
+    } else {
+      return "Blok";
+    }
+  }
+
   @override
-  String symbol() => maximum == 1 ? "Blok" : "List<Blok>";
+  String symbol() => maximum == 1 ? _type() : "List<${_type()}>";
 
   @override
   String generateInitializerCode(String valueCode) {
-    return maximum == 1
-        ? "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList().first" // TODO Nullable
-        : "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList()";
+    final code = "${List<JSONMap>}.from($valueCode).map(${_type()}.fromJson).toList()"; // TODO Nullable
+    return maximum == 1 ? "$code.first" : code;
   }
 }
 
