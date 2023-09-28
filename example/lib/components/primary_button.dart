@@ -22,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         textStyle: const TextStyle(fontWeight: FontWeight.w600),
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         backgroundColor: _isEnabled ? AppColors.primary : AppColors.primary.withOpacity(0.1),
         shape: const StadiumBorder(),
       ),

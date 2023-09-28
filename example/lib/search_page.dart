@@ -1,4 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +20,21 @@ class _SearchPageState extends State<SearchPage> {
     final results = this.results;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.searchPage.header),
+        title: TextATV.carouselHeading(widget.searchPage.header.toUpperCase()),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
-          child: SearchBar(
-            onSubmitted: _search,
-            leading: const Icon(Icons.search),
-            hintText: "Search a video",
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SearchBar(
+                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 41, 41, 41)),
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
+                onSubmitted: _search,
+                leading: const Icon(
+                  Icons.search,
+                  color: AppColors.white,
+                ),
+                hintText: "Search a video",
+                textStyle: MaterialStateTextStyle.resolveWith((states) => bodyStyle.copyWith(color: AppColors.white))),
           ),
         ),
       ),

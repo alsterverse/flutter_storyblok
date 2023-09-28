@@ -3,6 +3,7 @@ import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:video_player/video_player.dart';
+import 'package:example/components/colors.dart';
 
 class VideoPageWidget extends StatefulWidget {
   final VideoPage videoPage;
@@ -65,17 +66,16 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
           Padding(
             padding: const EdgeInsets.all(26),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextATV.title(
-                      videoPage.videoTitle,
-                    ),
-                    TextATV.subtitle(
-                      videoPage.publishedAt.toString().split(" ")[0],
-                    ),
-                  ],
+                Text(videoPage.publishedAt.toString().split(" ")[0],
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.white.withOpacity(0.6),
+                        fontSize: 12,
+                        height: 1.2)),
+                TextATV.title(
+                  videoPage.videoTitle,
                 ),
                 const SizedBox(height: 8),
                 TextATV.body(

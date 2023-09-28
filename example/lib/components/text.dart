@@ -25,7 +25,7 @@ class TextATV extends StatelessWidget {
     this.textAlign,
   }) : style = headingStyle.copyWith(
           fontSize: 24,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
         );
 
@@ -87,17 +87,17 @@ TextStyle headingStyle = TextStyle(
   letterSpacing: 0.9,
   color: AppColors.white,
   height: 1.2,
-  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w600).fontFamily,
+  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w700).fontFamily,
 );
 
 TextStyle bodyStyle = TextStyle(
   fontSize: 15,
   height: 1.3,
-  fontFamily: GoogleFonts.inter().fontFamily,
+  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w400).fontFamily,
 );
 
 TextStyle buttonStyle = TextStyle(
-  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w900).fontFamily,
+  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w700).fontFamily,
   fontSize: 14,
   color: AppColors.white,
   letterSpacing: 0.8,
