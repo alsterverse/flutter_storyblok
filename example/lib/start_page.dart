@@ -1,5 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
@@ -17,18 +18,19 @@ class StartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const CircleAvatar(
+        title: CircleAvatar(
+          minRadius: 20,
           backgroundColor: AppColors.primary,
           child: Text(
             "ATV",
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+            style: headingStyle,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
             color: AppColors.primaryFaded,
-            height: 3,
+            height: 2,
           ),
         ),
       ),

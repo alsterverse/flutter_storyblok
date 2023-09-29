@@ -25,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(56),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
                 decoration: ShapeDecoration(
                   shape: StadiumBorder(
