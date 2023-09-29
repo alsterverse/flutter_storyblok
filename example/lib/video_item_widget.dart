@@ -49,6 +49,20 @@ class VideoItemWidget extends StatelessWidget {
     );
   }
 
+  factory VideoItemWidget.fromVideoPage(bloks.VideoPage videoPage, [bool small = false, bool portrait = false]) {
+    return VideoItemWidget(
+      thumbnailUrl: switch (videoPage.videoThumbnail) {
+        final LinkTypeURL urlLink => urlLink.url,
+        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+      },
+      title: videoPage.videoTitle,
+      description: videoPage.videoDescription,
+      videoPageBuilder: (context) => videoPage.buildWidget(context),
+      small: small,
+      portrait: portrait,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(

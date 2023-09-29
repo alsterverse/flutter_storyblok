@@ -68,6 +68,7 @@ final class StoryblokClient<StoryContent> {
 
   Future<List<Story<StoryContent>>> getStories({
     String? startsWith,
+    String? searchTerm,
     Pagination? pagination,
     StoryblokVersion version = StoryblokVersion.draft,
     ResolveLinks resolveLinks = ResolveLinks.story,
@@ -76,6 +77,7 @@ final class StoryblokClient<StoryContent> {
       path: _pathStories,
       queryParameters: {
         if (startsWith != null) "starts_with": startsWith,
+        if (searchTerm != null) "search_term": searchTerm,
         if (pagination != null) ...pagination.toParameters(),
         "version": version.name,
         "resolve_links": resolveLinks.name,
