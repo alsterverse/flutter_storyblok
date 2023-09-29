@@ -73,10 +73,10 @@ class VideoItemWidget extends StatelessWidget {
         child: Container(
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-              boxShadow: [const BoxShadow(blurRadius: 10, color: Colors.black)],
+              boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black)],
               color: AppColors.layer,
               border: Border.all(width: 1, color: AppColors.white.withOpacity(0.05)),
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+              borderRadius: const BorderRadius.all(Radius.circular(8))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -28,7 +28,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         showUnselectedLabels: true,
         showSelectedLabels: true,
         selectedItemColor: const Color.fromARGB(255, 144, 84, 255),
-        unselectedItemColor: Color.fromARGB(109, 255, 255, 255),
+        unselectedItemColor: const Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.pages.map((page) {
           return BottomNavigationBarItem(

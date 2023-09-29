@@ -22,13 +22,13 @@ class BlockButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         height: 150,
         width: 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: AppColors.white.withOpacity(0.1)),
-            color: Color.fromARGB(255, 37, 35, 40)),
+            color: const Color.fromARGB(255, 37, 35, 40)),
         child: TextATV.button(
           text,
         ),
@@ -36,7 +36,7 @@ class BlockButton extends StatelessWidget {
     );
   }
 }
-/* 
+/*
 
 TextButton(
       onPressed: onPressed,

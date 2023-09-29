@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
-import 'package:example/components/colors.dart';
 
 class VideoPageWidget extends StatefulWidget {
   final bloks.VideoPage videoPage;

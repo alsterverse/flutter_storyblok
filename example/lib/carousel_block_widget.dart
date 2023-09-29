@@ -1,10 +1,8 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
-import 'package:example/components/text.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CarouselBlockWidget extends StatelessWidget {
   final bloks.CarouselBlock carouselBlock;
