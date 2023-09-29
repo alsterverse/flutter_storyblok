@@ -3,6 +3,9 @@ description: A new Flutter package project.
 version: 0.0.1
 homepage:
 
+executables:
+  flutter_storyblok:
+
 environment:
   sdk: '>=3.0.6 <4.0.0'
   flutter: ">=1.17.0"
@@ -13,13 +16,13 @@ dependencies:
   google_fonts: ^6.1.0
   http: ^1.1.0
   reflectable: ^4.0.5
+  dart_casing: ^2.0.0
+  flutter_lints: ^2.0.0
+  code_builder: ^4.6.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  code_builder: ^4.6.0
-  dart_casing: ^2.0.0
   # http: any
 
 # For information on the generic Dart part of this file, see the

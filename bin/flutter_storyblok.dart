@@ -13,7 +13,14 @@ import 'package:http/http.dart' as http;
 final dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
 final dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
 
+String spaceId = "";
+String authorization = "";
+
 void main(List<String> args) async {
+  spaceId = args[0];
+  authorization = args[1];
+  final outputPath = args[2];
+
   final lib = LibraryBuilder();
   lib.directives.addAll([
     Directive.import('package:flutter_storyblok/asset.dart'),
@@ -60,7 +67,7 @@ void main(List<String> args) async {
 
   final output = dartFormatter.format(lib.build().accept(dartEmitter).toString());
 
-  final file = File("example/lib/bloks.generated.dart");
+  final file = File(outputPath);
   if (file.existsSync()) file.deleteSync();
   file.writeAsStringSync(output);
 }
@@ -183,8 +190,8 @@ Future<List<({Component component, ClassBuilder builder})>> downloadComponents(L
 
 Future<JSONMap> apiGet(String path, [JSONMap? params]) async {
   final resp = await http.get(
-    Uri.https("mapi.storyblok.com", "/v1/spaces/253042/$path", params),
-    headers: {"Authorization": "11ZSIaeTCBAEPADpPFWcXwtt-212954-WujW5ymP5MQpttxNxxvs"},
+    Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
+    headers: {"Authorization": authorization},
   );
   final json = jsonDecode(resp.body) as JSONMap;
   return json;
