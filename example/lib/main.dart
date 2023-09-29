@@ -23,9 +23,10 @@ import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
-final storyblokClient = StoryblokClient(
+final storyblokClient = StoryblokClient<bloks.Blok>(
   accessToken: "2aurFHe7gdoL2yxIyk1APgtt",
   version: StoryblokVersion.draft,
+  contentBuilder: (json) => bloks.Blok.fromJson(json),
 );
 
 void main() {
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
 }
 
 class FutureStoryWidget extends StatelessWidget {
-  final Future<Story> storyFuture;
+  final Future<Story<bloks.Blok>> storyFuture;
   const FutureStoryWidget({super.key, required this.storyFuture});
 
   @override
@@ -84,7 +85,7 @@ class FutureStoryWidget extends StatelessWidget {
         final story = snapshot.data;
         if (story != null) {
           return Scaffold(
-            body: Center(child: bloks.Blok.fromJson(story.content).buildWidget(context)),
+            body: story.content.buildWidget(context),
             backgroundColor: AppColors.black,
           );
         } else if (snapshot.hasError) {
@@ -130,7 +131,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
-      final bloks.Hero hero => HeroWidget(video: hero.video as bloks.VideoItem),
+      final bloks.Hero hero => HeroWidget(video: hero.video),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),

@@ -13,27 +13,51 @@ class VideoItemWidget extends StatelessWidget {
   final bool small;
   final bool portrait;
 
-  const VideoItemWidget(
-      {super.key,
-      required this.thumbnailUrl,
-      required this.title,
-      required this.description,
-      required this.small,
-      required this.portrait,
-      required this.videoPageBuilder});
+  const VideoItemWidget({
+    super.key,
+    required this.thumbnailUrl,
+    required this.title,
+    required this.description,
+    required this.small,
+    required this.portrait,
+    required this.videoPageBuilder,
+  });
 
   factory VideoItemWidget.fromVideoItem(bloks.VideoItem videoItem, [bool small = false, bool portrait = false]) {
-    final linkedVideoPage =
-        (bloks.Blok.fromJson((videoItem.videoLink as LinkTypeStory).resolvedStory!.content) as bloks.VideoPage);
+    final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
+      LinkTypeURL() => null,
+    };
+    if (linkedVideoPage == null) throw "Needs resolved story"; // TODO Dont throw
+
+    final title = videoItem.title;
+    final description = videoItem.description;
     return VideoItemWidget(
-      thumbnailUrl: (linkedVideoPage.videoThumbnail as LinkTypeURL).url,
-      title: (videoItem.title != null && videoItem.title!.isNotEmpty) ? videoItem.title! : linkedVideoPage.videoTitle,
+      thumbnailUrl: switch (linkedVideoPage.videoThumbnail) {
+        final LinkTypeURL urlLink => urlLink.url,
+        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+      },
+      title: title != null && title.isNotEmpty ? title : linkedVideoPage.videoTitle,
       description: small
           ? null
-          : videoItem.description != null && videoItem.description!.isNotEmpty
-              ? videoItem.description!
+          : description != null && description.isNotEmpty
+              ? description
               : linkedVideoPage.videoDescription,
       videoPageBuilder: (context) => linkedVideoPage.buildWidget(context),
+      small: small,
+      portrait: portrait,
+    );
+  }
+
+  factory VideoItemWidget.fromVideoPage(bloks.VideoPage videoPage, [bool small = false, bool portrait = false]) {
+    return VideoItemWidget(
+      thumbnailUrl: switch (videoPage.videoThumbnail) {
+        final LinkTypeURL urlLink => urlLink.url,
+        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+      },
+      title: videoPage.videoTitle,
+      description: videoPage.videoDescription,
+      videoPageBuilder: (context) => videoPage.buildWidget(context),
       small: small,
       portrait: portrait,
     );

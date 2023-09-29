@@ -36,6 +36,7 @@ dependencies:
   go_router: ^10.2.0
   reflectable: ^4.0.5
   sensors_plus: ^3.0.3
+  share_plus: ^7.1.0
   video_player: ^2.7.2
 
 dev_dependencies:

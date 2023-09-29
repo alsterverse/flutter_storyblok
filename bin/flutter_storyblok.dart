@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:flutter_storyblok/field_types.dart';
+import 'package:flutter_storyblok/asset.dart';
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/utils.dart';
@@ -13,10 +13,17 @@ import 'package:http/http.dart' as http;
 final dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
 final dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
 
+String spaceId = "";
+String authorization = "";
+
 void main(List<String> args) async {
+  spaceId = args[0];
+  authorization = args[1];
+  final outputPath = args[2];
+
   final lib = LibraryBuilder();
   lib.directives.addAll([
-    Directive.import('package:flutter_storyblok/field_types.dart'),
+    Directive.import('package:flutter_storyblok/asset.dart'),
     Directive.import('package:flutter_storyblok/link_type.dart'),
   ]);
 
@@ -60,7 +67,7 @@ void main(List<String> args) async {
 
   final output = dartFormatter.format(lib.build().accept(dartEmitter).toString());
 
-  final file = File("example/lib/bloks.generated.dart");
+  final file = File(outputPath);
   if (file.existsSync()) file.deleteSync();
   file.writeAsStringSync(output);
 }
@@ -183,8 +190,8 @@ Future<List<({Component component, ClassBuilder builder})>> downloadComponents(L
 
 Future<JSONMap> apiGet(String path, [JSONMap? params]) async {
   final resp = await http.get(
-    Uri.https("mapi.storyblok.com", "/v1/spaces/253042/$path", params),
-    headers: {"Authorization": "11ZSIaeTCBAEPADpPFWcXwtt-212954-WujW5ymP5MQpttxNxxvs"},
+    Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
+    headers: {"Authorization": authorization},
   );
   final json = jsonDecode(resp.body) as JSONMap;
   return json;
@@ -220,18 +227,29 @@ abstract class _BaseField {
 
 final class _Bloks extends _BaseField {
   final int? maximum;
+  final bool restrictTypes;
+  final List<String> restrictedTypes;
   _Bloks.fromJson(super.data, super.name)
       : maximum = data["maximum"],
+        restrictTypes = data["restrict_components"] ?? false,
+        restrictedTypes = List.from(data["component_whitelist"] ?? []),
         super.fromJson();
 
+  String _type() {
+    if (restrictTypes && restrictedTypes.length == 1) {
+      return Casing.pascalCase(restrictedTypes.first);
+    } else {
+      return "Blok";
+    }
+  }
+
   @override
-  String symbol() => maximum == 1 ? "Blok" : "List<Blok>";
+  String symbol() => maximum == 1 ? _type() : "List<${_type()}>";
 
   @override
   String generateInitializerCode(String valueCode) {
-    return maximum == 1
-        ? "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList().first" // TODO Nullable
-        : "${List<JSONMap>}.from($valueCode).map(Blok.fromJson).toList()";
+    final code = "${List<JSONMap>}.from($valueCode).map(${_type()}.fromJson).toList()"; // TODO Nullable
+    return maximum == 1 ? "$code.first" : code;
   }
 }
 
@@ -298,7 +316,7 @@ final class _Asset extends _BaseField {
   _Asset.fromJson(super.data, super.name) : super.fromJson();
 
   @override
-  String symbol() => "$SBAsset";
+  String symbol() => "$Asset";
 
   @override
   String generateInitializerCode(String valueCode) {
@@ -315,10 +333,24 @@ final class _Asset extends _BaseField {
 // }
 
 final class _Link extends _BaseField {
-  _Link.fromJson(super.data, super.name) : super.fromJson();
+  final bool isAssetAllowed;
+  final bool isEmailAllowed;
+  // final bool restrictContentType;
+  // final List<String> restrictedTypes;
+  _Link.fromJson(super.data, super.name)
+      : isAssetAllowed = data["asset_link_type"] ?? false,
+        isEmailAllowed = data["email_link_type"] ?? false,
+        // restrictContentType = data["restrict_content_types"] ?? false,
+        // restrictedTypes = List.from(data["component_whitelist"] ?? []),
+        super.fromJson();
 
   @override
-  String symbol() => "$LinkType";
+  String symbol() {
+    if (isAssetAllowed && isEmailAllowed) return "$LinkType";
+    if (isAssetAllowed) return "$BaseWithAssetLinkTypes";
+    if (isEmailAllowed) return "$BaseWithEmailLinkTypes";
+    return "$BaseLinkTypes";
+  }
 
   @override
   String generateInitializerCode(String valueCode) {

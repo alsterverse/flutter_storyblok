@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:example/components/text.dart';
-import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -42,15 +41,13 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
         child: ValueListenableBuilder(
             valueListenable: _accelData,
             builder: (context, data, _) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(data?.x.roundToDecimals(2).toString() ?? "100", style: dataTextStyle),
-                    Text(data?.y.roundToDecimals(2).toString() ?? "100", style: dataTextStyle),
-                    Text(data?.z.roundToDecimals(2).toString() ?? "100", style: dataTextStyle),
-                  ],
-                ),
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(data?.x.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
+                  Text(data?.y.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
+                  Text(data?.z.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
+                ],
               );
             }),
       ),

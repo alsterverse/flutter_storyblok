@@ -16,12 +16,16 @@ class HeroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final linkedVideoPage =
-        (bloks.Blok.fromJson((video.videoLink as LinkTypeStory).resolvedStory!.content) as bloks.VideoPage);
+    final bloks.VideoPage? linkedVideoPage = switch (video.videoLink) {
+      LinkTypeURL() => null,
+      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
+    };
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => linkedVideoPage.buildWidget(context)),
-      ),
+      onTap: linkedVideoPage == null
+          ? null
+          : () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => linkedVideoPage.buildWidget(context),
+              )),
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: const BoxDecoration(
@@ -34,15 +38,17 @@ class HeroWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Image.network(
-                  ((bloks.Blok.fromJson((video.videoLink as LinkTypeStory).resolvedStory!.content) as bloks.VideoPage)
-                          .videoThumbnail as LinkTypeURL)
-                      .url
-                      .toString(),
-                  fit: BoxFit.cover,
-                )),
-            // "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg")),
+              aspectRatio: 16 / 9,
+              child: linkedVideoPage == null
+                  ? null
+                  : Image.network(
+                      switch (linkedVideoPage.videoThumbnail) {
+                        final LinkTypeURL urlLink => urlLink.url.toString(),
+                        LinkTypeStory() => "",
+                      },
+                      fit: BoxFit.cover,
+                    ),
+            ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -54,16 +60,9 @@ class HeroWidget extends StatelessWidget {
                           color: AppColors.white.withOpacity(0.6),
                           fontSize: 12,
                           height: 1.2)),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  TextATV.hero(
-                    video.title.toString(),
-                    // style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
+                  TextATV.hero(video.title.toString()),
+                  const SizedBox(height: 4),
                   TextATV.body(video.description.toString(), color: AppColors.white.withOpacity(0.8)),
                 ],
               ),

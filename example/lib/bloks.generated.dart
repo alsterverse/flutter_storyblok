@@ -1,4 +1,4 @@
-import 'package:flutter_storyblok/field_types.dart';
+import 'package:flutter_storyblok/asset.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
 enum Icons { start, search, blocks, unknown }
@@ -45,9 +45,9 @@ sealed class Blok {
 
 final class BottomNavigation extends Blok {
   BottomNavigation.fromJson(Map<String, dynamic> json)
-      : pages = List<Map<String, dynamic>>.from(json["pages"]).map(Blok.fromJson).toList();
+      : pages = List<Map<String, dynamic>>.from(json["pages"]).map(BottomNavPage.fromJson).toList();
 
-  final List<Blok> pages;
+  final List<BottomNavPage> pages;
 }
 
 final class BottomNavPage extends Blok {
@@ -66,13 +66,13 @@ final class BottomNavPage extends Blok {
 final class CarouselBlock extends Blok {
   CarouselBlock.fromJson(Map<String, dynamic> json)
       : heading = json["heading"],
-        videos = List<Map<String, dynamic>>.from(json["videos"]).map(Blok.fromJson).toList(),
+        videos = List<Map<String, dynamic>>.from(json["videos"]).map(VideoItem.fromJson).toList(),
         showInfo = json["show_info"] ?? false,
         isNotable = json["is_notable"] ?? false;
 
   final String heading;
 
-  final List<Blok> videos;
+  final List<VideoItem> videos;
 
   final bool showInfo;
 
@@ -91,9 +91,9 @@ final class HardwareButton extends Blok {
 
 final class Hero extends Blok {
   Hero.fromJson(Map<String, dynamic> json)
-      : video = List<Map<String, dynamic>>.from(json["video"]).map(Blok.fromJson).toList().first;
+      : video = List<Map<String, dynamic>>.from(json["video"]).map(VideoItem.fromJson).toList().first;
 
-  final Blok video;
+  final VideoItem video;
 }
 
 final class Page extends Blok {
@@ -141,9 +141,9 @@ final class TestBlock extends Blok {
         datetime1 = DateTime.tryParse(json["datetime1"]),
         bool1 = json["bool1"] ?? false,
         single1 = Icons.values.asNameMap()[json["single1"]] ?? Icons.unknown,
-        asset1 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset1"])),
-        asset2 = SBAsset.fromJson(Map<String, dynamic>.from(json["asset2"])),
-        link1 = LinkType.fromJson(Map<String, dynamic>.from(json["link1"])),
+        asset1 = Asset.fromJson(Map<String, dynamic>.from(json["asset1"])),
+        asset2 = Asset.fromJson(Map<String, dynamic>.from(json["asset2"])),
+        link1 = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["link1"])),
         single2 = Single2Option.values.asNameMap()[json["single2"]] ?? Single2Option.unknown;
 
   final List<Blok>? bloks1;
@@ -174,11 +174,11 @@ final class TestBlock extends Blok {
 
   final Icons? single1;
 
-  final SBAsset? asset1;
+  final Asset? asset1;
 
-  final SBAsset? asset2;
+  final Asset? asset2;
 
-  final LinkType? link1;
+  final BaseLinkTypes? link1;
 
   final Single2Option? single2;
 }
@@ -196,14 +196,14 @@ final class TextBlock extends Blok {
 final class VideoItem extends Blok {
   VideoItem.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        videoLink = LinkType.fromJson(Map<String, dynamic>.from(json["video_link"])),
+        videoLink = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_link"])),
         description = json["description"],
         summary = json["summary"],
         airDate = DateTime.tryParse(json["air_date"]);
 
   final String? title;
 
-  final LinkType videoLink;
+  final BaseLinkTypes videoLink;
 
   final String? description;
 
@@ -215,16 +215,16 @@ final class VideoItem extends Blok {
 final class VideoPage extends Blok {
   VideoPage.fromJson(Map<String, dynamic> json)
       : videoTitle = json["video_title"],
-        videoUrl = LinkType.fromJson(Map<String, dynamic>.from(json["video_url"])),
-        videoThumbnail = LinkType.fromJson(Map<String, dynamic>.from(json["video_thumbnail"])),
+        videoUrl = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_url"])),
+        videoThumbnail = BaseLinkTypes.fromJson(Map<String, dynamic>.from(json["video_thumbnail"])),
         videoDescription = json["video_description"],
         publishedAt = DateTime.parse(json["published_at"]);
 
   final String videoTitle;
 
-  final LinkType videoUrl;
+  final BaseLinkTypes videoUrl;
 
-  final LinkType videoThumbnail;
+  final BaseLinkTypes videoThumbnail;
 
   final String videoDescription;
 

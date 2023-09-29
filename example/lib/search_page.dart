@@ -2,6 +2,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';
+import 'package:example/video_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -22,30 +23,49 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: TextATV.carouselHeading(widget.searchPage.header.toUpperCase()),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: SearchBar(
-                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 41, 41, 41)),
-                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
-                onSubmitted: _search,
-                leading: const Icon(
-                  Icons.search,
-                  color: AppColors.white,
+            preferredSize: const Size.fromHeight(56),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: ShapeDecoration(
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      width: 1,
+                      color: AppColors.white.withOpacity(
+                        0.1,
+                      ),
+                    ),
+                  ),
+                  color: AppColors.layer,
                 ),
-                hintText: "Search a video",
-                textStyle: MaterialStateTextStyle.resolveWith((states) => bodyStyle.copyWith(color: AppColors.white))),
-          ),
-        ),
+                height: 56,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 16),
+                    const Icon(
+                      Icons.search,
+                      color: AppColors.white,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: TextField(
+                        style: bodyStyle.copyWith(color: AppColors.white),
+                        onSubmitted: _search,
+                        decoration: const InputDecoration.collapsed(
+                            hintText: 'Search for video', hintStyle: TextStyle(color: AppColors.white)),
+                        autocorrect: false,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           if (results != null) ...[
-            ...results.map((e) => Text(
-                  e.videoTitle,
-                  style: const TextStyle(color: Colors.white),
-                )),
+            ...results.map((e) => VideoItemWidget.fromVideoPage(e)),
           ],
         ],
       ),
@@ -61,10 +81,10 @@ class _SearchPageState extends State<SearchPage> {
       return;
     }
     print("Search for: '$query'");
-    final stories = await storyblokClient.getStories(startsWith: query);
+    final stories = await storyblokClient.getStories(startsWith: "videos/", searchTerm: query);
     print(stories.map((e) => e.name).toList().join(", "));
     setState(() {
-      results = List<bloks.VideoPage>.from(stories.map((e) => bloks.Blok.fromJson(e.content)));
+      results = stories.map((e) => e.content).cast<bloks.VideoPage>().toList();
     });
   }
 }
