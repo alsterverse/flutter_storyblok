@@ -62,7 +62,7 @@ class HeroWidget extends StatelessWidget {
                     // style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 4,
                   ),
                   TextATV.body(video.description.toString(), color: AppColors.white.withOpacity(0.8)),
                 ],

@@ -35,14 +35,16 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: TextATV.carouselHeading('Accelerometer'.toUpperCase()),
+      ),
       body: Center(
         child: ValueListenableBuilder(
             valueListenable: _accelData,
             builder: (context, data, _) {
               return Center(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(data?.x.roundToDecimals(2).toString() ?? "100", style: dataTextStyle),
                     Text(data?.y.roundToDecimals(2).toString() ?? "100", style: dataTextStyle),
