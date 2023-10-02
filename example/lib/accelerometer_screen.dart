@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/components/text.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -33,7 +34,9 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: TextATV.carouselHeading('Accelerometer'.toUpperCase()),
+      ),
       body: Center(
         child: ValueListenableBuilder(
             valueListenable: _accelData,
@@ -41,9 +44,9 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(data?.x.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
-                  Text(data?.y.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
-                  Text(data?.z.roundToDecimals(2).toString() ?? "-", style: const TextStyle(color: Colors.white)),
+                  Text(data?.x.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
+                  Text(data?.y.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
+                  Text(data?.z.roundToDecimals(2).toString() ?? "-", style: dataTextStyle),
                 ],
               );
             }),

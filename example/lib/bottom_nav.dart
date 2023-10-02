@@ -1,4 +1,5 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 
@@ -23,11 +24,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.black,
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedItemColor: Colors.deepPurpleAccent,
-        unselectedItemColor: Colors.white,
+        selectedItemColor: const Color.fromARGB(255, 144, 84, 255),
+        unselectedItemColor: const Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.pages.map((page) {
           return BottomNavigationBarItem(

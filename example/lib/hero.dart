@@ -27,13 +27,13 @@ class HeroWidget extends StatelessWidget {
                 builder: (context) => linkedVideoPage.buildWidget(context),
               )),
       child: Container(
+        clipBehavior: Clip.hardEdge,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primary, AppColors.accent],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            gradient: LinearGradient(
+                colors: [Color.fromARGB(94, 140, 2, 215), Color.fromARGB(211, 0, 110, 255)],
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -54,9 +54,16 @@ class HeroWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextATV.subtitle(video.airDate.toString().split(" ")[0].toUpperCase()),
+                  Text(video.airDate.toString().split(" ")[0].toUpperCase(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.white.withOpacity(0.6),
+                          fontSize: 12,
+                          height: 1.2)),
+                  const SizedBox(height: 4),
                   TextATV.hero(video.title.toString()),
-                  TextATV.body(video.description.toString()),
+                  const SizedBox(height: 4),
+                  TextATV.body(video.description.toString(), color: AppColors.white.withOpacity(0.8)),
                 ],
               ),
             ),

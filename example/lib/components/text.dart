@@ -24,8 +24,8 @@ class TextATV extends StatelessWidget {
     this.softWrap,
     this.textAlign,
   }) : style = headingStyle.copyWith(
-          fontSize: 32,
-          fontWeight: FontWeight.w900,
+          fontSize: 24,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
         );
 
@@ -37,8 +37,20 @@ class TextATV extends StatelessWidget {
     this.textAlign,
   }) : style = headingStyle.copyWith(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w800,
           letterSpacing: 0.8,
+        );
+
+  TextATV.carouselHeading(
+    this.text, {
+    super.key,
+    this.overflow,
+    this.softWrap,
+    this.textAlign,
+  }) : style = headingStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.5,
         );
 
   TextATV.body(
@@ -71,24 +83,26 @@ class TextATV extends StatelessWidget {
 }
 
 TextStyle headingStyle = TextStyle(
-    fontSize: 24,
-    letterSpacing: 0.9,
-    fontWeight: FontWeight.w700,
-    color: AppColors.white,
-    height: 1.2,
-    fontFamily: GoogleFonts.montserrat().fontFamily);
+  fontSize: 24,
+  letterSpacing: 0.9,
+  color: AppColors.white,
+  height: 1.2,
+  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w700).fontFamily,
+);
 
 TextStyle bodyStyle = TextStyle(
-  fontSize: 16,
-  height: 1.45,
-  fontFamily: GoogleFonts.openSans().fontFamily,
+  fontSize: 15,
+  height: 1.3,
+  fontFamily: GoogleFonts.dmSans(fontWeight: FontWeight.w500).fontFamily,
 );
 
 TextStyle buttonStyle = TextStyle(
-  fontFamily: GoogleFonts.montserrat().fontFamily,
+  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w700).fontFamily,
   fontSize: 14,
-  fontWeight: FontWeight.w900,
   color: AppColors.white,
   letterSpacing: 0.8,
   height: 1.3,
 );
+
+TextStyle dataTextStyle = TextStyle(
+    color: Colors.white, fontSize: 100, fontFamily: GoogleFonts.spaceMono(fontWeight: FontWeight.w700).fontFamily);

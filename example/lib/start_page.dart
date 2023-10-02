@@ -1,4 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +18,19 @@ class StartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const CircleAvatar(
-          backgroundColor: Colors.deepPurpleAccent,
+        title: CircleAvatar(
+          minRadius: 20,
+          backgroundColor: AppColors.primary,
           child: Text(
             "ATV",
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+            style: headingStyle,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: Colors.deepPurpleAccent.withOpacity(.25),
-            height: 3,
+            color: AppColors.primaryFaded,
+            height: 2,
           ),
         ),
       ),
@@ -39,7 +42,7 @@ class StartPage extends StatelessWidget {
               if (e is bloks.CarouselBlock) return widget;
               return Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: widget);
             })
-            .separatedBy(() => const SizedBox(height: 20))
+            .separatedBy(() => const SizedBox(height: 32))
             .toList(),
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,25 +21,43 @@ class _SearchPageState extends State<SearchPage> {
     final results = this.results;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.searchPage.header),
+        title: TextATV.carouselHeading(widget.searchPage.header.toUpperCase()),
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(56),
-            child: Container(
-              decoration: const ShapeDecoration(shape: StadiumBorder(), color: Colors.white),
-              height: 56,
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  const Icon(Icons.search),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      onSubmitted: _search,
-                      decoration: const InputDecoration.collapsed(hintText: 'Search for video'),
-                      autocorrect: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: ShapeDecoration(
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      width: 1,
+                      color: AppColors.white.withOpacity(
+                        0.1,
+                      ),
                     ),
-                  )
-                ],
+                  ),
+                  color: AppColors.layer,
+                ),
+                height: 56,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 16),
+                    const Icon(
+                      Icons.search,
+                      color: AppColors.white,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: TextField(
+                        style: bodyStyle.copyWith(color: AppColors.white),
+                        onSubmitted: _search,
+                        decoration: const InputDecoration.collapsed(
+                            hintText: 'Search for video', hintStyle: TextStyle(color: AppColors.white)),
+                        autocorrect: false,
+                      ),
+                    )
+                  ],
+                ),
               ),
             )),
       ),

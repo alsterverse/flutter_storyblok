@@ -80,9 +80,12 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextATV.subtitle(
-                          videoPage.publishedAt.toString().split(" ")[0],
-                        ),
+                        Text(videoPage.publishedAt.toString().split(" ")[0],
+                            style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.white.withOpacity(0.6),
+                                fontSize: 12,
+                                height: 1.2)),
                         TextATV.title(
                           videoPage.videoTitle,
                         ),
