@@ -18,12 +18,15 @@ class StartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: CircleAvatar(
-          minRadius: 20,
-          backgroundColor: AppColors.primary,
-          child: Text(
-            "ATV",
-            style: headingStyle,
+        title: SizedBox(
+          width: 150,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.primary,
+            child: Text(
+              "ATV",
+              style: headingStyle.copyWith(letterSpacing: -2),
+            ),
           ),
         ),
         bottom: PreferredSize(

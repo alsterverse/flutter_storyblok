@@ -41,18 +41,22 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         elevation: 0,
-        title: const CircleAvatar(
-          backgroundColor: Colors.deepPurpleAccent,
-          child: Text(
-            "ATV",
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+        title: SizedBox(
+          width: 150,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.primary,
+            child: Text(
+              "ATV",
+              style: headingStyle.copyWith(letterSpacing: -2),
+            ),
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: Colors.deepPurpleAccent.withOpacity(.25),
-            height: 3,
+            color: AppColors.primaryFaded,
+            height: 2,
           ),
         ),
       ),
