@@ -23,8 +23,9 @@ import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
+const rootPageId = 381723347;
 final storyblokClient = StoryblokClient<bloks.Blok>(
-  accessToken: "2aurFHe7gdoL2yxIyk1APgtt",
+  accessToken: "w6ZsTA1a0xxlQpd7Kkeqjgtt",
   version: StoryblokVersion.draft,
   contentBuilder: (json) => bloks.Blok.fromJson(json),
 );
@@ -47,7 +48,7 @@ final router = GoRouter(routes: [
       }
 
       return FutureStoryWidget(
-        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(376648209)),
+        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(rootPageId)),
       );
     },
   ),
