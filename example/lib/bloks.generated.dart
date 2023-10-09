@@ -112,15 +112,9 @@ final class SearchPage extends Blok {
 final class StartPage extends Blok {
   StartPage.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        label = json["label"],
-        icon = Icons.values.asNameMap()[json["icon"]] ?? Icons.unknown,
         content = List<Map<String, dynamic>>.from(json["content"]).map(Blok.fromJson).toList();
 
   final String title;
-
-  final String label;
-
-  final Icons icon;
 
   final List<Blok> content;
 }
