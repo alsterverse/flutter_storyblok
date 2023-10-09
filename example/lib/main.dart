@@ -10,6 +10,7 @@ import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
 import 'package:example/search_page.dart';
+import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
 import 'package:example/video_item_widget.dart';
@@ -49,6 +50,7 @@ final router = GoRouter(routes: [
 
       return FutureStoryWidget(
         storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(rootPageId)),
+        delayed: true,
       );
     },
   ),
@@ -76,14 +78,22 @@ class MyApp extends StatelessWidget {
 
 class FutureStoryWidget extends StatelessWidget {
   final Future<Story<bloks.Blok>> storyFuture;
-  const FutureStoryWidget({super.key, required this.storyFuture});
+  final bool delayed;
+  const FutureStoryWidget({
+    super.key,
+    required this.storyFuture,
+    this.delayed = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: storyFuture,
+      future: Future.wait([
+        storyFuture,
+        if (delayed) Future.delayed(const Duration(milliseconds: 2500)),
+      ]),
       builder: (context, snapshot) {
-        final story = snapshot.data;
+        final story = snapshot.data?.first as Story<bloks.Blok>?;
         if (story != null) {
           return Scaffold(
             body: story.content.buildWidget(context),
@@ -94,7 +104,9 @@ class FutureStoryWidget extends StatelessWidget {
           print(snapshot.stackTrace);
           return Scaffold(body: Center(child: Text(snapshot.error.toString())));
         }
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return const Scaffold(
+          body: SplashScreen(),
+        );
       },
     );
   }
