@@ -9,17 +9,19 @@ import 'package:flutter_storyblok/link_type.dart';
 class HeroWidget extends StatelessWidget {
   const HeroWidget({
     super.key,
-    required this.video,
+    required this.videoItem,
   });
 
-  final VideoItem video;
+  final VideoItem videoItem;
 
   @override
   Widget build(BuildContext context) {
-    final bloks.VideoPage? linkedVideoPage = switch (video.videoLink) {
+    final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
       LinkTypeURL() => null,
       final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
     };
+    final title = videoItem.title;
+    final description = videoItem.description;
     return GestureDetector(
       onTap: linkedVideoPage == null
           ? null
@@ -54,16 +56,21 @@ class HeroWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(video.airDate.toString().split(" ")[0].toUpperCase(),
+                  Text(videoItem.airDate.toString().split(" ")[0].toUpperCase(),
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           color: AppColors.white.withOpacity(0.6),
                           fontSize: 12,
                           height: 1.2)),
                   const SizedBox(height: 4),
-                  TextATV.hero(video.title.toString()),
+                  TextATV.hero(title != null && title.isNotEmpty ? title : (linkedVideoPage?.videoTitle).toString()),
                   const SizedBox(height: 4),
-                  TextATV.body(video.description.toString(), color: AppColors.white.withOpacity(0.8)),
+                  TextATV.body(
+                    description != null && description.isNotEmpty
+                        ? description
+                        : (linkedVideoPage?.videoDescription).toString(),
+                    color: AppColors.white.withOpacity(0.8),
+                  ),
                 ],
               ),
             ),
