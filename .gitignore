@@ -36,3 +36,6 @@ build/
 
 # Reflection
 *.reflectable.dart
+
+# Generated bloks
+example/lib/*.generated.dart
