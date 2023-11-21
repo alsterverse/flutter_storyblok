@@ -28,7 +28,7 @@ void main(List<String> args) async {
   final outputPath = args[2];
 
   final codegen = StoryblokCodegen(spaceId: spaceId, authorization: authorization, outputPath: outputPath);
-  codegen.generate();
+  await codegen.generate();
 }
 
 class StoryblokCodegen {
