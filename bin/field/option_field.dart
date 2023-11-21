@@ -3,7 +3,7 @@ import 'package:dart_casing/dart_casing.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import '../flutter_storyblok.dart';
+import '../storyblok_sourcegen.dart';
 import '../util/enum.dart';
 import 'base_field.dart';
 

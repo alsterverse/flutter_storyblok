@@ -14,9 +14,9 @@ import 'field/datetime_field.dart';
 import 'field/link_field.dart';
 import 'field/number_field.dart';
 import 'field/option_field.dart';
-import 'field/text/text_area.dart';
+import 'field/text/text_area_field.dart';
 import 'field/text/text_field.dart';
-import 'field/text/text_markdown.dart';
+import 'field/text/text_markdown_field.dart';
 import 'util/enum.dart';
 
 final dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
