@@ -145,7 +145,7 @@ class StoryblokCodegen {
           "asset" => AssetField.fromJson(data, fieldName),
           // "multiasset" => _MultiAsset.fromJson(data, fieldName),
           "multilink" => LinkField.fromJson(data, fieldName),
-          "option" => Option.fromJson(data, fieldName),
+          "option" => OptionField.fromJson(data, fieldName),
           // "options" => _Options.fromJson(data, fieldName),
           _ => null,
         };

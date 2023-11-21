@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Dart",
+            "type": "dart",
+            "request": "launch",
+            "program": "bin/flutter_storyblok.dart",
+            "args": [
+                "255111", "S3CQfBE2KVsq3yeEoxBQeQtt-220278-6ixNNG4Kwy9ayWceDH7Q", "lib/blok.generated.dart"
+            ]
+        },
+        {
             "name": "example",
             "cwd": "example",
             "request": "launch",

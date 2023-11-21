@@ -7,10 +7,10 @@ import '../flutter_storyblok.dart';
 import '../util/enum.dart';
 import 'base_field.dart';
 
-final class Option extends BaseField {
+final class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
-  Option.fromJson(super.data, super.name)
+  OptionField.fromJson(super.data, super.name)
       : source = OptionSource.values.byName(tryCast<String>(data["source"]) ?? OptionSource.self.name),
         enumName = "${name}_Option",
         super.fromJson();
