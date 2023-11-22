@@ -4,7 +4,7 @@ final class DateTimeField extends BaseField {
   DateTimeField.fromJson(super.data, super.name) : super.fromJson();
 
   @override
-  String symbol() => "$DateTimeField";
+  String symbol() => "$DateTime";
 
   @override
   String generateInitializerCode(String valueCode) {
