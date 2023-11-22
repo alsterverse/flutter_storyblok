@@ -12,4 +12,14 @@ extension IterableUtils<E> on Iterable<E> {
     int i = 0;
     return map((e) => mapper(i++, e));
   }
+
+  bool containsWhere(bool Function(E) check) {
+    for (final e in this) if (check(e)) return true;
+    return false;
+  }
+
+  E? firstWhereOrNull(bool Function(E) check) {
+    for (final e in this) if (check(e)) return e;
+    return null;
+  }
 }

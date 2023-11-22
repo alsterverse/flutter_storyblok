@@ -9,6 +9,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
 import 'package:example/image_block_widget.dart';
+import 'package:example/rich_text_content.dart';
 import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
@@ -146,6 +147,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.Teaser teaser => Teaser(headline: teaser.headline),
       final bloks.Page page => starter_blocks.Page(page: page),
       final bloks.Grid _ => const Grid(),
+      final bloks.RichBlock rich => StoryblokRichTextContent(content: rich.richtextheader?.content ?? []),
+      //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
