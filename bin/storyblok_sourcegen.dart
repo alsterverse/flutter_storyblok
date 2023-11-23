@@ -13,6 +13,7 @@ import 'field/blok_fields.dart';
 import 'field/boolean_field.dart';
 import 'field/datetime_field.dart';
 import 'field/link_field.dart';
+import 'field/multi_asset_field.dart';
 import 'field/number_field.dart';
 import 'field/option_field.dart';
 import 'field/text/text_area_field.dart';
@@ -206,16 +207,4 @@ class Component {
         isRoot = json["is_root"],
         isNestable = json["is_nestable"],
         schema = JSONMap.from(json["schema"]);
-}
-
-final class MultiAssetField extends BaseField {
-  MultiAssetField.fromJson(super.data, super.name) : super.fromJson();
-
-  @override
-  String symbol() => "${List<Asset>}";
-
-  @override
-  String generateInitializerCode(String valueCode) {
-    return "($valueCode as List<dynamic>).map((e) => $Asset.fromJson(e)).toList()";
-  }
 }
