@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:flutter_storyblok/asset.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 import 'api.dart';
@@ -143,7 +144,7 @@ class StoryblokCodegen {
           "boolean" => BooleanField.fromJson(data, fieldName),
           "datetime" => DateTimeField.fromJson(data, fieldName),
           "asset" => AssetField.fromJson(data, fieldName),
-          // "multiasset" => _MultiAsset.fromJson(data, fieldName),
+          "multiasset" => MultiAssetField.fromJson(data, name),
           "multilink" => LinkField.fromJson(data, fieldName),
           "option" => OptionField.fromJson(data, fieldName),
           // "options" => _Options.fromJson(data, fieldName),
@@ -158,8 +159,9 @@ class StoryblokCodegen {
         if (supportingClasses != null) lib.body.addAll(supportingClasses);
 
         c.fields.add(Field((f) {
+          f.type = TypeReference(baseField.buildFieldType);
           f.modifier = FieldModifier.final$;
-          baseField.buildField(f);
+          f.name = fieldName;
         }));
 
         co.initializers.add(Code(
@@ -204,4 +206,16 @@ class Component {
         isRoot = json["is_root"],
         isNestable = json["is_nestable"],
         schema = JSONMap.from(json["schema"]);
+}
+
+final class MultiAssetField extends BaseField {
+  MultiAssetField.fromJson(super.data, super.name) : super.fromJson();
+
+  @override
+  String symbol() => "${List<Asset>}";
+
+  @override
+  String generateInitializerCode(String valueCode) {
+    return "($valueCode as List<dynamic>).map((e) => $Asset.fromJson(e)).toList()";
+  }
 }
