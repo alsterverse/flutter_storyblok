@@ -148,6 +148,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }
