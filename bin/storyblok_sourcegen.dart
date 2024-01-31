@@ -57,6 +57,7 @@ class StoryblokCodegen {
     final components = await _downloadComponents(lib);
 
     final blokClazz = Class((c) {
+      c.docs.add("/// This class is generated, do not edit manually");
       c.sealed = true;
       c.name = "Blok";
       c.constructors.addAll([
