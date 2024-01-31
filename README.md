@@ -39,7 +39,7 @@ page based on a Storyblok Story.
 ## Preview
 
 A preview of the content from Storyblok is available within the Storyblok
-interface. Additionally, there is a Flutter web preview hosted on Nettify.
+interface. Additionally, there is a Flutter web preview hosted on Netlify.
 
 ## API Documentation
 
