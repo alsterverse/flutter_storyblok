@@ -9,6 +9,8 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
+import 'package:example/multi_asset_widget.dart';
+import 'package:example/multi_page.dart';
 import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
@@ -152,7 +154,13 @@ extension BlockWidget on bloks.Blok {
       bloks.MultiOptionsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       bloks.Testar() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       // TODO: Handle this case.
-      bloks.TestMultiAssetsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      final bloks.TestMultiAssetsBlock options => TestMultiAssetsBlock(options: options),
+      // TODO: Handle this case.
+      bloks.Rich() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.Root() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      final bloks.MultiPage multiPage => MultiPage(multiPage: multiPage),
     };
   }
 }

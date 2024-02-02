@@ -20,6 +20,7 @@ dependencies:
   flutter_lints: ^2.0.0
   code_builder: ^4.6.0
   wave: ^0.2.2
+  multiselect: ^0.1.0
 
 dev_dependencies:
   flutter_test:
