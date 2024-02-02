@@ -1,18 +1,52 @@
-### Code generator
+# Flutter Storyblok README
 
-Create a Storyblok account at https://www.storyblok.com
+This Flutter project integrates with Storyblok, a headless CMS, to dynamically
+fetch and render content. Follow the instructions below to set up and run the
+project.
 
-To generate the blocks you will need the following information from your
-Storyblok account:
+## Prerequisites
 
-1. Personal access token found under My account/Security/Personal access token
-2. Space ID found under Settings/General/Space
+- Dart SDK
+- Flutter SDK
 
-To run the generator: `cd flutter_storyblok`
-`dart run storyblok_sourcegen [SPACE ID] [ACCESS TOKEN] "lib/bloks.generated.dart"`
+## Getting Started
 
-### API Documentation
+1. **Personal Access Token:** Obtain your Personal Access Token from Storyblok.
+   You can find it under `My Account` > `Security` > `Personal Access Token`.
 
-[Storyblok Content Delivery API V2 Reference](https://www.storyblok.com/docs/api/content-delivery)
+2. **Space ID:** Find your Space ID in Storyblok under `Settings` > `General` >
+   `Space`.
 
-[Storyblok Management API Reference](https://www.storyblok.com/docs/api/management)
+## Running the Generator
+
+Navigate to the project directory and run the following commands:
+
+```bash
+cd flutter_storyblok
+dart run bin/storyblok_sourcegen.dart [SPACE ID] [ACCESS TOKEN] "example/lib/bloks.generated.dart"
+```
+
+Replace `[SPACE ID]` and `[ACCESS TOKEN]` with your Storyblok Space ID and
+Personal Access Token.
+
+## Project Structure
+
+The project utilizes a Dart SDK to fetch Storyblok components. A source
+generator is used to create Dart classes that parse these Bloks as JSON. The
+generated Bloks can then be utilized by a Flutter app to dynamically generate a
+page based on a Storyblok Story.
+
+## Preview
+
+A preview of the content from Storyblok is available within the Storyblok
+interface. Additionally, there is a Flutter web preview hosted on Netlify.
+
+## API Documentation
+
+Refer to the following Storyblok API documentation for more details:
+
+- [Storyblok Content Delivery API V2 Reference](https://www.storyblok.com/docs/api/content-delivery)
+- [Storyblok Management API Reference](https://www.storyblok.com/docs/api/management)
+
+Feel free to explore these resources for a deeper understanding of the
+integration and customization options.
