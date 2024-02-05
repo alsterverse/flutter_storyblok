@@ -150,17 +150,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      bloks.ContentEditor() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      bloks.MultiOptionsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      bloks.Testar() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      final bloks.TestMultiAssetsBlock options => TestMultiAssetsBlock(options: options),
-      // TODO: Handle this case.
-      bloks.Rich() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.Root() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      final bloks.MultiPage multiPage => MultiPage(multiPage: multiPage),
+//TODO: remove this line before release
+      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }
