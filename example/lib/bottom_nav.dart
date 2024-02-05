@@ -1,6 +1,7 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
+import 'package:example/start_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -30,14 +31,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
         selectedItemColor: const Color.fromARGB(255, 144, 84, 255),
         unselectedItemColor: const Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
-        items: widget.bottomNav.pages.map((page) {
+        items: widget.bottomNav.items.map((page) {
+          print("****ITEMS ${widget.bottomNav.items.length}");
           return BottomNavigationBarItem(
-            icon: switch (page.icon) {
-              bloks.Icons.start => const Icon(Icons.table_rows_rounded),
-              bloks.Icons.search => const Icon(Icons.search),
-              bloks.Icons.blocks => const Icon(Icons.square),
-              bloks.Icons.unknown => const Icon(Icons.abc),
-            },
+            icon: Image.network(page.icon.fileName),
+            // icon: switch (page.icon) {
+            //   bloks.Icons.start => const Icon(Icons.table_rows_rounded),
+            //   bloks.Icons.search => const Icon(Icons.search),
+            //   bloks.Icons.blocks => const Icon(Icons.square),
+            //   bloks.Icons.unknown => const Icon(Icons.abc),
+            // },
             label: page.label,
           );
         }).toList(),
@@ -45,11 +48,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: IndexedStack(
           index: _selectedIndex,
-          children: widget.bottomNav.pages
-              .map(
-                (e) => e.buildWidget(context),
-              )
-              .toList()),
+          children: widget.bottomNav.items.map((item) {
+            print("*** $item");
+            return Scaffold(
+              appBar: AppBar(title: Text("TEST")),
+              body: Center(child: Text(item.label ?? "is empty")),
+            );
+          }
+
+              //(item) => item.page?.buildWidget(context),
+              ).toList()),
     );
   }
 }
