@@ -21,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
     final results = this.results;
     return Scaffold(
       appBar: AppBar(
-        title: TextATV.carouselHeading(widget.searchPage.testmultiasset.toString()),
+        title: TextATV.carouselHeading("Hej"),
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(56),
             child: Padding(
