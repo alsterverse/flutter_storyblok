@@ -2,7 +2,11 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
 import 'package:example/start_page.dart';
+import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/link_type.dart';
+import 'package:flutter_storyblok/story.dart';
 
 class BottomNavigation extends StatefulWidget {
   final bloks.BottomNavigation bottomNav;
@@ -50,12 +54,27 @@ class _BottomNavigationState extends State<BottomNavigation> {
           index: _selectedIndex,
           children: widget.bottomNav.items.map((item) {
             print("*** $item");
-            return Scaffold(
-              appBar: AppBar(title: Text("TEST")),
-              body: Center(child: Text(item.label ?? "is empty")),
-            );
+            if( ((item.page as LinkTypeStory).resolvedStory?.content is bloks.Page)) {
+              var story = (item.page as LinkTypeStory).resolvedStory;
+              return Scaffold(
+                appBar: AppBar(title: Text(story?.name ?? "No content")),
+                body: Center(
+                  child: ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(24),
+                      children: ((item.page as LinkTypeStory).resolvedStory?.content as bloks.Page).blocks
+                          .map((e) => e.buildWidget(context))
+                          .separatedBy(() => const SizedBox(height: 24))
+                          .toList()),
+                ),
+              );
+            } else {
+              return Scaffold(
+                appBar: AppBar(title: Text((item.page as LinkTypeStory).resolvedStory?.name ?? "name is null")),
+                body: Center(child: Text(item.label)),
+              );
+            }
           }
-
               //(item) => item.page?.buildWidget(context),
               ).toList()),
     );
