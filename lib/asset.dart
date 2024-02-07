@@ -26,6 +26,8 @@ final class Asset {
 *
 * You need to create blocks in block library in Storyblok that implements assets
 * and only takes images/videos/documents
+*
+* Note: If Storyblok send content_type we don't need this
 * */
 final class ImageAsset extends Asset {
   ImageAsset.fromJson(super.json) : super.fromJson();
