@@ -9,6 +9,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
+import 'package:example/image_block_widget.dart';
 import 'package:example/multi_asset_widget.dart';
 import 'package:example/multi_page.dart';
 import 'package:example/search_page.dart';
@@ -168,6 +169,8 @@ extension BlockWidget on bloks.Blok {
       bloks.TestMultiAssetsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       // TODO: Handle this case.
       bloks.BottomNavigationItem() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
     };
   }
 }

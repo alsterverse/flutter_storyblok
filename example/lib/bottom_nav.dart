@@ -36,15 +36,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
         unselectedItemColor: const Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.items.map((page) {
-          print("****ITEMS ${widget.bottomNav.items.length}");
           return BottomNavigationBarItem(
-            icon: Image.network(page.icon.fileName),
-            // icon: switch (page.icon) {
-            //   bloks.Icons.start => const Icon(Icons.table_rows_rounded),
-            //   bloks.Icons.search => const Icon(Icons.search),
-            //   bloks.Icons.blocks => const Icon(Icons.square),
-            //   bloks.Icons.unknown => const Icon(Icons.abc),
-            // },
+            icon: Image.network(
+              page.icon.fileName,
+              color: Colors.white,
+              width: 40,
+              height: 40,
+            ),
             label: page.label,
           );
         }).toList(),
@@ -53,8 +51,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       body: IndexedStack(
           index: _selectedIndex,
           children: widget.bottomNav.items.map((item) {
-            print("*** $item");
-            if( ((item.page as LinkTypeStory).resolvedStory?.content is bloks.Page)) {
+            if (((item.page as LinkTypeStory).resolvedStory?.content is bloks.Page)) {
               var story = (item.page as LinkTypeStory).resolvedStory;
               return Scaffold(
                 appBar: AppBar(title: Text(story?.name ?? "No content")),
@@ -62,7 +59,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   child: ListView(
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(24),
-                      children: ((item.page as LinkTypeStory).resolvedStory?.content as bloks.Page).blocks
+                      children: ((item.page as LinkTypeStory).resolvedStory?.content as bloks.Page)
+                          .blocks
                           .map((e) => e.buildWidget(context))
                           .separatedBy(() => const SizedBox(height: 24))
                           .toList()),
@@ -74,9 +72,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 body: Center(child: Text(item.label)),
               );
             }
-          }
-              //(item) => item.page?.buildWidget(context),
-              ).toList()),
+          }).toList()),
     );
   }
 }
