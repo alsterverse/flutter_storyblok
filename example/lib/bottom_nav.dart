@@ -1,12 +1,9 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
-import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/link_type.dart';
-import 'package:flutter_storyblok/story.dart';
 
 class BottomNavigation extends StatefulWidget {
   final bloks.BottomNavigation bottomNav;
@@ -37,9 +34,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
         onTap: (value) => _onTap(value),
         items: widget.bottomNav.items.map((page) {
           return BottomNavigationBarItem(
+            activeIcon: Image.network(
+              page.icon.fileName,
+              color: const Color.fromARGB(255, 144, 84, 255),
+              width: 44,
+              height: 44,
+            ),
             icon: Image.network(
               page.icon.fileName,
-              color: Colors.white,
+              color: const Color.fromARGB(109, 255, 255, 255),
               width: 40,
               height: 40,
             ),
