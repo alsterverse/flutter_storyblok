@@ -4,10 +4,25 @@ import 'package:flutter_storyblok/utils.dart';
 import 'base_field.dart';
 
 final class AssetField extends BaseField {
-  AssetField.fromJson(super.data, super.name) : super.fromJson();
+  AssetField.fromJson(super.data, super.name)
+      : assetTypes = List.from(data["filetypes"] ?? [] ),
+        super.fromJson();
+  final List<String> assetTypes;
 
   @override
-  String symbol() => "$Asset";
+  String symbol() {
+    if (assetTypes.length == 1) {
+      final assetType = assetTypes.first;
+      return switch (assetType) {
+        "images"  => "$ImageAsset",
+        "videos" => "$VideoAsset",
+        _ => "$Asset"
+      };
+    }
+    else {
+      return "$Asset";
+    }
+  }
 
   @override
   String generateInitializerCode(String valueCode) {

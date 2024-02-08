@@ -12,6 +12,7 @@ import 'field/blok_fields.dart';
 import 'field/boolean_field.dart';
 import 'field/datetime_field.dart';
 import 'field/link_field.dart';
+import 'field/multi_asset_field.dart';
 import 'field/number_field.dart';
 import 'field/option_field.dart';
 import 'field/text/text_area_field.dart';
@@ -144,7 +145,7 @@ class StoryblokCodegen {
           "boolean" => BooleanField.fromJson(data, fieldName),
           "datetime" => DateTimeField.fromJson(data, fieldName),
           "asset" => AssetField.fromJson(data, fieldName),
-          // "multiasset" => _MultiAsset.fromJson(data, fieldName),
+          "multiasset" => MultiAssetField.fromJson(data, name),
           "multilink" => LinkField.fromJson(data, fieldName),
           "option" => OptionField.fromJson(data, fieldName),
           // "options" => _Options.fromJson(data, fieldName),
@@ -159,8 +160,9 @@ class StoryblokCodegen {
         if (supportingClasses != null) lib.body.addAll(supportingClasses);
 
         c.fields.add(Field((f) {
+          f.type = TypeReference(baseField.buildFieldType);
           f.modifier = FieldModifier.final$;
-          baseField.buildField(f);
+          f.name = fieldName;
         }));
 
         co.initializers.add(Code(

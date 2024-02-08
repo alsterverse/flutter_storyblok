@@ -9,10 +9,12 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
+import 'package:example/image_block_widget.dart';
 import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
 import 'package:example/utils.dart';
+import 'package:example/video_block_widget.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:example/video_page.dart';
 import 'package:flutter/foundation.dart';
@@ -147,9 +149,28 @@ extension BlockWidget on bloks.Blok {
       final bloks.Hero hero => HeroWidget(videoItem: hero.video),
       final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
+      final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
+      final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-//TODO: remove this line before release 
-        _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),  
+//TODO: remove this line before release
+      // _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.ContentEditor() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.MultiOptionsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.MultiPage() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.Rich() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.Root() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.Testar() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.TestMultiAssetsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // final bloks.TestMultiAssetsBlock multiAssatBlock => MultiAssatWidget(multiAssatBlock: multiAssatBlock),
+      // TODO: Handle this case.
+      bloks.BottomNavigationItem() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }

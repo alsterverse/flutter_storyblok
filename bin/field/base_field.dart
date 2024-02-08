@@ -17,11 +17,6 @@ abstract class BaseField {
     ..symbol = symbol()
     ..isNullable = !isRequired;
 
-  void buildField(FieldBuilder f) {
-    f.name = name;
-    f.type = TypeReference(buildFieldType);
-  }
-
   List<Spec>? generateSupportingClasses() => null;
 
   String generateInitializerCode(String valueCode) => valueCode;
