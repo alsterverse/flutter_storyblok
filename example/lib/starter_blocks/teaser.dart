@@ -1,4 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:example/components/colors.dart';
+import 'package:example/components/text.dart';
+import 'package:flutter/material.dart';
 
 class Teaser extends StatelessWidget {
   final String? headline;
@@ -11,14 +13,31 @@ class Teaser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final headline = this.headline;
-    //White background color
-    return Text(
-      headline ?? "",
-      textAlign: TextAlign.center,
-      overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+    return Center(
+      child: Card(
+        elevation: 0,
+        color: AppColors.black,
+        shape: const RoundedRectangleBorder(
+          side: BorderSide(
+            width: 4,
+            color: AppColors.purple,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            width: 300,
+            height: 125,
+            child: Center(
+              child: ListTile(
+                title: TextATV.title(
+                  headline ?? "",
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

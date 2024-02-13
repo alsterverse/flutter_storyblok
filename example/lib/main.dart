@@ -146,7 +146,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.Feature feature => Feature(name: feature.name),
       final bloks.Teaser teaser => Teaser(headline: teaser.headline),
       final bloks.Page page => starter_blocks.Page(page: page),
-      final bloks.Grid _ => const Grid(),
+      final bloks.Grid grid => Grid(columns: grid.columns),
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
