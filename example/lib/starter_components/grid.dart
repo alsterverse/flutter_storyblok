@@ -11,7 +11,10 @@ class Grid extends StatelessWidget {
       "I'm a grid",
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      ),
     );
   }
 }

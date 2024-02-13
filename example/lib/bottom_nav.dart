@@ -63,7 +63,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(24),
                       children: ((item.page as LinkTypeStory).resolvedStory?.content as bloks.Page)
-                          .blocks
+                          .body
                           .map((e) => e.buildWidget(context))
                           .separatedBy(() => const SizedBox(height: 24))
                           .toList()),
