@@ -25,9 +25,9 @@ import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:example/starter_components/teaser.dart';
-import 'package:example/starter_components/feature.dart';
-import 'package:example/starter_components/grid.dart';
+import 'package:example/starter_blocks/teaser.dart';
+import 'package:example/starter_blocks/feature.dart';
+import 'package:example/starter_blocks/grid.dart';
 
 const rootPageId = 381723347;
 final storyblokClient = StoryblokClient<bloks.Blok>(
