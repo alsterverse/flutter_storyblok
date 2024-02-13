@@ -6,14 +6,12 @@ import 'package:example/bottom_nav.dart';
 import 'package:example/camera_screen.dart';
 import 'package:example/carousel_block_widget.dart';
 import 'package:example/components/colors.dart';
-import 'package:example/components/text.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
 import 'package:example/image_block_widget.dart';
 import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
-import 'package:example/utils.dart';
 import 'package:example/video_block_widget.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:example/video_page.dart';
@@ -28,6 +26,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:example/starter_blocks/teaser.dart';
 import 'package:example/starter_blocks/feature.dart';
 import 'package:example/starter_blocks/grid.dart';
+import 'package:example/starter_blocks/page.dart' as starter_blocks;
 
 const rootPageId = 381723347;
 final storyblokClient = StoryblokClient<bloks.Blok>(
@@ -130,18 +129,6 @@ extension BlockWidget on bloks.Blok {
                 bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
                 bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
               }),
-      final bloks.Page page => Scaffold(
-          appBar: AppBar(title: TextATV.carouselHeading("Blocks".toUpperCase())),
-          body: Center(
-            child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(24),
-                children: page.body
-                    .map((e) => e.buildWidget(context))
-                    .separatedBy(() => const SizedBox(height: 24))
-                    .toList()),
-          ),
-        ),
       final bloks.StartPage startPage => StartPage(startPage: startPage),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
@@ -154,9 +141,10 @@ extension BlockWidget on bloks.Blok {
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
       final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),
-      final bloks.Feature featureBlock => Feature(name: featureBlock.name),
-      final bloks.Teaser teaserBlock => Teaser(headline: teaserBlock.headline),
-      final bloks.Grid gridBlock => Grid(),
+      final bloks.Feature feature => Feature(name: feature.name),
+      final bloks.Teaser teaser => Teaser(headline: teaser.headline),
+      final bloks.Page page => starter_blocks.Page(body: page.body),
+      final bloks.Grid grid => Grid(),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
 //TODO: remove this line before release
       // _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
