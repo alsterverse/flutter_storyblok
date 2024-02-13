@@ -25,6 +25,10 @@ import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:example/starter_components/teaser.dart';
+import 'package:example/starter_components/feature.dart';
+import 'package:example/starter_components/grid.dart';
+import 'package:example/starter_components/page1.dart';
 
 const rootPageId = 381723347;
 final storyblokClient = StoryblokClient<bloks.Blok>(
@@ -151,6 +155,10 @@ extension BlockWidget on bloks.Blok {
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
       final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),
+      final bloks.Feature featureBlock => Feature(name: featureBlock.name),
+      final bloks.Teaser teaserBlock => Teaser(headline: teaserBlock.headline),
+      final bloks.Grid gridBlock => Grid(),
+      final bloks.Page1 page1 => Page1(),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
 //TODO: remove this line before release
       // _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
