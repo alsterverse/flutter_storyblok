@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 class Page extends StatelessWidget {
   const Page({
     super.key,
-    required this.body,
+    required this.page,
   });
 
-  final List<Blok> body;
+  final bloks.Page page;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class Page extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 20),
-        children: body
+        children: page.body
             .map((e) {
               final widget = e.buildWidget(context);
               if (e is bloks.CarouselBlock) return widget;
