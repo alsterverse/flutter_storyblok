@@ -50,6 +50,7 @@ class StoryblokCodegen {
     lib.directives.addAll([
       Directive.import('package:flutter_storyblok/asset.dart'),
       Directive.import('package:flutter_storyblok/link_type.dart'),
+      Directive.import('package:flutter_storyblok/markdown.dart'),
     ]);
 
     await _downloadDatasource();
@@ -103,7 +104,7 @@ class StoryblokCodegen {
     final datasources = List<JSONMap>.from(ds["datasources"]).map(Datasource.fromJson).toList();
     final allEntries = await Future.wait(datasources.map((e) async {
       final d = await _apiClient.get("datasource_entries", {"datasource_id": e.id.toString()});
-      return List<JSONMap>.from(d["datasource_entries"]).map(DatasourceEntry.fromJson).toList();
+      return List<JSONMap>.from(d["datasource_entries"]).map(_DatasourceEntry.fromJson).toList();
     }));
     final mapped = datasources.mapIndexed((i, e) => (e, allEntries[i])).toList();
 
@@ -113,10 +114,10 @@ class StoryblokCodegen {
     }
   }
 
-  Future<List<({Component component, ClassBuilder builder})>> _downloadComponents(LibraryBuilder lib) async {
+  Future<List<({_Component component, ClassBuilder builder})>> _downloadComponents(LibraryBuilder lib) async {
     final d = await _apiClient.get("components");
     final components = [
-      ...List<JSONMap>.from(d["components"]).map(Component.fromJson),
+      ...List<JSONMap>.from(d["components"]).map(_Component.fromJson),
     ];
     return components.map((component) {
       final c = ClassBuilder();
@@ -188,21 +189,21 @@ class Datasource {
         slug = json["slug"];
 }
 
-class DatasourceEntry {
+class _DatasourceEntry {
   final int id;
   final String value;
   // final dynamic dimensions;
-  DatasourceEntry.fromJson(JSONMap json)
+  _DatasourceEntry.fromJson(JSONMap json)
       : id = json["id"],
         value = json["value"];
 }
 
-class Component {
+class _Component {
   final String name;
   final JSONMap schema;
   final bool isRoot;
   final bool isNestable;
-  Component.fromJson(JSONMap json)
+  _Component.fromJson(JSONMap json)
       : name = json["name"],
         isRoot = json["is_root"],
         isNestable = json["is_nestable"],

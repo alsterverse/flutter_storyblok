@@ -143,7 +143,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),
       final bloks.Feature feature => Feature(name: feature.name),
       final bloks.Teaser teaser => Teaser(headline: teaser.headline),
-      final bloks.Page page => starter_blocks.Page(body: page.body),
+      final bloks.Page page => starter_blocks.Page(page: page),
       final bloks.Grid grid => Grid(),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
 //TODO: remove this line before release
@@ -155,8 +155,6 @@ extension BlockWidget on bloks.Blok {
       // TODO: Handle this case.
       bloks.MultiPage() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       // TODO: Handle this case.
-      bloks.Rich() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
       bloks.Root() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       // TODO: Handle this case.
       bloks.Testar() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
@@ -165,6 +163,8 @@ extension BlockWidget on bloks.Blok {
       // final bloks.TestMultiAssetsBlock multiAssatBlock => MultiAssatWidget(multiAssatBlock: multiAssatBlock),
       // TODO: Handle this case.
       bloks.BottomNavigationItem() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      // TODO: Handle this case.
+      bloks.RichBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }
