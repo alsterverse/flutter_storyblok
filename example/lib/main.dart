@@ -146,7 +146,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.Page page => starter_blocks.Page(page: page),
       final bloks.Grid grid => Grid(),
       bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-//TODO: remove this line before release
+      //TODO: remove this line before release
       // _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       // TODO: Handle this case.
       bloks.ContentEditor() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),

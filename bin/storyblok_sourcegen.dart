@@ -51,7 +51,10 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/asset.dart'),
       Directive.import('package:flutter_storyblok/link_type.dart'),
       Directive.import('package:flutter_storyblok/markdown.dart'),
+      Directive.import('package:flutter_storyblok/request_parameters.dart'),
     ]);
+
+    lib.body.add(Code("final _regex = RegExp('[^a-zA-Z]');"));
 
     await _downloadDatasource();
     lib.body.addAll(datasourceData.values);
@@ -149,7 +152,10 @@ class StoryblokCodegen {
           "multiasset" => MultiAssetField.fromJson(data, name),
           "multilink" => LinkField.fromJson(data, fieldName),
           "option" => OptionField.fromJson(data, fieldName),
-          // "options" => _Options.fromJson(data, fieldName),
+          "options" => OptionField.fromJson(data, fieldName),
+          // table
+          // plugin
+          // rich
           _ => null,
         };
         if (baseField == null) {
