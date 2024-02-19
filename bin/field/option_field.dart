@@ -39,11 +39,11 @@ final class OptionField extends BaseField {
   String generateInitializerCode(String valueCode) {
     return super.generateInitializerCode(switch (source) {
       OptionSource.self =>
-        "${Casing.pascalCase(enumName)}.values.asNameMap()[$valueCode] ?? ${Casing.pascalCase(enumName)}.unknown",
-      OptionSource.internal_stories => "StoryIdentifierUUID($valueCode)",
+        "${Casing.pascalCase(enumName)}.fromName($valueCode)",
+      OptionSource.internal_stories => "$StoryIdentifierUUID($valueCode)",
       OptionSource.internal_languages => valueCode,
       OptionSource.internal =>
-        "${datasourceData[data["datasource_slug"]]!.name}.values.asNameMap()[$valueCode] ?? ${datasourceData[data["datasource_slug"]]!.name}.unknown",
+        "${datasourceData[data["datasource_slug"]]!.name}.fromName($valueCode)",
     });
   }
 }
