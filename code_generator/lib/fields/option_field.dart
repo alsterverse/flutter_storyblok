@@ -6,9 +6,10 @@ import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 import 'package:flutter_storyblok_code_generator/utils/enum.dart';
 import 'package:flutter_storyblok_code_generator/utils/names.dart';
 
-final class OptionField extends BaseField {
+class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
+
   OptionField.fromJson(super.data, super.name)
       : source = OptionSource.values.byName(tryCast<String>(data["source"]) ?? OptionSource.self.name),
         enumName = sanitizeName("${unsanitizedName(name)}_Option", isClass: true),
@@ -20,6 +21,7 @@ final class OptionField extends BaseField {
         OptionSource.internal_stories => "$StoryIdentifierUUID",
         OptionSource.internal_languages => "$String?", // TODO Language enum
         OptionSource.internal => cachedSanitizedName(data["datasource_slug"], isClass: true),
+        OptionSource.external => "$String?",
       };
 
   @override
@@ -31,7 +33,8 @@ final class OptionField extends BaseField {
         ),
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
-      OptionSource.internal => null
+      OptionSource.internal => null,
+      OptionSource.external => null
     };
     if (e != null) return [e];
     return null;
@@ -44,6 +47,7 @@ final class OptionField extends BaseField {
       OptionSource.internal_stories => "$StoryIdentifierUUID($valueCode)",
       OptionSource.internal_languages => valueCode,
       OptionSource.internal => buildInstantiateEnum(data["datasource_slug"], valueCode),
+      OptionSource.external => valueCode,
     });
   }
 }
@@ -51,6 +55,7 @@ final class OptionField extends BaseField {
 enum OptionSource {
   self, // data is from self.options parameter, needs to be generated
   internal_stories, // data is story uuid
-  internal_languages, // data is language default = "default" TODO
+  internal_languages, // data is language default = "default"
   internal, // data is from Datasource
+  external, // data is from Datasource
 }
