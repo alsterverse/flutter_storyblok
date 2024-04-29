@@ -14,8 +14,6 @@ class BlockButton extends StatelessWidget {
   final bool wrapContentWidth;
   final VoidCallback? onPressed;
 
-  bool get _isEnabled => onPressed != null;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

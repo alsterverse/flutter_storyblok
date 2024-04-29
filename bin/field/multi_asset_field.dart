@@ -10,6 +10,6 @@ final class MultiAssetField extends BaseField {
 
   @override
   String generateInitializerCode(String valueCode) {
-    return "($valueCode as List<dynamic>${isRequired ? "" : " ?? []"}).map((e) => $Asset.fromJson(e)).toList()";
+    return "($valueCode as $List${isRequired ? ")" : "?)?"}.map((e) => $Asset.fromJson(e)).toList()";
   }
 }

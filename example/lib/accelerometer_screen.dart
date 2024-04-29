@@ -20,7 +20,7 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
   void initState() {
     super.initState();
 
-    _streamSubscription = accelerometerEvents.listen((e) {
+    _streamSubscription = accelerometerEventStream().listen((e) {
       _accelData.value = (x: e.x, y: e.y, z: e.z);
     });
   }

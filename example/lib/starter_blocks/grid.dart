@@ -7,11 +7,11 @@ class Grid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return const Text(
       "I'm a grid",
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
+      style: TextStyle(
         fontWeight: FontWeight.bold,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),

@@ -1,5 +1,4 @@
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/bloks.generated.dart';
 import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';

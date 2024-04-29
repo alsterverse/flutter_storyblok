@@ -22,14 +22,24 @@ project.
 Navigate to the project directory and run the following commands:
 
 ```bash
-cd flutter_storyblok
-dart run bin/storyblok_sourcegen.dart [SPACE ID] [ACCESS TOKEN] "example/lib/bloks.generated.dart"
+dart run bin/storyblok_sourcegen.dart <space_id> <personal_access_token> "example/lib/bloks.generated.dart"
 ```
 
-Replace `[SPACE ID]` and `[ACCESS TOKEN]` with your Storyblok Space ID and
-Personal Access Token.
-
 ## Project Structure
+
+- `bin/`
+  > Contains the code generator for generating strongly typed classes for
+  > Storyblok Blocks found in the "Block library". It fetches the necessary data
+  > with the
+  > [Storyblok Management REST API](https://www.storyblok.com/docs/api/management).
+
+  - `field/`
+    > Contains the classes for parsing each field type e.g Text, Single-option,
+    > Blocks etc.
+
+- `lib/`
+  > Contains the Storyblok SDK Client for fetching storys with the
+  > [Storyblok Content Delivery REST API](https://www.storyblok.com/docs/api/content-delivery/v2/).
 
 The project utilizes a Dart SDK to fetch Storyblok components. A source
 generator is used to create Dart classes that parse these Bloks as JSON. The
