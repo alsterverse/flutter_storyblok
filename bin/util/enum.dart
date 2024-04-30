@@ -16,29 +16,38 @@ Enum buildEnum(String name, Iterable<String> cases) {
   return Enum(
     (e) => e
       ..name = className
+      ..fields.add(Field((f) => f
+        ..modifier = FieldModifier.final$
+        ..name = "raw"
+        ..type = refer("$String")))
       ..values.addAll(
         cases.map((c) => EnumValue(
-              (v) => v..name = Casing.camelCase(c.startsWith(RegExp(incompatibleNameRegex)) ? '\$$c' : c),
+              (v) => v
+                ..name = Casing.camelCase(c.startsWith(RegExp(incompatibleNameRegex)) ? '\$$c' : c)
+                ..arguments.add(
+                  literalString("$c"),
+                ),
             )),
       )
       ..constructors.add(
         Constructor(
-          (con) => con..constant = true,
+          (con) => con
+            ..constant = true
+            ..requiredParameters.add(Parameter((p) => p
+              ..toThis = true
+              ..name = "raw")),
         ),
       )
-      ..methods.add(
-        Method((m) => m
-          ..static = true
-          ..returns = Reference(className)
-          ..name = _fromNameName
-          ..requiredParameters.add(Parameter(
-            (p) => p
-              ..type = Reference("$String?")
-              ..name = "name",
-          ))
-          ..body = Code(
-            "return ${mapIfNotNullMethod.name}(name, (n) => $className.values.asNameMap()[n.startsWith(${incompatibleNameRegexField.name}) ? '\\\$\$n' : n]) ?? $className.$_unknownName;",
-          )),
-      ),
+      ..constructors.add(Constructor((m) => m
+        ..factory = true
+        ..name = _fromNameName
+        ..requiredParameters.add(Parameter(
+          (p) => p
+            ..type = refer("$String?")
+            ..name = "name",
+        ))
+        ..body = Code(
+          "return ${mapIfNotNullMethod.name}(name, (n) => $className.values.asNameMap()[n.startsWith(${incompatibleNameRegexField.name}) ? '\\\$\$n' : n]) ?? $className.$_unknownName;",
+        ))),
   );
 }
