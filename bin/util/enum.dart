@@ -6,8 +6,8 @@ import '../storyblok_sourcegen.dart';
 const _unknownName = "unknown";
 const _fromNameName = "fromName";
 
-String buildInstantiateEnum(String className, String name) {
-  return "$className.$_fromNameName('$name')";
+String buildInstantiateEnum(String className, [String? name]) {
+  return "$className.$_fromNameName${name == null ? "" : "($name)"}";
 }
 
 Enum buildEnum(String name, Iterable<String> cases) {
