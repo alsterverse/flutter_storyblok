@@ -1,27 +1,47 @@
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 import 'api.dart';
-import 'field/asset_field.dart';
 import 'field/base_field.dart';
-import 'field/blok_fields.dart';
-import 'field/boolean_field.dart';
-import 'field/datetime_field.dart';
-import 'field/link_field.dart';
-import 'field/multi_asset_field.dart';
-import 'field/number_field.dart';
-import 'field/option_field.dart';
-import 'field/text/text_area_field.dart';
-import 'field/text/text_field.dart';
-import 'field/text/text_markdown_field.dart';
+import 'util/data_models.dart';
 import 'util/enum.dart';
 
 final dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
 final dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
+
+// Key is the datasource slug
+Map<String, Enum> datasourceData = {};
+
+/// final _incompatibleNameRegex = RegExp('[^a-zA-Z]');
+const incompatibleNameRegex = "[^a-zA-Z]";
+final incompatibleNameRegexField = Field(
+  (f) => f
+    ..modifier = FieldModifier.final$
+    ..name = "_incompatibleNameRegex"
+    ..assignment = Code("RegExp('$incompatibleNameRegex')"),
+);
+
+/// Out? _mapIfNotNull<In, Out>(In?, Out? Function(In))
+final mapIfNotNullMethod = Method(
+  (m) => m
+    ..returns = refer("Out?")
+    ..name = "_mapIfNotNull"
+    ..types = ListBuilder([refer("In"), refer("Out")])
+    ..requiredParameters.addAll([
+      Parameter((p) => p
+        ..type = refer("In?")
+        ..name = "value"),
+      Parameter((p) => p
+        ..type = refer("Out? Function(In)")
+        ..name = "mapper"),
+    ])
+    ..body = Code("return value == null ? null : mapper(value);"),
+);
 
 void main(List<String> args) async {
   final spaceId = args[0];
@@ -47,6 +67,10 @@ class StoryblokCodegen {
 
   Future generate() async {
     final lib = LibraryBuilder();
+
+    lib.comments.add("ignore_for_file: unused_import");
+
+    // import ...
     lib.directives.addAll([
       Directive.import('package:flutter_storyblok/asset.dart'),
       Directive.import('package:flutter_storyblok/link_type.dart'),
@@ -54,48 +78,60 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/request_parameters.dart'),
     ]);
 
-    lib.body.add(Code("final _regex = RegExp('[^a-zA-Z]');"));
+    lib.body.add(incompatibleNameRegexField);
+    lib.body.add(mapIfNotNullMethod);
 
-    await _downloadDatasource();
-    lib.body.addAll(datasourceData.values);
-
+    await _downloadDatasource(); // Must be fetched before "components"
     final components = await _downloadComponents(lib);
 
-    final blokClazz = Class((c) {
+    // enum <name> {
+    lib.body.addAll(datasourceData.values);
+
+    // class UnrecognizedBlok
+    final unrecognizedBlokClass = ClassBuilder()..name = "UnrecognizedBlok";
+
+    // sealed class Blok {
+    final blokClass = Class((c) {
       c.docs.add("/// This class is generated, do not edit manually");
       c.sealed = true;
       c.name = "Blok";
       c.constructors.addAll([
         Constructor(),
-        Constructor((co) => co
-          ..factory = true
-          ..name = "fromJson"
-          ..requiredParameters.add(
-            Parameter((p) => p
-              ..name = "json"
-              ..type = refer("$JSONMap")),
-          )
-          ..body = Code([
-            'switch (json["component"] as String) {',
-            ...components.map((e) => 'case "${e.component.name}": return ${e.builder.name}.fromJson(json);'),
-            'default: print("Unrecognized type \$\{json["component"]\}"); return UnrecognizedBlok();',
-            '}',
-          ].join("\n"))),
+        // Blok.fromJson(JSONMap json) {
+        Constructor(
+          (co) => co
+            ..factory = true
+            ..name = "fromJson"
+            ..requiredParameters.add(
+              Parameter((p) => p
+                ..type = refer("$JSONMap")
+                ..name = "json"),
+            )
+            ..body = Code([
+              'switch (json["component"] as String) {',
+              ...components.map((e) => 'case "${e.key}": return ${e.builder.name}.fromJson(json);'),
+              'default: print("Unrecognized type \$\{json["component"]\}"); return ${unrecognizedBlokClass.name}();',
+              '}',
+            ].join("\n")),
+        ),
+        // }
       ]);
     });
-    lib.body.add(blokClazz);
+    lib.body.add(blokClass);
+    // }
 
+    // final class <name> extends Blok {
     lib.body.addAll([
       ...components.map((e) => e.builder),
-      ClassBuilder()..name = "UnrecognizedBlok",
+      unrecognizedBlokClass,
     ].map((c) {
       c.modifier = ClassModifier.final$;
-      c.extend = refer(blokClazz.name);
+      c.extend = refer(blokClass.name);
       return c.build();
     }));
+    // }
 
     final output = dartFormatter.format(lib.build().accept(dartEmitter).toString());
-
     final file = File(_outputPath);
     if (file.existsSync()) file.deleteSync();
     file.writeAsStringSync(output);
@@ -107,7 +143,7 @@ class StoryblokCodegen {
     final datasources = List<JSONMap>.from(ds["datasources"]).map(Datasource.fromJson).toList();
     final allEntries = await Future.wait(datasources.map((e) async {
       final d = await _apiClient.get("datasource_entries", {"datasource_id": e.id.toString()});
-      return List<JSONMap>.from(d["datasource_entries"]).map(_DatasourceEntry.fromJson).toList();
+      return List<JSONMap>.from(d["datasource_entries"]).map(DatasourceEntry.fromJson).toList();
     }));
     final mapped = datasources.mapIndexed((i, e) => (e, allEntries[i])).toList();
 
@@ -117,101 +153,46 @@ class StoryblokCodegen {
     }
   }
 
-  Future<List<({_Component component, ClassBuilder builder})>> _downloadComponents(LibraryBuilder lib) async {
-    final d = await _apiClient.get("components");
-    final components = [
-      ...List<JSONMap>.from(d["components"]).map(_Component.fromJson),
-    ];
+  Future<List<({String key, ClassBuilder builder})>> _downloadComponents(LibraryBuilder lib) async {
+    final components = await _apiClient.getComponents();
     return components.map((component) {
       final c = ClassBuilder();
       c.name = Casing.pascalCase(component.name);
       final schema = component.schema;
 
-      final co = ConstructorBuilder();
-      co.name = "fromJson";
-      co.requiredParameters.add(Parameter((p) => p
+      final con = ConstructorBuilder();
+      con.name = "fromJson";
+      con.requiredParameters.add(Parameter((p) => p
         ..type = refer("$JSONMap")
         ..name = "json"));
 
       for (final entry in schema.entries) {
         final name = entry.key;
+        final fieldName = Casing.camelCase(name);
         final data = entry.value as JSONMap;
         final type = data["type"] as String;
-        // print("final ${data["type"]} $name");
 
-        final fieldName = Casing.camelCase(name);
-        final BaseField? baseField = switch (type) {
-          "bloks" => BlokFields.fromJson(data, name),
-          "text" => TextField.fromJson(data, fieldName),
-          "textarea" => TextAreaField.fromJson(data, fieldName),
-          "markdown" => MarkdownField.fromJson(data, fieldName),
-          "number" => NumberField.fromJson(data, fieldName),
-          "boolean" => BooleanField.fromJson(data, fieldName),
-          "datetime" => DateTimeField.fromJson(data, fieldName),
-          "asset" => AssetField.fromJson(data, fieldName),
-          "multiasset" => MultiAssetField.fromJson(data, name),
-          "multilink" => LinkField.fromJson(data, fieldName),
-          "option" => OptionField.fromJson(data, fieldName),
-          "options" => OptionField.fromJson(data, fieldName),
-          // table
-          // plugin
-          // rich
-          _ => null,
-        };
-        if (baseField == null) {
+        final field = BaseField.fromData(data, type, fieldName);
+        if (field == null) {
           print("Unrecognized type $type");
           continue;
         }
 
-        final supportingClasses = baseField.generateSupportingClasses();
+        final supportingClasses = field.generateSupportingClasses();
         if (supportingClasses != null) lib.body.addAll(supportingClasses);
 
         c.fields.add(Field((f) {
-          f.type = TypeReference(baseField.buildFieldType);
+          f.type = TypeReference(field.buildFieldType);
           f.modifier = FieldModifier.final$;
           f.name = fieldName;
         }));
 
-        co.initializers.add(Code(
-          "$fieldName = ${baseField.generateInitializerCode('json["$name"]')}",
+        con.initializers.add(Code(
+          "$fieldName = ${field.generateInitializerCode('json["$name"]')}",
         ));
       }
-
-      c.constructors.add(co.build());
-      return (component: component, builder: c);
+      c.constructors.add(con.build());
+      return (key: component.name, builder: c);
     }).toList();
   }
-}
-
-// Key is the datasource slug
-Map<String, Enum> datasourceData = {};
-
-class Datasource {
-  final int id;
-  final String slug;
-  // final dynamic dimensions;
-  Datasource.fromJson(JSONMap json)
-      : id = json["id"],
-        slug = json["slug"];
-}
-
-class _DatasourceEntry {
-  final int id;
-  final String value;
-  // final dynamic dimensions;
-  _DatasourceEntry.fromJson(JSONMap json)
-      : id = json["id"],
-        value = json["value"];
-}
-
-class _Component {
-  final String name;
-  final JSONMap schema;
-  final bool isRoot;
-  final bool isNestable;
-  _Component.fromJson(JSONMap json)
-      : name = json["name"],
-        isRoot = json["is_root"],
-        isNestable = json["is_nestable"],
-        schema = JSONMap.from(json["schema"]);
 }

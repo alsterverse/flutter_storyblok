@@ -3,11 +3,11 @@ import 'package:flutter_storyblok/utils.dart';
 
 import 'base_field.dart';
 
-final class BlokFields extends BaseField {
+final class BlokField extends BaseField {
   final int? maximum;
   final bool restrictTypes;
   final List<String> restrictedTypes;
-  BlokFields.fromJson(super.data, super.name)
+  BlokField.fromJson(super.data, super.name)
       : maximum = data["maximum"],
         restrictTypes = data["restrict_components"] ?? false,
         restrictedTypes = List.from(data["component_whitelist"] ?? []),
