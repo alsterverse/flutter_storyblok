@@ -144,27 +144,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.Feature feature => Feature(name: feature.name),
       final bloks.Teaser teaser => Teaser(headline: teaser.headline),
       final bloks.Page page => starter_blocks.Page(page: page),
-      final bloks.Grid grid => Grid(),
-      bloks.UnrecognizedBlok() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      //TODO: remove this line before release
-      // _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.ContentEditor() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.MultiOptionsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.MultiPage() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.Root() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.Testar() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.TestMultiAssetsBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // final bloks.TestMultiAssetsBlock multiAssatBlock => MultiAssatWidget(multiAssatBlock: multiAssatBlock),
-      // TODO: Handle this case.
-      bloks.BottomNavigationItem() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-      // TODO: Handle this case.
-      bloks.RichBlock() => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      final bloks.Grid _ => const Grid(),
+      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }
 }
