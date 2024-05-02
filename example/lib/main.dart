@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.black,
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.black,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
         ),
       ),
     );
@@ -139,7 +139,6 @@ extension BlockWidget on bloks.Blok {
       final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
       final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
       final bloks.Hero hero => HeroWidget(videoItem: hero.video),
-      final bloks.BottomNavPage bottomNavPage => BottomNavigationPage(bottomNavPage: bottomNavPage),
       final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
       final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
       final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),

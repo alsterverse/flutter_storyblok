@@ -1,7 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
-import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/link_type.dart';
 
@@ -24,68 +23,48 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColor = AppColors.black;
+    const selectedItemColor = AppColors.primary;
+    final unselectedItemColor = AppColors.primary.withOpacity(0.5);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.black,
+        currentIndex: _selectedIndex,
+        backgroundColor: backgroundColor,
+        selectedItemColor: selectedItemColor,
+        unselectedItemColor: unselectedItemColor,
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedItemColor: const Color.fromARGB(255, 144, 84, 255),
-        unselectedItemColor: const Color.fromARGB(109, 255, 255, 255),
         onTap: (value) => _onTap(value),
-        items: widget.bottomNav.items.map((page) {
-          return BottomNavigationBarItem(
-            activeIcon: Image.network(
-              page.icon.fileName,
-              color: const Color.fromARGB(255, 144, 84, 255),
-              width: 44,
-              height: 44,
-            ),
-            icon: Image.network(
-              page.icon.fileName,
-              color: const Color.fromARGB(109, 255, 255, 255),
-              width: 40,
-              height: 40,
-            ),
-            label: page.label,
-          );
-        }).toList(),
-        currentIndex: _selectedIndex,
+        items: widget.bottomNav.items
+            .map((item) => BottomNavigationBarItem(
+                  backgroundColor: backgroundColor,
+                  label: item.label,
+                  activeIcon: Image.network(
+                    item.icon.fileName,
+                    color: selectedItemColor,
+                    width: 40,
+                    height: 40,
+                  ),
+                  icon: Image.network(
+                    item.icon.fileName,
+                    color: unselectedItemColor,
+                    width: 40,
+                    height: 40,
+                  ),
+                ))
+            .toList(),
       ),
       body: IndexedStack(
-          index: _selectedIndex,
-          children: widget.bottomNav.items.map((item) {
-            if (((item.page as LinkTypeStory).resolvedStory?.content is bloks.Page)) {
-              var story = (item.page as LinkTypeStory).resolvedStory;
-              return Scaffold(
-                appBar: AppBar(title: Text(story?.name ?? "No content")),
-                body: Center(
-                  child: ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(24),
-                      children: ((item.page as LinkTypeStory).resolvedStory?.content as bloks.Page)
-                          .body
-                          .map((e) => e.buildWidget(context))
-                          .separatedBy(() => const SizedBox(height: 24))
-                          .toList()),
-                ),
-              );
-            } else {
-              return Scaffold(
-                appBar: AppBar(title: Text((item.page as LinkTypeStory).resolvedStory?.name ?? "name is null")),
-                body: Center(child: Text(item.label)),
-              );
-            }
-          }).toList()),
+        index: _selectedIndex,
+        children: widget.bottomNav.items.map((item) {
+          final page = item.page;
+          if (page is LinkTypeStory) {
+            final content = page.resolvedStory?.content;
+            if (content is bloks.Blok) return content.buildWidget(context);
+          }
+          return const Placeholder();
+        }).toList(),
+      ),
     );
-  }
-}
-
-class BottomNavigationPage extends StatelessWidget {
-  final bloks.BottomNavPage bottomNavPage;
-  const BottomNavigationPage({super.key, required this.bottomNavPage});
-
-  @override
-  Widget build(BuildContext context) {
-    return bottomNavPage.block.buildWidget(context);
   }
 }

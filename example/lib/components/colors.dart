@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const purple = Color.fromARGB(255, 105, 38, 229);
+  AppColors._();
+
+  static const purple = Color.fromARGB(255, 144, 84, 255);
   static const purpleFaded = Color.fromARGB(191, 79, 41, 151);
   static const accent = Color.fromARGB(255, 65, 137, 230);
 
