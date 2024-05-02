@@ -2,7 +2,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/link_type.dart';
+import 'package:flutter_storyblok/link.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 

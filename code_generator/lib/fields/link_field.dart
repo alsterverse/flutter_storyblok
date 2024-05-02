@@ -1,4 +1,4 @@
-import 'package:flutter_storyblok/link_type.dart';
+import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
@@ -17,7 +17,7 @@ final class LinkField extends BaseField {
 
   @override
   String symbol() {
-    if (isAssetAllowed && isEmailAllowed) return "$LinkType";
+    if (isAssetAllowed && isEmailAllowed) return "$Link";
     if (isAssetAllowed) return "$BaseWithAssetLinkTypes";
     if (isEmailAllowed) return "$BaseWithEmailLinkTypes";
     return "$BaseLinkTypes";

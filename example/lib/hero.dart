@@ -4,7 +4,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/link_type.dart';
+import 'package:flutter_storyblok/link.dart';
 
 class HeroWidget extends StatelessWidget {
   const HeroWidget({
