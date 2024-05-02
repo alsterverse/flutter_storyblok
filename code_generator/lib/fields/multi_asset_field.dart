@@ -1,6 +1,6 @@
 import 'package:flutter_storyblok/asset.dart';
 
-import 'base_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 
 final class MultiAssetField extends BaseField {
   MultiAssetField.fromJson(super.data, super.name) : super.fromJson();

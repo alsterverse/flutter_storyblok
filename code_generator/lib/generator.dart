@@ -1,74 +1,36 @@
-import 'dart:io';
-
 import 'package:code_builder/code_builder.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import 'api.dart';
-import 'field/base_field.dart';
-import 'util/data_models.dart';
-import 'util/enum.dart';
-
-final dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
-final dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
-
-// Key is the datasource slug
-Map<String, Enum> datasourceData = {};
-
-/// final _incompatibleNameRegex = RegExp('[^a-zA-Z]');
-const incompatibleNameRegex = "[^a-zA-Z]";
-final incompatibleNameRegexField = Field(
-  (f) => f
-    ..modifier = FieldModifier.final$
-    ..name = "_incompatibleNameRegex"
-    ..assignment = Code("RegExp('$incompatibleNameRegex')"),
-);
-
-/// Out? _mapIfNotNull<In, Out>(In?, Out? Function(In))
-final mapIfNotNullMethod = Method(
-  (m) => m
-    ..returns = refer("Out?")
-    ..name = "_mapIfNotNull"
-    ..types = ListBuilder([refer("In"), refer("Out")])
-    ..requiredParameters.addAll([
-      Parameter((p) => p
-        ..type = refer("In?")
-        ..name = "value"),
-      Parameter((p) => p
-        ..type = refer("Out? Function(In)")
-        ..name = "mapper"),
-    ])
-    ..body = Code("return value == null ? null : mapper(value);"),
-);
-
-void main(List<String> args) async {
-  final spaceId = args[0];
-  final authorization = args[1];
-  final outputPath = args[2];
-
-  final codegen = StoryblokCodegen(spaceId: spaceId, authorization: authorization, outputPath: outputPath);
-  await codegen.generate();
-}
+import 'package:flutter_storyblok_code_generator/http_client.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/data_models.dart';
+import 'package:flutter_storyblok_code_generator/utils/enum.dart';
+import 'package:flutter_storyblok_code_generator/utils/methods.dart';
 
 class StoryblokCodegen {
-  late final String _spaceId;
-  late final String _authorization;
-  late final String _outputPath;
+  final _dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
+  final _dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
 
-  StoryblokCodegen({required String spaceId, required String authorization, required String outputPath}) {
-    _spaceId = spaceId;
-    _authorization = authorization;
-    _outputPath = outputPath;
-  }
+  StoryblokCodegen({
+    required List<DatasourceWithEntries> datasourceWithEntries,
+    required this.components,
+  }) : datasourceData = Map.fromEntries(datasourceWithEntries.map((e) {
+          final (:datasource, :entries) = e;
+          final name = datasource.slug;
+          return MapEntry(name, buildEnum(Casing.pascalCase(name), entries.map((e) => e.value)));
+        }));
 
-  late final _apiClient = StoryblokHttpClient(_spaceId, _authorization);
+  // Key is the datasource slug
+  final Map<String, Enum> datasourceData;
+  final List<Component> components;
 
-  Future generate() async {
+  Future<String> generate() async {
     final lib = LibraryBuilder();
-
-    lib.comments.add("ignore_for_file: unused_import");
+    lib.name = "bloks";
+    lib.generatedByComment = "storyblok_code_generator";
+    lib.ignoreForFile.add("unused_import");
 
     // import ...
     lib.directives.addAll([
@@ -78,11 +40,12 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/request_parameters.dart'),
     ]);
 
-    lib.body.add(incompatibleNameRegexField);
-    lib.body.add(mapIfNotNullMethod);
+    lib.body.addAll([
+      incompatibleNameRegexField,
+      mapIfNotNullMethod,
+    ]);
 
-    await _downloadDatasource(); // Must be fetched before "components"
-    final components = await _downloadComponents(lib);
+    final components = _buildComponents(lib);
 
     // enum <name> {
     lib.body.addAll(datasourceData.values);
@@ -131,30 +94,12 @@ class StoryblokCodegen {
     }));
     // }
 
-    final output = dartFormatter.format(lib.build().accept(dartEmitter).toString());
-    final file = File(_outputPath);
-    if (file.existsSync()) file.deleteSync();
-    file.writeAsStringSync(output);
+    final library = lib.build();
+    final a = library.accept(_dartEmitter);
+    return _dartFormatter.format(a.toString());
   }
 
-  // TODO Dimensions
-  Future _downloadDatasource() async {
-    final ds = await _apiClient.get("datasources");
-    final datasources = List<JSONMap>.from(ds["datasources"]).map(Datasource.fromJson).toList();
-    final allEntries = await Future.wait(datasources.map((e) async {
-      final d = await _apiClient.get("datasource_entries", {"datasource_id": e.id.toString()});
-      return List<JSONMap>.from(d["datasource_entries"]).map(DatasourceEntry.fromJson).toList();
-    }));
-    final mapped = datasources.mapIndexed((i, e) => (e, allEntries[i])).toList();
-
-    for (final (d, entries) in mapped) {
-      final name = d.slug;
-      datasourceData[name] = buildEnum(name, entries.map((e) => e.value));
-    }
-  }
-
-  Future<List<({String key, ClassBuilder builder})>> _downloadComponents(LibraryBuilder lib) async {
-    final components = await _apiClient.getComponents();
+  List<({String key, ClassBuilder builder})> _buildComponents(LibraryBuilder lib) {
     return components.map((component) {
       final c = ClassBuilder();
       c.name = Casing.pascalCase(component.name);

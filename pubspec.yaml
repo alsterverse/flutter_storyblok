@@ -1,34 +1,16 @@
 name: flutter_storyblok
 description: A new Flutter package project.
-version: 0.0.1
-homepage:
-
-executables:
-  flutter_storyblok:
+version: 0.0.1+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: ^3.3.0
 
 dependencies:
-  flutter:
-    sdk: flutter
-  google_fonts: ^6.1.0
-  http: ^1.1.0
-  reflectable: ^4.0.5
-  dart_casing: ^2.0.0
-  flutter_lints: ^2.0.0
-  code_builder: ^4.6.0
-  wave: ^0.2.2
-  multiselect: ^0.1.0
+  http: ^1.2.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  # http: any
+  lints: ^2.0.3
+  build_runner: ^2.4.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
-flutter:
