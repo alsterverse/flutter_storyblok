@@ -120,15 +120,17 @@ class FutureStoryWidget extends StatelessWidget {
 extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return switch (this) {
-      final bloks.HardwareButton button => BlockButton(button.title,
+      final bloks.HardwareButton button => BlockButton(
+          button.title,
           onPressed: () => switch (button.sensor) {
-                bloks.PhoneHardware.camera =>
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CameraScreen())),
-                bloks.PhoneHardware.accelerometer =>
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AccelerometerScreen())),
-                bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
-                bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
-              }),
+            bloks.PhoneHardware.camera =>
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CameraScreen())),
+            bloks.PhoneHardware.accelerometer =>
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AccelerometerScreen())),
+            bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
+            bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
+          },
+        ),
       final bloks.StartPage startPage => StartPage(startPage: startPage),
       final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
