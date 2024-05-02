@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:example/bloks.generated.dart';
+import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
 import 'package:example/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_storyblok/rich_text.dart';
 import 'package:flutter_storyblok/utils.dart';
+
+// TODO: Use Flutter.RichText
 
 class StoryblokRichTextContent extends StatelessWidget {
   const StoryblokRichTextContent({super.key, required this.content});
@@ -104,10 +105,11 @@ extension RichTextLeaftWidget on RichTextLeaf {
   Widget buildLeafWidget(BuildContext context) {
     return switch (this) {
       final RichTextLeafText text => RichTextLeafTextWidget(text: text),
+      final RichTextLeafEmoji emoji => Text(emoji.text ?? "⌧"),
       final RichTextLeafImage image => Image.network(image.imageUrl.toString()),
       final RichTextLeafHardBreak _ => const SizedBox(width: double.infinity),
       final RichTextComponentParagraph paragraph => paragraph.buildComponentWidget(context),
-      UnrecognizedRichTextLeaf() => const SizedBox.shrink()
+      UnrecognizedRichTextLeaf() => const SizedBox.shrink(),
     };
   }
 }
@@ -119,39 +121,25 @@ class RichTextLeafTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final string = text.text.replaceAll(" ", " ");
-    if (text.isSuperscript || text.isSubscript) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: text.isSuperscript ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-        children: [
-          SizedBox(width: 0, child: _buildText(context, "")),
-          _buildText(context, string, true),
-        ],
-      );
-    }
-    return _buildText(context, string);
-  }
-
-  Text _buildText(BuildContext context, String string, [bool subOrSuperscript = false]) {
-    final foregroundColor = mapIfNotNull(text.foregroundColor, HexColor.new);
-
+    final foregroundColor =
+        mapIfNotNull(text.foregroundColor?.colorHex, HexColor.new) ?? (text.link != null ? AppColors.accent : null);
     return Text(
       string,
       style: TextStyle(
-        backgroundColor: text.isCode ? Colors.grey : mapIfNotNull(text.backgroundColor, HexColor.new),
+        backgroundColor: text.isCode ? Colors.grey : mapIfNotNull(text.backgroundColor?.colorHex, HexColor.new),
         color: foregroundColor,
-        fontSize: mapIfNotNull(
-          DefaultTextStyle.of(context).style.fontSize,
-          (size) => subOrSuperscript ? size * 0.7 : size,
-        ),
         fontStyle: text.isItalic || text.isCode ? FontStyle.italic : null,
         fontWeight: text.isBold ? FontWeight.bold : null,
-        decorationColor: foregroundColor,
+        decorationColor: text.link == null ? foregroundColor : AppColors.accent,
         decorationStyle: TextDecorationStyle.solid,
         decoration: TextDecoration.combine([
           if (text.isStriked) TextDecoration.lineThrough,
-          if (text.isUnderlined) TextDecoration.underline,
+          if (text.isUnderlined || text.link != null) TextDecoration.underline,
         ]),
+        fontFeatures: [
+          if (text.isSuperscript) const FontFeature.superscripts(),
+          if (text.isSubscript) const FontFeature.subscripts(),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 //
 
+import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 class RichText {
@@ -26,6 +27,7 @@ sealed class RichTextLeaf {
     final type = json["type"];
     return switch (type) {
       "text" => RichTextLeafText.fromJson(json),
+      "emoji" => RichTextLeafEmoji.fromJson(json),
       "image" => RichTextLeafImage.fromJson(json),
       "hard_break" => RichTextLeafHardBreak(),
       "paragraph" => RichTextComponentParagraph.fromJson(json),
@@ -61,6 +63,8 @@ sealed class RichTextLeafTextMark {
       "superscript" => RichTextLeafTextMarkSuperscript(),
       "subscript" => RichTextLeafTextMarkSubscript(),
       "code" => RichTextLeafTextMarkCode(),
+      "anchor" => RichTextLeafTextMarkAnchor.fromJson(json),
+      "link" => RichTextLeafTextMarkLink.fromJson(json),
       "textStyle" => RichTextLeafTextMarkTextStyle.fromJson(json),
       "highlight" => RichTextLeafTextMarkHighlight.fromJson(json),
       _ => UnrecognizedTextRichTextMark(type, json),
@@ -93,6 +97,22 @@ class RichTextLeafTextMarkSubscript extends RichTextLeafTextMark {}
 
 class RichTextLeafTextMarkCode extends RichTextLeafTextMark {}
 
+class RichTextLeafTextMarkAnchor extends RichTextLeafTextMark {
+  RichTextLeafTextMarkAnchor({required this.id});
+  factory RichTextLeafTextMarkAnchor.fromJson(JSONMap json) => RichTextLeafTextMarkAnchor(
+        id: json["attrs"]["id"],
+      );
+  final String id;
+}
+
+class RichTextLeafTextMarkLink extends RichTextLeafTextMark {
+  RichTextLeafTextMarkLink({required this.link});
+  factory RichTextLeafTextMarkLink.fromJson(JSONMap json) => RichTextLeafTextMarkLink(
+        link: Link.fromJson(json["attrs"]),
+      );
+  final Link? link;
+}
+
 class RichTextLeafTextMarkTextStyle extends RichTextLeafTextMark {
   RichTextLeafTextMarkTextStyle({required this.colorHex});
   factory RichTextLeafTextMarkTextStyle.fromJson(JSONMap json) => RichTextLeafTextMarkTextStyle(
@@ -114,32 +134,52 @@ class RichTextLeafTextMarkHighlight extends RichTextLeafTextMark {
 //
 
 class RichTextLeafText extends RichTextLeaf {
-  RichTextLeafText({required this.text, required this.marks});
+  RichTextLeafText({required this.text, required List<RichTextLeafTextMark> marks})
+      : isCode = marks.containsType<RichTextLeafTextMarkCode>(),
+        isBold = marks.containsType<RichTextLeafTextMarkBold>(),
+        isItalic = marks.containsType<RichTextLeafTextMarkItalic>(),
+        isStriked = marks.containsType<RichTextLeafTextMarkStrike>(),
+        isUnderlined = marks.containsType<RichTextLeafTextMarkUnderline>(),
+        isSuperscript = marks.containsType<RichTextLeafTextMarkSuperscript>(),
+        isSubscript = marks.containsType<RichTextLeafTextMarkSubscript>(),
+        anchor = marks.firstAsType(),
+        link = marks.firstAsType(),
+        backgroundColor = marks.firstAsType(),
+        foregroundColor = marks.firstAsType();
+
   factory RichTextLeafText.fromJson(JSONMap json) => RichTextLeafText(
         text: json["text"],
         marks: List<JSONMap>.from(json["marks"] ?? []).map(RichTextLeafTextMark.fromJson).toList(),
       );
 
   final String text;
-  final List<RichTextLeafTextMark> marks;
+  final bool isCode;
+  final bool isBold;
+  final bool isItalic;
+  final bool isStriked;
+  final bool isUnderlined;
+  final bool isSuperscript;
+  final bool isSubscript;
+  final RichTextLeafTextMarkAnchor? anchor;
+  final RichTextLeafTextMarkLink? link;
+  final RichTextLeafTextMarkHighlight? backgroundColor;
+  final RichTextLeafTextMarkTextStyle? foregroundColor;
+}
 
-  bool get isCode => marks.containsWhere((e) => e is RichTextLeafTextMarkCode);
-
-  bool get isBold => marks.containsWhere((e) => e is RichTextLeafTextMarkBold);
-  bool get isItalic => marks.containsWhere((e) => e is RichTextLeafTextMarkItalic);
-  bool get isStriked => marks.containsWhere((e) => e is RichTextLeafTextMarkStrike);
-  bool get isUnderlined => marks.containsWhere((e) => e is RichTextLeafTextMarkUnderline);
-  bool get isSuperscript => marks.containsWhere((e) => e is RichTextLeafTextMarkSuperscript);
-  bool get isSubscript => marks.containsWhere((e) => e is RichTextLeafTextMarkSubscript);
-
-  String? get foregroundColor => mapIfNotNull(
-        marks.firstWhereOrNull((e) => e is RichTextLeafTextMarkTextStyle) as RichTextLeafTextMarkTextStyle?,
-        (e) => e.colorHex,
+class RichTextLeafEmoji extends RichTextLeaf {
+  RichTextLeafEmoji({
+    required this.name,
+    required this.text,
+    required this.fallback,
+  });
+  factory RichTextLeafEmoji.fromJson(JSONMap json) => RichTextLeafEmoji(
+        name: json["attrs"]["name"],
+        text: json["attrs"]["emoji"],
+        fallback: mapIfNotNull(json["attrs"]["fallbackImage"] as String?, Uri.parse),
       );
-  String? get backgroundColor => mapIfNotNull(
-        marks.firstWhereOrNull((e) => e is RichTextLeafTextMarkHighlight) as RichTextLeafTextMarkHighlight?,
-        (e) => e.colorHex,
-      );
+  final String name;
+  final String? text;
+  final Uri? fallback;
 }
 
 class RichTextLeafImage extends RichTextLeaf {

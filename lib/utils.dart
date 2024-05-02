@@ -18,8 +18,18 @@ extension IterableUtils<E> on Iterable<E> {
     return false;
   }
 
+  bool containsType<T>() {
+    for (final e in this) if (e is T) return true;
+    return false;
+  }
+
   E? firstWhereOrNull(bool Function(E) check) {
     for (final e in this) if (check(e)) return e;
+    return null;
+  }
+
+  T? firstAsType<T>() {
+    for (final e in this) if (e is T) return e;
     return null;
   }
 }
