@@ -6,19 +6,31 @@ import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/rich_text.dart' as rich_blok;
 import 'package:flutter_storyblok/utils.dart';
 
+class _StoryblokRichTextContentData {
+  _StoryblokRichTextContentData({required this.onTapLink});
+  final void Function(Link)? onTapLink;
+}
+
 class StoryblokRichTextContent extends StatelessWidget {
-  const StoryblokRichTextContent({super.key, required this.content});
-  final List<rich_blok.RichTextComponent> content;
+  StoryblokRichTextContent({
+    super.key,
+    required this.content,
+    void Function(Link)? onTapLink,
+  }) : _contentData = _StoryblokRichTextContentData(onTapLink: onTapLink);
+
+  final _StoryblokRichTextContentData _contentData;
+  final List<rich_blok.RichTextContainer> content;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: content
-          .map((e) => e.buildComponentWidget(context)) //
+          .map((e) => e.buildComponentWidget(context, _contentData)) //
           .separatedBy(() => const SizedBox(height: 16))
           .toList(),
     );
@@ -27,27 +39,28 @@ class StoryblokRichTextContent extends StatelessWidget {
 
 // MARK: - Components
 
-extension _RichTextComponentBuildWidget on rich_blok.RichTextComponent {
-  Widget buildComponentWidget(BuildContext context) {
+extension _RichTextComponentBuildWidget on rich_blok.RichTextContainer {
+  Widget buildComponentWidget(BuildContext context, _StoryblokRichTextContentData contentData) {
     return switch (this) {
-      final rich_blok.RichTextComponentParagraph paragraph => paragraph.content.buildRichText(context),
-      final rich_blok.RichTextComponentHeading heading => heading.content.buildRichText(
+      final rich_blok.RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
+      final rich_blok.RichTextContainerHeading heading => heading.content.buildRichText(
           context,
+          contentData,
           textStyle: TextStyle(
             fontSize: 24 / max(1, (heading.level / 4)),
             fontWeight: FontWeight.bold,
           ),
         ),
-      final rich_blok.RichTextComponentCode code => Container(
+      final rich_blok.RichTextContainerCode code => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey),
             color: const Color(0xFFEEEEEE),
           ),
-          child: code.content.buildRichText(context),
+          child: code.content.buildRichText(context, contentData),
         ),
-      final rich_blok.RichTextComponentQuote quote => IntrinsicHeight(
+      final rich_blok.RichTextContainerQuote quote => IntrinsicHeight(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -55,14 +68,14 @@ extension _RichTextComponentBuildWidget on rich_blok.RichTextComponent {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: quote.content.buildRichText(context),
+                  child: quote.content.buildRichText(context, contentData),
                 ),
               )
             ],
           ),
         ),
-      final rich_blok.RichTextComponentLine _ => Container(height: 1, color: Colors.black),
-      final rich_blok.RichTextComponentList list => Column(
+      final rich_blok.RichTextContainerLine _ => Container(height: 1, color: Colors.black),
+      final rich_blok.RichTextContainerList list => Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -72,12 +85,12 @@ extension _RichTextComponentBuildWidget on rich_blok.RichTextComponent {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(list.isOrdered ? "${i + 1}. " : "- "),
-                      Expanded(child: e.content.buildRichText(context)),
+                      Expanded(child: e.content.buildRichText(context, contentData)),
                     ],
                   ))
               .toList(),
         ),
-      final rich_blok.RichTextComponentBlok blok => Column(
+      final rich_blok.RichTextContainerBlok blok => Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: blok.bloksData.map((e) => Blok.fromJson(e).buildWidget(context)).toList(),
@@ -90,17 +103,17 @@ extension _RichTextComponentBuildWidget on rich_blok.RichTextComponent {
 // MARK: - Leaves
 
 extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
-  Widget buildRichText(BuildContext context, {TextStyle? textStyle}) {
+  Widget buildRichText(BuildContext context, _StoryblokRichTextContentData contentData, {TextStyle? textStyle}) {
     return RichText(
       text: TextSpan(
         style: DefaultTextStyle.of(context).style.merge(textStyle),
         children: map((e) => switch (e) {
-              final rich_blok.RichTextLeafText text => _buildLeafText(context, text),
+              final rich_blok.RichTextLeafText text => _buildLeafText(context, contentData, text),
               final rich_blok.RichTextLeafEmoji emoji => TextSpan(text: emoji.text ?? "⌧"),
               final rich_blok.RichTextLeafImage image => WidgetSpan(child: Image.network(image.imageUrl.toString())),
               final rich_blok.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
-              final rich_blok.RichTextComponentParagraph paragraph => WidgetSpan(
-                  child: paragraph.buildComponentWidget(context),
+              final rich_blok.RichTextContainerParagraph paragraph => WidgetSpan(
+                  child: paragraph.buildComponentWidget(context, contentData),
                 ),
               rich_blok.UnrecognizedRichTextLeaf() => const TextSpan(),
             }).toList(),
@@ -111,13 +124,14 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
 
 // MARK: - Text
 
-TextSpan _buildLeafText(BuildContext context, rich_blok.RichTextLeafText text) {
+TextSpan _buildLeafText(
+    BuildContext context, _StoryblokRichTextContentData contentData, rich_blok.RichTextLeafText text) {
   final foregroundColor =
       mapIfNotNull(text.foregroundColor?.colorHex, _HexColor.new) ?? (text.link != null ? AppColors.accent : null);
-  final link = text.link;
+  final link = text.link?.link;
   return TextSpan(
     text: text.text,
-    recognizer: link == null ? null : (TapGestureRecognizer()..onTap = () => print("Tap ${link.link}")),
+    recognizer: link == null ? null : (TapGestureRecognizer()..onTap = () => contentData.onTapLink?.call(link)),
     style: TextStyle(
       backgroundColor: text.isCode ? Colors.grey : mapIfNotNull(text.backgroundColor?.colorHex, _HexColor.new),
       color: foregroundColor,
