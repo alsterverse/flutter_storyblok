@@ -10,11 +10,6 @@ import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/rich_text.dart' as rich_blok;
 import 'package:flutter_storyblok/utils.dart';
 
-class _StoryblokRichTextContentData {
-  _StoryblokRichTextContentData({required this.onTapLink});
-  final void Function(Link)? onTapLink;
-}
-
 class StoryblokRichTextContent extends StatelessWidget {
   StoryblokRichTextContent({
     super.key,
@@ -30,17 +25,25 @@ class StoryblokRichTextContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: content
-          .map((e) => e.buildComponentWidget(context, _contentData)) //
+          .map((e) => e.buildContainerWidget(context, _contentData)) //
           .separatedBy(() => const SizedBox(height: 16))
           .toList(),
     );
   }
 }
 
-// MARK: - Components
+// MARK: - Data
 
-extension _RichTextComponentBuildWidget on rich_blok.RichTextContainer {
-  Widget buildComponentWidget(BuildContext context, _StoryblokRichTextContentData contentData) {
+/// Used for passing data to the containers and leaves
+class _StoryblokRichTextContentData {
+  _StoryblokRichTextContentData({required this.onTapLink});
+  final void Function(Link)? onTapLink;
+}
+
+// MARK: - Containers
+
+extension _RichTextContainerWidget on rich_blok.RichTextContainer {
+  Widget buildContainerWidget(BuildContext context, _StoryblokRichTextContentData contentData) {
     return switch (this) {
       final rich_blok.RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
       final rich_blok.RichTextContainerHeading heading => heading.content.buildRichText(
@@ -103,17 +106,36 @@ extension _RichTextComponentBuildWidget on rich_blok.RichTextContainer {
 // MARK: - Leaves
 
 extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
-  Widget buildRichText(BuildContext context, _StoryblokRichTextContentData contentData, {TextStyle? textStyle}) {
+  Widget buildRichText(
+    BuildContext context,
+    _StoryblokRichTextContentData contentData, {
+    TextStyle? textStyle,
+  }) {
     return RichText(
       text: TextSpan(
         style: DefaultTextStyle.of(context).style.merge(textStyle),
         children: map((e) => switch (e) {
-              final rich_blok.RichTextLeafText text => _buildLeafText(context, contentData, text),
-              final rich_blok.RichTextLeafEmoji emoji => TextSpan(text: emoji.text ?? "⌧"),
-              final rich_blok.RichTextLeafImage image => WidgetSpan(child: Image.network(image.imageUrl.toString())),
+              final rich_blok.RichTextLeafText text => TextSpan(
+                  text: text.text,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = mapIfNotNull(contentData.onTapLink,
+                        (onTapLink) => () => mapIfNotNull(text.link?.link, (link) => onTapLink(link))),
+                  style: text.buildTextStyle(),
+                ),
+              final rich_blok.RichTextLeafEmoji emoji => TextSpan(
+                  text: emoji.text ?? "⌧",
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = mapIfNotNull(contentData.onTapLink,
+                        (onTapLink) => () => mapIfNotNull(emoji.link?.link, (link) => onTapLink(link))),
+                  style: emoji.buildTextStyle(),
+                ),
+              final rich_blok.RichTextLeafImage image => WidgetSpan(
+                  style: image.buildTextStyle(),
+                  child: Image.network(image.imageUrl.toString()),
+                ),
               final rich_blok.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
               final rich_blok.RichTextContainerParagraph paragraph => WidgetSpan(
-                  child: paragraph.buildComponentWidget(context, contentData),
+                  child: paragraph.buildContainerWidget(context, contentData),
                 ),
               rich_blok.UnrecognizedRichTextLeaf() => const TextSpan(),
             }).toList(),
@@ -122,33 +144,29 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
   }
 }
 
-// MARK: - Text
+// MARK: - Markable TextStyle
 
-TextSpan _buildLeafText(
-    BuildContext context, _StoryblokRichTextContentData contentData, rich_blok.RichTextLeafText text) {
-  final foregroundColor =
-      mapIfNotNull(text.foregroundColor?.colorHex, _HexColor.new) ?? (text.link != null ? AppColors.accent : null);
-  final link = text.link?.link;
-  return TextSpan(
-    text: text.text,
-    recognizer: link == null ? null : (TapGestureRecognizer()..onTap = () => contentData.onTapLink?.call(link)),
-    style: TextStyle(
-      backgroundColor: text.isCode ? Colors.grey : mapIfNotNull(text.backgroundColor?.colorHex, _HexColor.new),
+extension _RichTextLeafMarkableWidget on rich_blok.RichTextLeafMarkable {
+  TextStyle buildTextStyle() {
+    final foregroundColor =
+        mapIfNotNull(this.foregroundColor?.colorHex, _HexColor.new) ?? (link != null ? AppColors.accent : null);
+    return TextStyle(
+      backgroundColor: isCode ? Colors.grey : mapIfNotNull(backgroundColor?.colorHex, _HexColor.new),
       color: foregroundColor,
-      fontStyle: text.isItalic || text.isCode ? FontStyle.italic : null,
-      fontWeight: text.isBold ? FontWeight.bold : null,
-      decorationColor: text.link == null ? foregroundColor : AppColors.accent,
+      fontStyle: isItalic || isCode ? FontStyle.italic : null,
+      fontWeight: isBold ? FontWeight.bold : null,
+      decorationColor: link == null ? foregroundColor : AppColors.accent,
       decorationStyle: TextDecorationStyle.solid,
       decoration: TextDecoration.combine([
-        if (text.isStriked) TextDecoration.lineThrough,
-        if (text.isUnderlined || text.link != null) TextDecoration.underline,
+        if (isStriked) TextDecoration.lineThrough,
+        if (isUnderlined || link != null) TextDecoration.underline,
       ]),
       fontFeatures: [
-        if (text.isSuperscript) const FontFeature.superscripts(),
-        if (text.isSubscript) const FontFeature.subscripts(),
+        if (isSuperscript) const FontFeature.superscripts(),
+        if (isSubscript) const FontFeature.subscripts(),
       ],
-    ),
-  );
+    );
+  }
 }
 
 // MARK: - HexColor
