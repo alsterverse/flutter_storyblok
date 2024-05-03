@@ -1,4 +1,4 @@
-import 'base_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 
 final class DateTimeField extends BaseField {
   DateTimeField.fromJson(super.data, super.name) : super.fromJson();

@@ -3,24 +3,23 @@ import 'package:dart_casing/dart_casing.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import '../storyblok_sourcegen.dart';
-import '../util/enum.dart';
-import 'base_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/enum.dart';
 
 final class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
   OptionField.fromJson(super.data, super.name)
       : source = OptionSource.values.byName(tryCast<String>(data["source"]) ?? OptionSource.self.name),
-        enumName = "${name}_Option",
+        enumName = Casing.pascalCase("${name}_Option"),
         super.fromJson();
 
   @override
   String symbol() => switch (source) {
-        OptionSource.self => Casing.pascalCase(enumName),
+        OptionSource.self => enumName,
         OptionSource.internal_stories => "$StoryIdentifierUUID",
         OptionSource.internal_languages => "$String", // TODO Language enum
-        OptionSource.internal => datasourceData[data["datasource_slug"]]!.name,
+        OptionSource.internal => Casing.pascalCase(data["datasource_slug"]),
       };
 
   @override
@@ -38,10 +37,10 @@ final class OptionField extends BaseField {
   @override
   String generateInitializerCode(String valueCode) {
     return super.generateInitializerCode(switch (source) {
-      OptionSource.self => buildInstantiateEnum(Casing.pascalCase(enumName), valueCode),
+      OptionSource.self => buildInstantiateEnum(enumName, valueCode),
       OptionSource.internal_stories => "$StoryIdentifierUUID($valueCode)",
       OptionSource.internal_languages => valueCode,
-      OptionSource.internal => buildInstantiateEnum(datasourceData[data["datasource_slug"]]!.name, valueCode),
+      OptionSource.internal => buildInstantiateEnum(Casing.pascalCase(data["datasource_slug"]), valueCode),
     });
   }
 }

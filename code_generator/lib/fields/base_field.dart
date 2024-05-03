@@ -1,17 +1,17 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import 'asset_field.dart';
-import 'blok_fields.dart';
-import 'boolean_field.dart';
-import 'datetime_field.dart';
-import 'link_field.dart';
-import 'multi_asset_field.dart';
-import 'number_field.dart';
-import 'option_field.dart';
-import 'text/text_area_field.dart';
-import 'text/text_field.dart';
-import 'text/text_markdown_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/asset_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/blok_fields.dart';
+import 'package:flutter_storyblok_code_generator/fields/boolean_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/datetime_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/link_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/multi_asset_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/number_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/option_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/text_area_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/text_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/text_markdown_field.dart';
 
 abstract class BaseField {
   final JSONMap data;
@@ -23,8 +23,8 @@ abstract class BaseField {
       : isRequired = tryCast<bool>(data["required"]) ?? false,
         position = tryCast<int>(data["pos"]);
 
-  static BaseField? fromData(JSONMap data, String type, String fieldName) {
-    return switch (type) {
+  static BaseField? fromData(JSONMap data, String typee, String fieldName) {
+    final BaseField? a = switch (typee) {
       "bloks" => BlokField.fromJson(data, fieldName),
       "text" => TextField.fromJson(data, fieldName),
       "textarea" => TextAreaField.fromJson(data, fieldName),
@@ -42,8 +42,10 @@ abstract class BaseField {
       // rich
       _ => null,
     };
+    return a;
   }
 
+  // TODO: return Reference
   String symbol();
 
   void buildFieldType(TypeReferenceBuilder t) => t
@@ -52,5 +54,6 @@ abstract class BaseField {
 
   List<Spec>? generateSupportingClasses() => null;
 
+  // TODO: return Code
   String generateInitializerCode(String valueCode) => valueCode;
 }
