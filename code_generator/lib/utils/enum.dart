@@ -1,7 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_casing/dart_casing.dart';
-
-import '../storyblok_sourcegen.dart';
+import 'package:flutter_storyblok_code_generator/utils/methods.dart';
 
 const _unknownName = "unknown";
 const _fromNameName = "fromName";
@@ -10,8 +9,7 @@ String buildInstantiateEnum(String className, [String? name]) {
   return "$className.$_fromNameName${name == null ? "" : "($name)"}";
 }
 
-Enum buildEnum(String name, Iterable<String> cases) {
-  final className = Casing.pascalCase(name);
+Enum buildEnum(String className, Iterable<String> cases) {
   cases = [...cases.where((element) => element.isNotEmpty), _unknownName];
   return Enum(
     (e) => e

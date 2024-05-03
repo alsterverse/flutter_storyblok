@@ -1,0 +1,22 @@
+name: flutter_storyblok_code_generator
+description: A new Flutter project.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 0.0.1+1
+
+executables:
+  codegen: main
+
+environment:
+  sdk: ^3.3.0
+
+dependencies:
+  flutter_storyblok:
+    path: ../
+  build_runner: ^2.4.9
+  code_builder: ^4.10.0
+  dart_casing: ^2.0.0
+  http: ^1.2.1
+
+dev_dependencies:
+  lints: ^2.0.3

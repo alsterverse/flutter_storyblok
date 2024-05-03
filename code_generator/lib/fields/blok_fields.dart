@@ -1,7 +1,7 @@
 import 'package:dart_casing/dart_casing.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import 'base_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 
 final class BlokField extends BaseField {
   final int? maximum;

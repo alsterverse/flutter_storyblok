@@ -1,7 +1,7 @@
 import 'package:flutter_storyblok/link_type.dart';
 import 'package:flutter_storyblok/utils.dart';
 
-import 'base_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 
 final class LinkField extends BaseField {
   final bool isAssetAllowed;
