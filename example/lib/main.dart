@@ -149,7 +149,7 @@ extension BlockWidget on bloks.Blok {
       final bloks.Page page => starter_blocks.Page(page: page),
       final bloks.Grid _ => const Grid(),
       final bloks.RichBlock rich => StoryblokRichTextContent(
-          content: rich.richtextheader?.content ?? [],
+          content: rich.richTextHeader?.content ?? [],
           onTapLink: (link) => switch (link) {
             LinkTypeURL() => print("Open URL: ${link.url}"),
             LinkTypeAsset() => Navigator.of(context).push(MaterialPageRoute(

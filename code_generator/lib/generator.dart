@@ -1,5 +1,4 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dart_casing/dart_casing.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:flutter_storyblok/utils.dart';
 
@@ -7,7 +6,7 @@ import 'package:flutter_storyblok_code_generator/http_client.dart';
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
 import 'package:flutter_storyblok_code_generator/utils/data_models.dart';
 import 'package:flutter_storyblok_code_generator/utils/enum.dart';
-import 'package:flutter_storyblok_code_generator/utils/methods.dart';
+import 'package:flutter_storyblok_code_generator/utils/names.dart';
 
 class StoryblokCodegen {
   final _dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
@@ -18,8 +17,8 @@ class StoryblokCodegen {
     required this.components,
   }) : datasourceData = Map.fromEntries(datasourceWithEntries.map((e) {
           final (:datasource, :entries) = e;
-          final name = datasource.slug;
-          return MapEntry(name, buildEnum(Casing.pascalCase(name), entries.map((e) => e.value)));
+          final name = sanitizeName(datasource.slug, isClass: true);
+          return MapEntry(name, buildEnum(name, entries.map((e) => e.value)));
         }));
 
   // Key is the datasource slug
@@ -30,6 +29,8 @@ class StoryblokCodegen {
     final lib = LibraryBuilder();
     lib.name = "bloks";
     lib.generatedByComment = "storyblok_code_generator";
+
+    // lint ...
     lib.ignoreForFile.add("unused_import");
 
     // import ...
@@ -39,11 +40,6 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/markdown.dart'),
       Directive.import('package:flutter_storyblok/request_parameters.dart'),
       Directive.import('package:flutter_storyblok/rich_text.dart'),
-    ]);
-
-    lib.body.addAll([
-      incompatibleNameRegexField,
-      mapIfNotNullMethod,
     ]);
 
     final components = _buildComponents(lib);
@@ -62,22 +58,22 @@ class StoryblokCodegen {
       c.constructors.addAll([
         Constructor(),
         // Blok.fromJson(JSONMap json) {
-        Constructor(
-          (co) => co
-            ..factory = true
-            ..name = "fromJson"
-            ..requiredParameters.add(
-              Parameter((p) => p
-                ..type = refer("$JSONMap")
-                ..name = "json"),
-            )
-            ..body = Code([
-              'switch (json["component"] as String) {',
-              ...components.map((e) => 'case "${e.key}": return ${e.builder.name}.fromJson(json);'),
-              'default: print("Unrecognized type \$\{json["component"]\}"); return ${unrecognizedBlokClass.name}();',
-              '}',
-            ].join("\n")),
-        ),
+        Constructor((con) => con
+              ..factory = true
+              ..name = "fromJson"
+              ..requiredParameters.add(Parameter((p) => p
+                    ..type = refer("$JSONMap")
+                    ..name = "json"
+                  //
+                  ))
+              ..body = Code([
+                'switch (json["component"] as String) {',
+                ...components.map((e) => 'case "${e.key}": return ${e.builder.name}.fromJson(json);'),
+                'default: print("Unrecognized type \$\{json["component"]\}"); return ${unrecognizedBlokClass.name}();',
+                '}',
+              ].join("\n"))
+            //
+            ),
         // }
       ]);
     });
@@ -103,7 +99,7 @@ class StoryblokCodegen {
   List<({String key, ClassBuilder builder})> _buildComponents(LibraryBuilder lib) {
     return components.map((component) {
       final c = ClassBuilder();
-      c.name = Casing.pascalCase(component.name);
+      c.name = sanitizeName(component.name, isClass: true);
       final schema = component.schema;
 
       final con = ConstructorBuilder();
@@ -114,7 +110,7 @@ class StoryblokCodegen {
 
       for (final entry in schema.entries) {
         final name = entry.key;
-        final fieldName = Casing.camelCase(name);
+        final fieldName = sanitizeName(name, isClass: false);
         final data = entry.value as JSONMap;
         final type = data["type"] as String;
 
