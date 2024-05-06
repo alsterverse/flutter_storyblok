@@ -10,6 +10,8 @@ import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/rich_text.dart' as rich_blok;
 import 'package:flutter_storyblok/utils.dart';
 
+// TODO: library...ify this code
+
 class StoryblokRichTextContent extends StatelessWidget {
   StoryblokRichTextContent({
     super.key,
@@ -34,6 +36,7 @@ class StoryblokRichTextContent extends StatelessWidget {
 
 // MARK: - Data
 
+// library...ify
 /// Used for passing data to the containers and leaves
 class _StoryblokRichTextContentData {
   _StoryblokRichTextContentData({required this.onTapLink});
@@ -115,20 +118,8 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
       text: TextSpan(
         style: DefaultTextStyle.of(context).style.merge(textStyle),
         children: map((e) => switch (e) {
-              final rich_blok.RichTextLeafText text => TextSpan(
-                  text: text.text,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = mapIfNotNull(contentData.onTapLink,
-                        (onTapLink) => () => mapIfNotNull(text.link?.link, (link) => onTapLink(link))),
-                  style: text.buildTextStyle(),
-                ),
-              final rich_blok.RichTextLeafEmoji emoji => TextSpan(
-                  text: emoji.text ?? "⌧",
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = mapIfNotNull(contentData.onTapLink,
-                        (onTapLink) => () => mapIfNotNull(emoji.link?.link, (link) => onTapLink(link))),
-                  style: emoji.buildTextStyle(),
-                ),
+              final rich_blok.RichTextLeafText text => text.buildTextSpan(text.text, contentData),
+              final rich_blok.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
               final rich_blok.RichTextLeafImage image => WidgetSpan(
                   style: image.buildTextStyle(),
                   child: Image.network(image.imageUrl.toString()),
@@ -137,7 +128,7 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
               final rich_blok.RichTextContainerParagraph paragraph => WidgetSpan(
                   child: paragraph.buildContainerWidget(context, contentData),
                 ),
-              rich_blok.UnrecognizedRichTextLeaf() => const TextSpan(),
+              rich_blok.UnrecognizedRichTextLeaf() => const WidgetSpan(child: SizedBox.shrink()),
             }).toList(),
       ),
     );
@@ -165,6 +156,20 @@ extension _RichTextLeafMarkableWidget on rich_blok.RichTextLeafMarkable {
         if (isSuperscript) const FontFeature.superscripts(),
         if (isSubscript) const FontFeature.subscripts(),
       ],
+    );
+  }
+
+  TextSpan buildTextSpan(String text, _StoryblokRichTextContentData contentData) {
+    return TextSpan(
+      text: text,
+      recognizer: mapIfNotNull(
+        contentData.onTapLink,
+        (onTapLink) => mapIfNotNull(
+          link?.link,
+          (link) => TapGestureRecognizer()..onTap = () => onTapLink(link),
+        ),
+      ),
+      style: buildTextStyle(),
     );
   }
 }
