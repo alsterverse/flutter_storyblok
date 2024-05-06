@@ -9,6 +9,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/hero.dart';
 import 'package:example/components/block_button.dart';
 import 'package:example/image_block_widget.dart';
+import 'package:example/rich_text_content.dart';
 import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/start_page.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
 import 'package:go_router/go_router.dart';
@@ -146,6 +148,29 @@ extension BlockWidget on bloks.Blok {
       final bloks.Teaser teaser => Teaser(headline: teaser.headline),
       final bloks.Page page => starter_blocks.Page(page: page),
       final bloks.Grid _ => const Grid(),
+      final bloks.RichBlock rich => StoryblokRichTextContent(
+          content: rich.richtextheader?.content ?? [],
+          onTapLink: (link) => switch (link) {
+            LinkTypeURL() => print("Open URL: ${link.url}"),
+            LinkTypeAsset() => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(),
+                  body: Center(
+                    child: Image.network(link.url.toString()),
+                  ),
+                ),
+              )),
+            LinkTypeEmail() => print("Send email to: ${link.email}"),
+            LinkTypeStory() => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => FutureStoryWidget(
+                    storyFuture: storyblokClient.getStory(id: StoryIdentifierUUID(link.uuid)),
+                  ),
+                ),
+              ),
+          },
+        ),
+      //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
   }

@@ -9,6 +9,7 @@ import 'package:flutter_storyblok_code_generator/fields/link_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/multi_asset_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/number_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/option_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/rich_text_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_area_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_markdown_field.dart';
@@ -39,7 +40,7 @@ abstract class BaseField {
       // "options" => OptionField.fromJson(data, fieldName),
       // table
       // plugin
-      // rich
+      "richtext" => RichTextField.fromJson(data, fieldName),
       _ => null,
     };
     return a;
