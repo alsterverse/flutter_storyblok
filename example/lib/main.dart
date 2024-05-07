@@ -23,6 +23,7 @@ import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok/link.dart';
 import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/story.dart';
+import 'package:flutter_storyblok/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:example/starter_blocks/teaser.dart';
@@ -134,7 +135,6 @@ extension BlockWidget on bloks.Blok {
           },
         ),
       final bloks.StartPage startPage => StartPage(startPage: startPage),
-      final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
@@ -170,6 +170,21 @@ extension BlockWidget on bloks.Blok {
               ),
           },
         ),
+      final bloks.TestBlock test => StoryblokRichTextContent(content: test.richtext2.content),
+      final bloks.TestTable table => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: table.defaultTable.columns
+              .map((column) => Column(
+                    children: column
+                        .mapIndexed((i, e) => Text(
+                              e,
+                              style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
+                            ))
+                        .toList(),
+                  ))
+              .toList(),
+        ),
+
       //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };

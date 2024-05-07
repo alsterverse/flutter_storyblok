@@ -1,6 +1,3 @@
-// import 'package:flutter_storyblok/link_type.dart';
-// import 'package:flutter_storyblok/reflector.dart';
-
 import 'package:flutter_storyblok/utils.dart';
 
 final class Asset {
