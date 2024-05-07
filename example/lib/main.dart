@@ -171,18 +171,38 @@ extension BlockWidget on bloks.Blok {
           },
         ),
       final bloks.TestBlock test => StoryblokRichTextContent(content: test.richtext2.content),
-      final bloks.TestTable table => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      final bloks.TestTable table => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
           children: table.defaultTable.columns
-              .map((column) => Column(
+                  .map((column) => Expanded(
+                        child: Column(
                     children: column
                         .mapIndexed((i, e) => Text(
                               e,
                               style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
                             ))
                         .toList(),
+                        ),
+                      ))
+                  .toList(),
+            ),
+            Table(
+              children: table.defaultTable.rows
+                  .mapIndexed((i, e) => TableRow(
+                        children: e
+                            .map((e) => Text(
+                                  e,
+                                  style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ))
+                            .toList(),
                   ))
               .toList(),
+        ),
+          ],
         ),
 
       //TODO: remove this line before release
