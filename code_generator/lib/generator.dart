@@ -18,7 +18,7 @@ class StoryblokCodegen {
   }) : datasourceData = Map.fromEntries(datasourceWithEntries.map((e) {
           final (:datasource, :entries) = e;
           final name = sanitizeName(datasource.slug, isClass: true);
-          return MapEntry(name, buildEnum(name, entries.map((e) => e.value)));
+          return MapEntry(name, buildEnum(name, entries.map((e) => MapEntry(e.name, e.value))));
         }));
 
   // Key is the datasource slug
@@ -74,11 +74,9 @@ class StoryblokCodegen {
               ].join("\n"))
             //
             ),
-        // }
       ]);
     });
     lib.body.add(blokClass);
-    // }
 
     // final class <name> extends Blok {
     lib.body.addAll([
@@ -89,7 +87,6 @@ class StoryblokCodegen {
       c.extend = refer(blokClass.name);
       return c.build();
     }));
-    // }
 
     final library = lib.build();
     final a = library.accept(_dartEmitter);

@@ -25,7 +25,10 @@ final class OptionField extends BaseField {
   @override
   List<Spec>? generateSupportingClasses() {
     final e = switch (source) {
-      OptionSource.self => buildEnum(enumName, List<JSONMap>.from(data["options"]).map((e) => e["value"])),
+      OptionSource.self => buildEnum(
+          enumName,
+          List<JSONMap>.from(data["options"]).map((e) => MapEntry(e["name"], e["value"])),
+        ),
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
       OptionSource.internal => null

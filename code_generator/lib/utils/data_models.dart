@@ -11,11 +11,15 @@ class Datasource {
 
 class DatasourceEntry {
   final int id;
+  final String name;
   final String value;
   // final dynamic dimensions;
   DatasourceEntry.fromJson(JSONMap json)
       : id = json["id"],
-        value = json["value"];
+        name = json["name"],
+        value = json["value"]
+  //
+  ;
 }
 
 class Component {

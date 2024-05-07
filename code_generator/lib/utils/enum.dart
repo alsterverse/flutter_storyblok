@@ -8,9 +8,9 @@ String buildInstantiateEnum(String className, [String? code]) {
   return "${cachedSanitizedName(className, isClass: true)}.$_fromNameName${code == null ? "" : "($code)"}";
 }
 
-Enum buildEnum(String className, Iterable<String> caseNames) {
+Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
   className = sanitizeName(unsanitizedName(className), isClass: true);
-  caseNames = caseNames.where((element) => element.isNotEmpty);
+  caseNames = caseNames.where((element) => element.value.isNotEmpty);
   return Enum(
     (e) => e
       ..name = className
@@ -20,12 +20,12 @@ Enum buildEnum(String className, Iterable<String> caseNames) {
             ..type = refer("$String")
           //
           ))
-      ..values.addAll([
+      ..values.addAll(<MapEntry<String, String>>[
         ...caseNames,
-        _unknownName,
+        MapEntry(_unknownName, _unknownName),
       ].map((kase) => EnumValue((v) => v
-            ..name = sanitizeName(kase, isClass: false)
-            ..arguments.add(literalString("$kase"))
+            ..name = sanitizeName(kase.key, isClass: false)
+            ..arguments.add(literalString("${kase.value}"))
           //
           )))
       ..constructors.add(Constructor((con) => con
@@ -47,7 +47,9 @@ Enum buildEnum(String className, Iterable<String> caseNames) {
                 ))
             ..body = Code([
               "return switch (name) {",
-              ...caseNames.map((e) => '"$e" => $className.${cachedSanitizedName(e, isClass: false)},'),
+              ...caseNames.map(
+                (e) => '"${e.value}" => $className.${cachedSanitizedName(e.key, isClass: false)},',
+              ),
               "_ => $className.$_unknownName,",
               "};",
             ].join("\n"))
