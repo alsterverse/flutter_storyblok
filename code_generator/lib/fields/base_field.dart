@@ -9,6 +9,7 @@ import 'package:flutter_storyblok_code_generator/fields/link_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/multi_asset_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/number_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/option_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/options_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/rich_text_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_area_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_field.dart';
@@ -37,7 +38,7 @@ abstract class BaseField {
       "multiasset" => MultiAssetField.fromJson(data, fieldName),
       "multilink" => LinkField.fromJson(data, fieldName),
       "option" => OptionField.fromJson(data, fieldName),
-      // "options" => OptionField.fromJson(data, fieldName),
+      "options" => OptionsField.fromJson(data, fieldName),
       // table
       // plugin
       "richtext" => RichTextField.fromJson(data, fieldName),

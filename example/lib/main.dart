@@ -134,7 +134,6 @@ extension BlockWidget on bloks.Blok {
           },
         ),
       final bloks.StartPage startPage => StartPage(startPage: startPage),
-      final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
       final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
       final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
       final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
@@ -169,6 +168,17 @@ extension BlockWidget on bloks.Blok {
                 ),
               ),
           },
+        ),
+      final bloks.TestBlock testBlock => Text("TestBlock: ${testBlock.text2}"),
+      final bloks.TestMultiOptions multi => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("Default: ${multi.$default.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
+            Text("Stories: ${multi.stories.map((e) => e.uuid).join(", ")}"),
+            Text("Languages: ${multi.languages.map((e) => e).join(", ")}"),
+            Text("Datasource: ${multi.datasource.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
+            Text("External: ${multi.$external.map((e) => e).join(", ")}"),
+          ],
         ),
       //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
