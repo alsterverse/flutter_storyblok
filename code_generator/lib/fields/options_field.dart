@@ -26,7 +26,7 @@ final class OptionsField extends OptionField {
       OptionSource.internal_stories => "$list.map($StoryIdentifierUUID.new).toList()",
       OptionSource.internal_languages => list,
       OptionSource.internal => "$list.map(${buildInstantiateEnum(data["datasource_slug"])}).toList()",
-      OptionSource.external => list
+      OptionSource.external => "$list.map(${buildInstantiateEnum(externalEnumName)}).toList()",
     };
   }
 }

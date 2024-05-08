@@ -34,12 +34,18 @@ class StoryblokHttpClient {
     return List<JSONMap>.from(data[key]).map(DatasourceEntry.fromJson).toList();
   }
 
+  static Future<List<JSONMap>> getDatasourceFromExternalSource(Uri url) async {
+    final response = await http.get(url);
+    final data = List<JSONMap>.from(jsonDecode(response.body));
+    return data;
+  }
+
   Future<JSONMap> _get(String path, [JSONMap? params]) async {
-    final resp = await http.get(
+    final response = await http.get(
       Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
       headers: {"Authorization": authorization},
     );
-    final json = jsonDecode(resp.body) as JSONMap;
+    final json = jsonDecode(response.body) as JSONMap;
     return json;
   }
 }

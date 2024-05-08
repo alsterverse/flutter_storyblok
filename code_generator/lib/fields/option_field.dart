@@ -3,16 +3,19 @@ import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/http_client.dart';
 import 'package:flutter_storyblok_code_generator/utils/enum.dart';
 import 'package:flutter_storyblok_code_generator/utils/names.dart';
 
 class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
+  final String externalEnumName;
 
   OptionField.fromJson(super.data, super.name)
       : source = OptionSource.values.byName(tryCast<String>(data["source"]) ?? OptionSource.self.name),
         enumName = sanitizeName("${unsanitizedName(name)}_Option", isClass: true),
+        externalEnumName = sanitizeName("${unsanitizedName(name)}_ExternalOption", isClass: true),
         super.fromJson();
 
   @override
@@ -21,23 +24,27 @@ class OptionField extends BaseField {
         OptionSource.internal_stories => "$StoryIdentifierUUID",
         OptionSource.internal_languages => "$String?", // TODO Language enum
         OptionSource.internal => cachedSanitizedName(data["datasource_slug"], isClass: true),
-        OptionSource.external => "$String?",
+        OptionSource.external => externalEnumName,
       };
 
+  Spec _buildEnum(String name, Iterable<JSONMap> cases) {
+    return buildEnum(
+      name,
+      cases.map((e) => MapEntry(e["name"], e["value"])),
+    );
+  }
+
   @override
-  List<Spec>? generateSupportingClasses() {
-    final e = switch (source) {
-      OptionSource.self => buildEnum(
-          enumName,
-          List<JSONMap>.from(data["options"]).map((e) => MapEntry(e["name"], e["value"])),
-        ),
+  Future<Spec?> generateSupportingClass() async {
+    return switch (source) {
+      OptionSource.self => _buildEnum(enumName, List<JSONMap>.from(data["options"])),
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
       OptionSource.internal => null,
-      OptionSource.external => null
+      OptionSource.external => await StoryblokHttpClient.getDatasourceFromExternalSource(
+          Uri.parse(data["external_datasource"]),
+        ).then((options) => _buildEnum(externalEnumName, options)),
     };
-    if (e != null) return [e];
-    return null;
   }
 
   @override
@@ -47,7 +54,7 @@ class OptionField extends BaseField {
       OptionSource.internal_stories => "$StoryIdentifierUUID($valueCode)",
       OptionSource.internal_languages => valueCode,
       OptionSource.internal => buildInstantiateEnum(data["datasource_slug"], valueCode),
-      OptionSource.external => valueCode,
+      OptionSource.external => buildInstantiateEnum(externalEnumName, valueCode),
     });
   }
 }

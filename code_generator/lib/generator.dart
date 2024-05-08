@@ -44,7 +44,7 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/plugin.dart'),
     ]);
 
-    final components = _buildComponents(lib);
+    final components = await _buildComponents(lib);
 
     // enum <name> {
     lib.body.addAll(datasourceData.values);
@@ -95,8 +95,8 @@ class StoryblokCodegen {
     return _dartFormatter.format(a.toString());
   }
 
-  List<({String key, ClassBuilder builder})> _buildComponents(LibraryBuilder lib) {
-    return components.map((component) {
+  Future<List<({String key, ClassBuilder builder})>> _buildComponents(LibraryBuilder lib) {
+    final list = components.map((component) async {
       final c = ClassBuilder();
       c.name = sanitizeName(component.name, isClass: true);
       final schema = component.schema;
@@ -119,8 +119,9 @@ class StoryblokCodegen {
           continue;
         }
 
-        final supportingClasses = field.generateSupportingClasses();
-        if (supportingClasses != null) lib.body.addAll(supportingClasses);
+        // TODO: External JSON should be unique to the url not the field.
+        final supportingClass = await field.generateSupportingClass();
+        if (supportingClass != null) lib.body.add(supportingClass);
 
         c.fields.add(Field((f) {
           f.type = TypeReference(field.buildFieldType);
@@ -135,5 +136,7 @@ class StoryblokCodegen {
       c.constructors.add(con.build());
       return (key: component.name, builder: c);
     }).toList();
+
+    return Future.wait(list);
   }
 }
