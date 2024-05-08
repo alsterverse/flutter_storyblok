@@ -214,6 +214,7 @@ extension BlockWidget on bloks.Blok {
             Text("External: ${multi.$external.map((e) => e).join(", ")}"),
           ],
         ),
+      final bloks.TestPlugin plugin => Text(plugin.plugin?.data.toString() ?? ""),
       //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };

@@ -15,6 +15,7 @@ import 'package:flutter_storyblok_code_generator/fields/table_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_area_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_field.dart';
 import 'package:flutter_storyblok_code_generator/fields/text_markdown_field.dart';
+import 'package:flutter_storyblok_code_generator/fields/plugin_field.dart';
 
 abstract class BaseField {
   final JSONMap data;
@@ -41,7 +42,7 @@ abstract class BaseField {
       "option" => OptionField.fromJson(data, fieldName),
       "table" => TableField.fromJson(data, fieldName),
       "options" => OptionsField.fromJson(data, fieldName),
-      // plugin
+      "custom" => PluginField.fromJson(data, fieldName),
       "richtext" => RichTextField.fromJson(data, fieldName),
       _ => null,
     };
