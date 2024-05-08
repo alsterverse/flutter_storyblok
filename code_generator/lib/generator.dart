@@ -41,6 +41,7 @@ class StoryblokCodegen {
       Directive.import('package:flutter_storyblok/request_parameters.dart'),
       Directive.import('package:flutter_storyblok/rich_text.dart'),
       Directive.import('package:flutter_storyblok/table.dart'),
+      Directive.import('package:flutter_storyblok/plugin.dart'),
     ]);
 
     final components = _buildComponents(lib);
