@@ -176,15 +176,15 @@ extension BlockWidget on bloks.Blok {
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
-          children: table.defaultTable.columns
+              children: table.defaultTable.columns
                   .map((column) => Expanded(
                         child: Column(
-                    children: column
-                        .mapIndexed((i, e) => Text(
-                              e,
-                              style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
-                            ))
-                        .toList(),
+                          children: column
+                              .mapIndexed((i, e) => Text(
+                                    e,
+                                    style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
+                                  ))
+                              .toList(),
                         ),
                       ))
                   .toList(),
@@ -199,12 +199,21 @@ extension BlockWidget on bloks.Blok {
                                   textAlign: TextAlign.center,
                                 ))
                             .toList(),
-                  ))
-              .toList(),
-        ),
+                      ))
+                  .toList(),
+            ),
           ],
         ),
-
+      final bloks.TestMultiOptions multi => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("Default: ${multi.$default.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
+            Text("Stories: ${multi.stories.map((e) => e.uuid).join(", ")}"),
+            Text("Languages: ${multi.languages.map((e) => e).join(", ")}"),
+            Text("Datasource: ${multi.datasource.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
+            Text("External: ${multi.$external.map((e) => e).join(", ")}"),
+          ],
+        ),
       //TODO: remove this line before release
       _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
     };
