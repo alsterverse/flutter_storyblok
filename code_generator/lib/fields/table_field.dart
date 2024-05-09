@@ -1,21 +1,18 @@
-import 'package:code_builder/src/specs/type_reference.dart';
+import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok/table.dart';
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 
 final class TableField extends BaseField {
   TableField.fromJson(super.data, super.name) : super.fromJson();
 
   @override
-  String symbol() => "$Table";
+  late final TypeReference type = referType(
+    "$Table",
+    importUrl: 'package:flutter_storyblok/table.dart',
+    nullable: false,
+  );
 
   @override
-  void buildFieldType(TypeReferenceBuilder t) {
-    super.buildFieldType(t);
-    t.isNullable = false;
-  }
-
-  @override
-  String generateInitializerCode(String valueCode) {
-    return "${symbol()}.fromJson($valueCode)";
-  }
+  Expression buildInitializer(CodeExpression valueExpression) => type.invokeNamed("fromJson", valueExpression);
 }

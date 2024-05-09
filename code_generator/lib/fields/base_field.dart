@@ -25,9 +25,7 @@ abstract class BaseField {
   BaseField(this.data, this.name, this.isRequired, this.position);
   BaseField.fromJson(this.data, this.name)
       : isRequired = tryCast<bool>(data["required"]) ?? false,
-        position = tryCast<int>(data["pos"])
-  //
-  ;
+        position = tryCast<int>(data["pos"]);
 
   static BaseField? fromData(JSONMap data, String type, String fieldName) {
     return switch (type) {
@@ -50,15 +48,14 @@ abstract class BaseField {
     };
   }
 
-  // TODO: return Reference
-  String symbol();
+  TypeReference get type;
 
-  void buildFieldType(TypeReferenceBuilder t) => t
-    ..symbol = symbol()
-    ..isNullable = !isRequired;
+  void buildField(FieldBuilder f) {
+    f..name = name;
+    f..type = type;
+  }
 
-  Future<Spec?> generateSupportingClass() => Future.value(null);
+  Expression buildInitializer(CodeExpression valueExpression) => valueExpression;
 
-  // TODO: return Code
-  String generateInitializerCode(String valueCode) => valueCode;
+  Future<Spec?> buildSupportingClass() => Future.value(null);
 }

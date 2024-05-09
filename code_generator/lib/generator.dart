@@ -4,6 +4,7 @@ import 'package:flutter_storyblok/utils.dart';
 
 import 'package:flutter_storyblok_code_generator/http_client.dart';
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/utils/data_models.dart';
 import 'package:flutter_storyblok_code_generator/utils/enum.dart';
 import 'package:flutter_storyblok_code_generator/utils/names.dart';
@@ -15,14 +16,13 @@ class StoryblokCodegen {
   StoryblokCodegen({
     required List<DatasourceWithEntries> datasourceWithEntries,
     required this.components,
-  }) : datasourceData = Map.fromEntries(datasourceWithEntries.map((e) {
+  }) : datasourceData = datasourceWithEntries.map((e) {
           final (:datasource, :entries) = e;
-          final name = sanitizeName(datasource.slug, isClass: true);
-          return MapEntry(name, buildEnum(name, entries.map((e) => MapEntry(e.name, e.value))));
-        }));
+          return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
+        }).toList();
 
   // Key is the datasource slug
-  final Map<String, Enum> datasourceData;
+  final List<Enum> datasourceData;
   final List<Component> components;
 
   Future<String> generate() async {
@@ -33,21 +33,10 @@ class StoryblokCodegen {
     // lint ...
     lib.ignoreForFile.add("unused_import");
 
-    // import ...
-    lib.directives.addAll([
-      Directive.import('package:flutter_storyblok/asset.dart'),
-      Directive.import('package:flutter_storyblok/link.dart'),
-      Directive.import('package:flutter_storyblok/markdown.dart'),
-      Directive.import('package:flutter_storyblok/request_parameters.dart'),
-      Directive.import('package:flutter_storyblok/rich_text.dart'),
-      Directive.import('package:flutter_storyblok/table.dart'),
-      Directive.import('package:flutter_storyblok/plugin.dart'),
-    ]);
-
     final components = await _buildComponents(lib);
 
     // enum <name> {
-    lib.body.addAll(datasourceData.values);
+    lib.body.addAll(datasourceData);
 
     // class UnrecognizedBlok
     final unrecognizedBlokClass = ClassBuilder()..name = "UnrecognizedBlok";
@@ -55,6 +44,7 @@ class StoryblokCodegen {
     // sealed class Blok {
     final blokClass = Class((c) {
       c.docs.add("/// This class is generated, do not edit manually");
+      c.modifier = ClassModifier.final$;
       c.sealed = true;
       c.name = "Blok";
       c.constructors.addAll([
@@ -68,12 +58,16 @@ class StoryblokCodegen {
                     ..name = "json"
                   //
                   ))
-              ..body = Code([
-                'switch (json["component"] as String) {',
-                ...components.map((e) => 'case "${e.key}": return ${e.builder.name}.fromJson(json);'),
-                'default: print("Unrecognized type \$\{json["component"]\}"); return ${unrecognizedBlokClass.name}();',
-                '}',
-              ].join("\n"))
+              ..body = Block.of([
+                "switch (json[${literal("component")}] as String) {",
+                ...components.map(
+                  (e) => "case ${literal(e.key)}: return ${e.builder.name}.fromJson(json);",
+                ),
+                "default:",
+                "print('Unrecognized type \${json[${literal("component")}]}');",
+                "return ${unrecognizedBlokClass.name}();",
+                "}",
+              ].map(Code.new))
             //
             ),
       ]);
@@ -86,7 +80,7 @@ class StoryblokCodegen {
       unrecognizedBlokClass,
     ].map((c) {
       c.modifier = ClassModifier.final$;
-      c.extend = refer(blokClass.name);
+      c.extend = blokClass.name.reference();
       return c.build();
     }));
 
@@ -104,9 +98,10 @@ class StoryblokCodegen {
       final con = ConstructorBuilder();
       con.name = "fromJson";
       con.requiredParameters.add(Parameter((p) => p
-        ..type = refer("$JSONMap")
+        ..type = "$JSONMap".reference()
         ..name = "json"));
 
+      // fields
       for (final entry in schema.entries) {
         final name = entry.key;
         final fieldName = sanitizeName(name, isClass: false);
@@ -115,23 +110,23 @@ class StoryblokCodegen {
 
         final field = BaseField.fromData(data, type, fieldName);
         if (field == null) {
-          print("Unrecognized type $type");
+          if (type != "group") print("Unrecognized type $type");
           continue;
         }
 
         // TODO: External JSON should be unique to the url not the field.
-        final supportingClass = await field.generateSupportingClass();
+        final supportingClass = await field.buildSupportingClass();
         if (supportingClass != null) lib.body.add(supportingClass);
 
         c.fields.add(Field((f) {
-          f.type = TypeReference(field.buildFieldType);
+          f.type = field.type;
           f.modifier = FieldModifier.final$;
           f.name = fieldName;
         }));
 
-        con.initializers.add(Code(
-          "$fieldName = ${field.generateInitializerCode('json["$name"]')}",
-        ));
+        con.initializers.add(
+          fieldName.expression.assign(field.buildInitializer("json[${literal(name)}]".expression)).code,
+        );
       }
       c.constructors.add(con.build());
       return (key: component.name, builder: c);

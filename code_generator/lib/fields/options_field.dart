@@ -1,32 +1,35 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok/request_parameters.dart';
 import 'package:flutter_storyblok_code_generator/fields/option_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/utils/enum.dart';
 
 final class OptionsField extends OptionField {
   OptionsField.fromJson(super.data, super.name) : super.fromJson();
 
   @override
-  String symbol() {
-    final symbol = super.symbol().replaceAll("?", "");
-    return "List<$symbol>";
-  }
+  late final TypeReference type = referList(type: super.type.nonNullable);
 
   @override
-  void buildFieldType(TypeReferenceBuilder t) {
-    super.buildFieldType(t);
-    t.isNullable = false;
-  }
+  Expression buildInitializer(CodeExpression valueExpression) {
+    final expression = referList(type: referType("$String")).invokeNamed(
+      "from",
+      valueExpression.ifNullThen(literalEmptyList()),
+    );
 
-  @override
-  String generateInitializerCode(String valueCode) {
-    final list = "${List<String>}.from($valueCode ?? [])";
     return switch (source) {
-      OptionSource.self => "$list.map(${buildInstantiateEnum(enumName)}).toList()",
-      OptionSource.internal_stories => "$list.map($StoryIdentifierUUID.new).toList()",
-      OptionSource.internal_languages => list,
-      OptionSource.internal => "$list.map(${buildInstantiateEnum(data["datasource_slug"])}).toList()",
-      OptionSource.external => "$list.map(${buildInstantiateEnum(externalEnumName)}).toList()",
+      OptionSource.self => expression //
+          .invokeNamed("map", buildInstantiateEnum(enumName))
+          .invokeNamed("toList"),
+      OptionSource.internal_stories => expression //
+          .invokeNamed("map", super.type.nonNullable.property("new"))
+          .invokeNamed("toList"),
+      OptionSource.internal_languages => expression,
+      OptionSource.internal => expression //
+          .invokeNamed("map", buildInstantiateEnum(data["datasource_slug"]))
+          .invokeNamed("toList"),
+      OptionSource.external => expression //
+          .invokeNamed("map", buildInstantiateEnum(externalEnumName))
+          .invokeNamed("toList"),
     };
   }
 }

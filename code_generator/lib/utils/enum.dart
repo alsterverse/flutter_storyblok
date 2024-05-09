@@ -1,11 +1,16 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/utils/names.dart';
 
 const _unknownName = "unknown";
 const _fromNameName = "fromName";
 
-String buildInstantiateEnum(String className, [String? code]) {
-  return "${cachedSanitizedName(className, isClass: true)}.$_fromNameName${code == null ? "" : "($code)"}";
+Expression buildInstantiateEnum(String className, [String? code]) {
+  var exp = referType(sanitizeName(className, isClass: true)).property(_fromNameName);
+  if (code != null) {
+    exp = exp.invoke(code.expression);
+  }
+  return exp;
 }
 
 Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
@@ -25,7 +30,7 @@ Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
         MapEntry(_unknownName, _unknownName),
       ].map((kase) => EnumValue((v) => v
             ..name = sanitizeName(kase.key, isClass: false)
-            ..arguments.add(literalString("${kase.value}"))
+            ..arguments.add(literal(kase.value))
           //
           )))
       ..constructors.add(Constructor((con) => con
@@ -41,18 +46,18 @@ Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
             ..factory = true
             ..name = _fromNameName
             ..requiredParameters.add(Parameter((p) => p
-                  ..type = refer("$String?")
+                  ..type = referType("$String?")
                   ..name = "name"
                 //
                 ))
-            ..body = Code([
+            ..body = Block.of([
               "return switch (name) {",
               ...caseNames.map(
-                (e) => '"${e.value}" => $className.${cachedSanitizedName(e.key, isClass: false)},',
+                (e) => "${literal(e.value)} => $className.${sanitizeName(e.key, isClass: false)},",
               ),
               "_ => $className.$_unknownName,",
               "};",
-            ].join("\n"))
+            ].map(Code.new))
           //
           )),
   );

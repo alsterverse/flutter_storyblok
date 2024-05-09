@@ -1,7 +1,8 @@
-import 'package:dart_casing/dart_casing.dart';
-import 'package:flutter_storyblok/utils.dart';
+import 'package:code_builder/code_builder.dart';
 
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
+import 'package:flutter_storyblok_code_generator/utils/names.dart';
 
 final class BlokField extends BaseField {
   final int? maximum;
@@ -13,20 +14,29 @@ final class BlokField extends BaseField {
         restrictedTypes = List.from(data["component_whitelist"] ?? []),
         super.fromJson();
 
-  String _type() {
-    if (restrictTypes && restrictedTypes.length == 1) {
-      return Casing.pascalCase(restrictedTypes.first);
-    } else {
-      return "Blok";
+  late final TypeReference _type = referType((restrictTypes && restrictedTypes.length == 1) //
+          ? sanitizeName(restrictedTypes.first, isClass: true)
+          : "Blok"
+      //
+      );
+
+  @override
+  late final TypeReference type = (maximum == 1 //
+          ? _type
+          : referList(type: _type))
+      .rebuild((t) => t.isNullable = !isRequired);
+
+  @override
+  Expression buildInitializer(CodeExpression valueExpression) {
+    var expression = referList(type: referJSONMap())
+        .invokeNamed("from", valueExpression.ifNullThen(literalEmptyList()))
+        .invokeNamed("map", _type.property("fromJson"))
+        .invokeNamed("toList");
+
+    if (maximum == 1) {
+      // TODO: Needs to import collection package
+      expression = expression.property(isRequired ? "first" : "firstOrNull");
     }
-  }
-
-  @override
-  String symbol() => maximum == 1 ? _type() : "List<${_type()}>";
-
-  @override
-  String generateInitializerCode(String valueCode) {
-    final code = "${List<JSONMap>}.from($valueCode).map(${_type()}.fromJson).toList()"; // TODO Nullable
-    return maximum == 1 ? "$code.first" : code;
+    return expression;
   }
 }

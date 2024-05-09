@@ -1,7 +1,8 @@
+import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok/link.dart';
-import 'package:flutter_storyblok/utils.dart';
 
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 
 final class LinkField extends BaseField {
   final bool isAssetAllowed;
@@ -16,15 +17,18 @@ final class LinkField extends BaseField {
         super.fromJson();
 
   @override
-  String symbol() {
-    if (isAssetAllowed && isEmailAllowed) return "$Link";
-    if (isAssetAllowed) return "$BaseWithAssetLinkTypes";
-    if (isEmailAllowed) return "$BaseWithEmailLinkTypes";
-    return "$BaseLinkTypes";
-  }
+  late final TypeReference type = referType(
+    switch ((isAssetAllowed, isEmailAllowed)) {
+      (true, true) => "$Link",
+      (true, _) => "$BaseWithAssetLinkTypes",
+      (_, true) => "$BaseWithEmailLinkTypes",
+      _ => "$BaseLinkTypes",
+    },
+    importUrl: 'package:flutter_storyblok/link.dart',
+    nullable: !isRequired,
+  );
 
   @override
-  String generateInitializerCode(String valueCode) {
-    return "${symbol()}.fromJson($JSONMap.from($valueCode))";
-  }
+  Expression buildInitializer(CodeExpression valueExpression) =>
+      type.invokeNamed("fromJson", referJSONMap().invokeNamed("from", valueExpression));
 }

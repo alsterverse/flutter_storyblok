@@ -14,3 +14,9 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+dependency_overrides:
+  code_builder: # Until fork gets merged
+    git:
+      url: https://github.com/PhiFry/code_builder
+      ref: 59f7ceb9a61389debab0755a6147c85f360640a6

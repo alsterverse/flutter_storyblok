@@ -2,7 +2,11 @@ import 'package:dart_casing/dart_casing.dart';
 
 Map<String, String> _sanitizedNames = {};
 
+String _sanitizedNameKey(String raw, bool isClass) => "${isClass ? "class" : ""}$raw";
+
 String sanitizeName(final String raw, {required bool isClass}) {
+  final cached = _sanitizedNames["${isClass ? "class" : ""}$raw"];
+  if (cached != null) return cached;
   // Trim and replace spaces with _
   var sanitized = raw.trim().replaceAll(RegExp(r"\s"), "_");
   // camelCase to snake_case to retain an already camelCase. "(?=)" (lookahead) is a trick to keep the delimiter.
@@ -13,12 +17,8 @@ String sanitizeName(final String raw, {required bool isClass}) {
   }
   sanitized = isClass ? Casing.pascalCase(sanitized) : Casing.camelCase(sanitized);
   // If the string was sanitized add it to cache
-  if (sanitized != raw) _sanitizedNames["${isClass ? "class" : ""}$raw"] = sanitized;
+  _sanitizedNames[_sanitizedNameKey(raw, isClass)] = sanitized;
   return sanitized;
-}
-
-String cachedSanitizedName(String raw, {required bool isClass}) {
-  return _sanitizedNames["${isClass ? "class" : ""}$raw"] ?? raw;
 }
 
 String unsanitizedName(String sanitized) {

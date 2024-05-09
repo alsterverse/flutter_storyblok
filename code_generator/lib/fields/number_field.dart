@@ -1,6 +1,8 @@
+import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok/utils.dart';
 
 import 'package:flutter_storyblok_code_generator/fields/base_field.dart';
+import 'package:flutter_storyblok_code_generator/utils/code_builder.dart';
 
 final class NumberField extends BaseField {
   final int? decimals;
@@ -9,10 +11,12 @@ final class NumberField extends BaseField {
         super.fromJson();
 
   @override
-  String symbol() => decimals == 0 ? "$int" : "$double";
+  late final TypeReference type = referType(
+    decimals == 0 ? "$int" : "$double",
+    nullable: !isRequired,
+  );
 
   @override
-  String generateInitializerCode(String valueCode) {
-    return "${symbol()}.${isRequired ? "parse" : "tryParse"}($valueCode)";
-  }
+  Expression buildInitializer(CodeExpression valueExpression) =>
+      type.invokeNamed(isRequired ? "parse" : "tryParse", valueExpression);
 }
