@@ -163,7 +163,7 @@ final class UnrecognizedRichTextLeaf implements RichTextLeaf {
 //
 
 final class RichTextLeafText extends RichTextLeafMarkable implements RichTextLeaf {
-  RichTextLeafText({required this.text, required List<RichTextLeafMark> marks}) : super(marks: marks);
+  RichTextLeafText({required this.text, required super.marks});
   factory RichTextLeafText.fromJson(JSONMap json) => RichTextLeafText(
         text: json["text"],
         marks: RichTextLeafMarkable.marksFromJson(json),
@@ -177,8 +177,8 @@ final class RichTextLeafEmoji extends RichTextLeafMarkable implements RichTextLe
     required this.name,
     required this.text,
     required this.fallback,
-    required List<RichTextLeafMark> marks,
-  }) : super(marks: marks);
+    required super.marks,
+  });
   factory RichTextLeafEmoji.fromJson(JSONMap json) => RichTextLeafEmoji(
         name: json["attrs"]["name"],
         text: json["attrs"]["emoji"],
@@ -199,8 +199,8 @@ final class RichTextLeafImage extends RichTextLeafMarkable implements RichTextLe
     required this.alt,
     required this.copyright,
     required this.metadata,
-    required List<RichTextLeafMark> marks,
-  }) : super(marks: marks);
+    required super.marks,
+  });
   factory RichTextLeafImage.fromJson(JSONMap json) {
     json = JSONMap.from(json["attrs"]);
     return RichTextLeafImage(

@@ -3,7 +3,7 @@ import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 import 'base_field.dart';
 import '../http_client.dart';
-import '../utils/code_builder.dart';
+import '../utils/code_builder_extensions.dart';
 import '../enum.dart';
 import '../names.dart';
 import '../utils/utils.dart';

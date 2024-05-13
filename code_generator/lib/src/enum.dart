@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 
 import 'names.dart';
-import 'utils/code_builder.dart';
+import 'utils/code_builder_extensions.dart';
 
 const _unknownName = "unknown";
 const _fromNameName = "fromName";

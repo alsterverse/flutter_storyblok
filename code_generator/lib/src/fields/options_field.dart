@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 
 import 'option_field.dart';
-import '../utils/code_builder.dart';
+import '../utils/code_builder_extensions.dart';
 import '../enum.dart';
 
 final class OptionsField extends OptionField {

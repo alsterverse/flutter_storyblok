@@ -6,7 +6,7 @@ import 'http_client.dart';
 import 'data_models.dart';
 import 'enum.dart';
 import 'names.dart';
-import 'utils/code_builder.dart';
+import 'utils/code_builder_extensions.dart';
 import 'utils/utils.dart';
 
 class StoryblokCodegen {
