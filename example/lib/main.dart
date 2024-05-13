@@ -19,22 +19,19 @@ import 'package:example/video_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
-import 'package:flutter_storyblok/link.dart';
-import 'package:flutter_storyblok/request_parameters.dart';
-import 'package:flutter_storyblok/story.dart';
-import 'package:flutter_storyblok/utils.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart' as sb;
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:example/starter_blocks/teaser.dart';
 import 'package:example/starter_blocks/feature.dart';
 import 'package:example/starter_blocks/grid.dart';
 import 'package:example/starter_blocks/page.dart' as starter_blocks;
+import 'package:collection/collection.dart';
 
 const rootPageId = 381723347;
-final storyblokClient = StoryblokClient<bloks.Blok>(
+final storyblokClient = sb.StoryblokClient<bloks.Blok>(
   accessToken: "w6ZsTA1a0xxlQpd7Kkeqjgtt",
-  version: StoryblokVersion.draft,
+  version: sb.StoryblokVersion.draft,
   contentBuilder: (json) => bloks.Blok.fromJson(json),
 );
 
@@ -51,12 +48,12 @@ final router = GoRouter(routes: [
 
       if (slug != null) {
         return FutureStoryWidget(
-          storyFuture: storyblokClient.getStory(id: StoryIdentifierFullSlug(slug)),
+          storyFuture: storyblokClient.getStory(id: sb.StoryIdentifierFullSlug(slug)),
         );
       }
 
       return FutureStoryWidget(
-        storyFuture: storyblokClient.getStory(id: const StoryIdentifierID(rootPageId)),
+        storyFuture: storyblokClient.getStory(id: const sb.StoryIdentifierID(rootPageId)),
         delayed: true,
       );
     },
@@ -84,7 +81,7 @@ class MyApp extends StatelessWidget {
 }
 
 class FutureStoryWidget extends StatelessWidget {
-  final Future<Story<bloks.Blok>> storyFuture;
+  final Future<sb.Story<bloks.Blok>> storyFuture;
   final bool delayed;
   const FutureStoryWidget({
     super.key,
@@ -100,7 +97,7 @@ class FutureStoryWidget extends StatelessWidget {
         if (delayed) Future.delayed(const Duration(milliseconds: 2500)),
       ]),
       builder: (context, snapshot) {
-        final story = snapshot.data?.first as Story<bloks.Blok>?;
+        final story = snapshot.data?.first as sb.Story<bloks.Blok>?;
         if (story != null) {
           return Scaffold(
             body: story.content.buildWidget(context),
@@ -151,8 +148,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.RichBlock rich => StoryblokRichTextContent(
           content: rich.richTextHeader?.content ?? [],
           onTapLink: (link) => switch (link) {
-            LinkTypeURL() => print("Open URL: ${link.url}"),
-            LinkTypeAsset() => Navigator.of(context).push(MaterialPageRoute(
+            sb.LinkTypeURL() => print("Open URL: ${link.url}"),
+            sb.LinkTypeAsset() => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => Scaffold(
                   appBar: AppBar(),
                   body: Center(
@@ -160,11 +157,11 @@ extension BlockWidget on bloks.Blok {
                   ),
                 ),
               )),
-            LinkTypeEmail() => print("Send email to: ${link.email}"),
-            LinkTypeStory() => Navigator.of(context).push(
+            sb.LinkTypeEmail() => print("Send email to: ${link.email}"),
+            sb.LinkTypeStory() => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => FutureStoryWidget(
-                    storyFuture: storyblokClient.getStory(id: StoryIdentifierUUID(link.uuid)),
+                    storyFuture: storyblokClient.getStory(id: sb.StoryIdentifierUUID(link.uuid)),
                   ),
                 ),
               ),

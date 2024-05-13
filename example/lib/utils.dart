@@ -1,5 +1,10 @@
 import 'dart:math';
 
+Out? mapIfNotNull<In, Out>(In? dataIn, Out? Function(In) mapper) {
+  if (dataIn != null) return mapper(dataIn);
+  return null;
+}
+
 extension IterableUtils<E> on Iterable<E> {
   /// Inserts [separator] between every element of [this]
   Iterable<E> separatedBy(E Function() separator) => separatedByIndexed((_) => separator());
@@ -16,8 +21,6 @@ extension IterableUtils<E> on Iterable<E> {
     );
   }
 }
-
-T? tryCast<T>(dynamic object) => object is T ? object : null;
 
 extension DoubleExtensions on double {
   double roundToDecimals(int decimals) {

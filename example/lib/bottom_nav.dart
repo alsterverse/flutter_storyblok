@@ -2,7 +2,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/link.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 class BottomNavigation extends StatefulWidget {
   final bloks.BottomNavigation bottomNav;

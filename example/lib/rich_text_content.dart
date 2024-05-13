@@ -6,9 +6,8 @@ import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/link.dart';
-import 'package:flutter_storyblok/rich_text.dart' as rich_blok;
-import 'package:flutter_storyblok/utils.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart' as sb;
+import 'package:collection/collection.dart';
 
 // TODO: library...ify this code
 
@@ -16,11 +15,11 @@ class StoryblokRichTextContent extends StatelessWidget {
   StoryblokRichTextContent({
     super.key,
     required this.content,
-    void Function(Link)? onTapLink,
+    void Function(sb.Link)? onTapLink,
   }) : _contentData = _StoryblokRichTextContentData(onTapLink: onTapLink);
 
   final _StoryblokRichTextContentData _contentData;
-  final List<rich_blok.RichTextContainer> content;
+  final List<sb.RichTextContainer> content;
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +39,16 @@ class StoryblokRichTextContent extends StatelessWidget {
 /// Used for passing data to the containers and leaves
 class _StoryblokRichTextContentData {
   _StoryblokRichTextContentData({required this.onTapLink});
-  final void Function(Link)? onTapLink;
+  final void Function(sb.Link)? onTapLink;
 }
 
 // MARK: - Containers
 
-extension _RichTextContainerWidget on rich_blok.RichTextContainer {
+extension _RichTextContainerWidget on sb.RichTextContainer {
   Widget buildContainerWidget(BuildContext context, _StoryblokRichTextContentData contentData) {
     return switch (this) {
-      final rich_blok.RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
-      final rich_blok.RichTextContainerHeading heading => heading.content.buildRichText(
+      final sb.RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
+      final sb.RichTextContainerHeading heading => heading.content.buildRichText(
           context,
           contentData,
           textStyle: TextStyle(
@@ -57,7 +56,7 @@ extension _RichTextContainerWidget on rich_blok.RichTextContainer {
             fontWeight: FontWeight.bold,
           ),
         ),
-      final rich_blok.RichTextContainerCode code => Container(
+      final sb.RichTextContainerCode code => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -66,7 +65,7 @@ extension _RichTextContainerWidget on rich_blok.RichTextContainer {
           ),
           child: code.content.buildRichText(context, contentData),
         ),
-      final rich_blok.RichTextContainerQuote quote => IntrinsicHeight(
+      final sb.RichTextContainerQuote quote => IntrinsicHeight(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -80,8 +79,8 @@ extension _RichTextContainerWidget on rich_blok.RichTextContainer {
             ],
           ),
         ),
-      final rich_blok.RichTextContainerLine _ => Container(height: 1, color: Colors.black),
-      final rich_blok.RichTextContainerList list => Column(
+      final sb.RichTextContainerLine _ => Container(height: 1, color: Colors.black),
+      final sb.RichTextContainerList list => Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +95,7 @@ extension _RichTextContainerWidget on rich_blok.RichTextContainer {
                   ))
               .toList(),
         ),
-      final rich_blok.RichTextContainerBlok blok => Column(
+      final sb.RichTextContainerBlok blok => Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: blok.bloksData.map((e) => Blok.fromJson(e).buildWidget(context)).toList(),
@@ -108,7 +107,7 @@ extension _RichTextContainerWidget on rich_blok.RichTextContainer {
 
 // MARK: - Leaves
 
-extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
+extension _RichTextLeafBuildWidget on List<sb.RichTextLeaf> {
   Widget buildRichText(
     BuildContext context,
     _StoryblokRichTextContentData contentData, {
@@ -118,17 +117,17 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
       text: TextSpan(
         style: DefaultTextStyle.of(context).style.merge(textStyle),
         children: map((e) => switch (e) {
-              final rich_blok.RichTextLeafText text => text.buildTextSpan(text.text, contentData),
-              final rich_blok.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
-              final rich_blok.RichTextLeafImage image => WidgetSpan(
+              final sb.RichTextLeafText text => text.buildTextSpan(text.text, contentData),
+              final sb.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
+              final sb.RichTextLeafImage image => WidgetSpan(
                   style: image.buildTextStyle(),
                   child: Image.network(image.imageUrl.toString()),
                 ),
-              final rich_blok.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
-              final rich_blok.RichTextContainerParagraph paragraph => WidgetSpan(
+              final sb.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
+              final sb.RichTextContainerParagraph paragraph => WidgetSpan(
                   child: paragraph.buildContainerWidget(context, contentData),
                 ),
-              rich_blok.UnrecognizedRichTextLeaf() => const WidgetSpan(child: SizedBox.shrink()),
+              sb.UnrecognizedRichTextLeaf() => const WidgetSpan(child: SizedBox.shrink()),
             }).toList(),
       ),
     );
@@ -137,7 +136,7 @@ extension _RichTextLeafBuildWidget on List<rich_blok.RichTextLeaf> {
 
 // MARK: - Markable TextStyle
 
-extension _RichTextLeafMarkableWidget on rich_blok.RichTextLeafMarkable {
+extension _RichTextLeafMarkableWidget on sb.RichTextLeafMarkable {
   TextStyle buildTextStyle() {
     final foregroundColor =
         mapIfNotNull(this.foregroundColor?.colorHex, _HexColor.new) ?? (link != null ? AppColors.accent : null);

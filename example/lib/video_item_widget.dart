@@ -3,7 +3,7 @@ import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/link.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 class VideoItemWidget extends StatelessWidget {
   final Uri thumbnailUrl;
