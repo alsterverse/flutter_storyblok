@@ -204,11 +204,11 @@ extension BlockWidget on bloks.Blok {
       final bloks.TestMultiOptions multi => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Default: ${multi.$default.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
+            Text("Default: ${multi.default$.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
             Text("Stories: ${multi.stories.map((e) => e.uuid).join(", ")}"),
             Text("Languages: ${multi.languages.map((e) => e).join(", ")}"),
             Text("Datasource: ${multi.datasource.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
-            Text("External: ${multi.$external.map((e) => e).join(", ")}"),
+            Text("External: ${multi.external$.map((e) => e).join(", ")}"),
           ],
         ),
       final bloks.TestPlugin plugin => Text(plugin.plugin?.data.toString() ?? ""),
