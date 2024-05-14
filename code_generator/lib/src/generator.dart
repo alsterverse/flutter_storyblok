@@ -108,9 +108,9 @@ class StoryblokCodegen {
         final data = entry.value as JSONMap;
         final type = data["type"] as String;
 
-        final field = BaseField.fromData(data, type, fieldName);
+        final field = BaseField.fromData(data, type: type, fieldName: fieldName, ownerName: c.name!);
         if (field == null) {
-          if (type != "group") print("Unrecognized type $type");
+          if (!["section", "tab"].contains(type)) print("Unrecognized type $type");
           continue;
         }
 

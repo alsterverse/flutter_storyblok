@@ -13,10 +13,10 @@ base class OptionField extends BaseField {
   final String enumName;
   final String externalEnumName;
 
-  OptionField.fromJson(super.data, super.name)
+  OptionField.fromJson(super.data, super.name, String ownerName)
       : source = OptionSource.values.byName(data["source"] ?? OptionSource.self.name),
-        enumName = sanitizeName("${unsanitizedName(name)}_Option", isClass: true),
-        externalEnumName = sanitizeName("${unsanitizedName(name)}_ExternalOption", isClass: true),
+        enumName = sanitizeName("${unsanitizedName("${name}_$ownerName")}_Option", isClass: true),
+        externalEnumName = sanitizeName("${unsanitizedName("${name}_$ownerName")}_ExternalOption", isClass: true),
         super.fromJson();
 
   @override

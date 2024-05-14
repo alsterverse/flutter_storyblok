@@ -5,7 +5,7 @@ import '../utils/code_builder_extensions.dart';
 import '../enum.dart';
 
 final class OptionsField extends OptionField {
-  OptionsField.fromJson(super.data, super.name) : super.fromJson();
+  OptionsField.fromJson(super.data, super.name, super.ownerName) : super.fromJson();
 
   @override
   TypeReference get type => referList(type: super.type.nonNullable);

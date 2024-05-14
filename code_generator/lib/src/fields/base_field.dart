@@ -27,7 +27,12 @@ abstract base class BaseField {
       : isRequired = data["required"] ?? false,
         position = data["pos"];
 
-  static BaseField? fromData(JSONMap data, String type, String fieldName) {
+  static BaseField? fromData(
+    JSONMap data, {
+    required String type,
+    required String fieldName,
+    required String ownerName,
+  }) {
     return switch (type) {
       "bloks" => BlokField.fromJson(data, fieldName),
       "text" => TextField.fromJson(data, fieldName),
@@ -39,9 +44,9 @@ abstract base class BaseField {
       "asset" => AssetField.fromJson(data, fieldName),
       "multiasset" => MultiAssetField.fromJson(data, fieldName),
       "multilink" => LinkField.fromJson(data, fieldName),
-      "option" => OptionField.fromJson(data, fieldName),
+      "option" => OptionField.fromJson(data, fieldName, ownerName),
       "table" => TableField.fromJson(data, fieldName),
-      "options" => OptionsField.fromJson(data, fieldName),
+      "options" => OptionsField.fromJson(data, fieldName, ownerName),
       "custom" => PluginField.fromJson(data, fieldName),
       "richtext" => RichTextField.fromJson(data, fieldName),
       _ => null,
