@@ -1,4 +1,10 @@
+import 'package:characters/characters.dart';
 import 'package:dart_casing/dart_casing.dart';
+
+// Only ASCII, _ and $ characters allowed
+final _illegalCharacters = RegExp(r"[^_\$a-zA-Z0-9]");
+final _startIllegalCharacters = RegExp(r"[^_\$a-zA-Z]");
+final _camelCasePattern = RegExp(r"(?=[A-Z])");
 
 Map<String, String> _sanitizedNames = {};
 
@@ -8,17 +14,22 @@ String sanitizeName(String raw, {required bool isClass}) {
   final cached = _sanitizedNames[_sanitizedNameKey(raw, isClass)];
   if (cached != null) return cached;
 
-  // Trim and replace spaces with _
-  var sanitized = raw.trim().replaceAll(RegExp(r"\s"), "_");
+  // Trim and replace illegal identifiers with _
+  var sanitized = raw.trim().replaceAll(_illegalCharacters, "_");
 
   // camelCase to snake_case to retain an already camelCase. "(?=)" (lookahead) is a trick to keep the delimiter.
-  sanitized = sanitized.split(RegExp(r"(?=[A-Z])")).join("_");
+  sanitized = sanitized.split(_camelCasePattern).join("_");
 
-  // If string starts with an illegal character or is a keyword, prefix the name with `$`.
-  if (sanitized.startsWith(RegExp(r"^([^\$a-zA-Z])")) || (!isClass && _dartKeywords.contains(sanitized))) {
+  sanitized = isClass ? Casing.pascalCase(sanitized) : Casing.camelCase(sanitized);
+
+  // If string starts with an illegal character, prefix the name with `$`.
+  if (sanitized.startsWith(_startIllegalCharacters)) {
     sanitized = "\$$sanitized";
   }
-  sanitized = isClass ? Casing.pascalCase(sanitized) : Casing.camelCase(sanitized);
+  // If string is a Dart keyword, suffix the name with `$`. No need if it's a class name since it will be capitalized.
+  if (!isClass && _dartKeywords.contains(sanitized.toLowerCase())) {
+    sanitized = "$sanitized\$";
+  }
 
   // Cache the sanitized name for `raw`
   _sanitizedNames[_sanitizedNameKey(raw, isClass)] = sanitized;
@@ -27,6 +38,7 @@ String sanitizeName(String raw, {required bool isClass}) {
 
 String unsanitizedName(String sanitized) {
   if (sanitized.startsWith("\$")) return sanitized.substring(1);
+  if (sanitized.endsWith("\$")) return sanitized.characters.skipLast(1).string;
   return sanitized;
 }
 
