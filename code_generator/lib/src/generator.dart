@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dart_style/dart_style.dart';
+import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
 
 import 'fields/base_field.dart';
 import 'http_client.dart';
@@ -10,9 +10,6 @@ import 'utils/code_builder_extensions.dart';
 import 'utils/utils.dart';
 
 class StoryblokCodegen {
-  final _dartFormatter = DartFormatter(fixes: StyleFix.all, pageWidth: 120);
-  final _dartEmitter = DartEmitter.scoped(orderDirectives: true, useNullSafetySyntax: true);
-
   StoryblokCodegen({
     required List<DatasourceWithEntries> datasourceWithEntries,
     required this.components,
@@ -20,6 +17,8 @@ class StoryblokCodegen {
           final (:datasource, :entries) = e;
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
+
+  final _codeEmitter = CodeEmitter();
 
   // Key is the datasource slug
   final List<Enum> datasourceData;
@@ -85,8 +84,7 @@ class StoryblokCodegen {
     }));
 
     final library = lib.build();
-    final a = library.accept(_dartEmitter);
-    return _dartFormatter.format(a.toString());
+    return _codeEmitter.codeFromSpec(library);
   }
 
   Future<List<({String key, ClassBuilder builder})>> _buildComponents(LibraryBuilder lib) {
