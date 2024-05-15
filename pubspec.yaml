@@ -7,6 +7,7 @@ environment:
 
 dependencies:
   http: ^1.2.1
+  collection: ^1.18.0
 
 dev_dependencies:
   lints: ^4.0.0

@@ -9,7 +9,7 @@ final class LinkField extends BaseField {
   final bool isEmailAllowed;
   // final bool restrictContentType;
   // final List<String> restrictedTypes;
-  LinkField.fromJson(super.data, super.name)
+  LinkField.fromJson(super.data)
       : isAssetAllowed = data["asset_link_type"] ?? false,
         isEmailAllowed = data["email_link_type"] ?? false,
         // restrictContentType = data["restrict_content_types"] ?? false,

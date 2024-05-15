@@ -5,7 +5,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 final class MarkdownField extends BaseField {
-  MarkdownField.fromJson(super.data, super.name) : super.fromJson();
+  MarkdownField.fromJson(super.data) : super.fromJson();
 
   @override
   late final TypeReference type = referType(
@@ -15,5 +15,9 @@ final class MarkdownField extends BaseField {
   );
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) => type.invoke(valueExpression);
+  Expression buildInitializer(CodeExpression valueExpression) => isRequired
+      ? _initializer(valueExpression)
+      : valueExpression.equalTo(literalNull).conditional(literalNull, _initializer(valueExpression));
+
+  Expression _initializer(CodeExpression valueExpression) => type.invoke(valueExpression);
 }

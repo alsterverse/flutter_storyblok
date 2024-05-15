@@ -5,7 +5,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 final class MultiAssetField extends BaseField {
-  MultiAssetField.fromJson(super.data, super.name) : super.fromJson();
+  MultiAssetField.fromJson(super.data) : super.fromJson();
 
   late final TypeReference _type = referType(
     "$Asset",

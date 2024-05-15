@@ -8,23 +8,24 @@ final class BlokField extends BaseField {
   final int? maximum;
   final bool restrictTypes;
   final List<String> restrictedTypes;
-  BlokField.fromJson(super.data, super.name)
+  BlokField.fromJson(super.data)
       : maximum = data["maximum"],
         restrictTypes = data["restrict_components"] ?? false,
         restrictedTypes = List.from(data["component_whitelist"] ?? []),
         super.fromJson();
 
-  late final TypeReference _type = referType((restrictTypes && restrictedTypes.length == 1) //
-          ? sanitizeName(restrictedTypes.first, isClass: true)
-          : "Blok"
-      //
-      );
+  late final _isSingle = maximum == 1;
+  late final _isRestricted = restrictTypes && restrictedTypes.length == 1;
+
+  late final TypeReference _type = referType(_isRestricted //
+      ? sanitizeName(restrictedTypes.first, isClass: true)
+      : "Blok");
 
   @override
-  late final TypeReference type = (maximum == 1 //
+  late final TypeReference type = (_isSingle //
           ? _type
           : referList(type: _type))
-      .rebuild((t) => t.isNullable = !isRequired);
+      .rebuild((t) => t.isNullable = _isSingle && !isRequired);
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {

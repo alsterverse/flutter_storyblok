@@ -7,7 +7,7 @@ import '../utils/code_builder_extensions.dart';
 // FieldType enum can not be generated beacuse FieldTypes API returns all available plugins for a user, not the project.
 
 final class PluginField extends BaseField {
-  PluginField.fromJson(super.data, super.name) : super.fromJson();
+  PluginField.fromJson(super.data) : super.fromJson();
 
   @override
   late final TypeReference type = referType(

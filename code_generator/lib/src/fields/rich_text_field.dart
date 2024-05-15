@@ -5,7 +5,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 final class RichTextField extends BaseField {
-  RichTextField.fromJson(super.data, super.name) : super.fromJson();
+  RichTextField.fromJson(super.data) : super.fromJson();
 
   @override
   late final TypeReference type = referType(

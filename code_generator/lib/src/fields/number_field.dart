@@ -5,7 +5,7 @@ import '../utils/code_builder_extensions.dart';
 
 final class NumberField extends BaseField {
   final int? decimals;
-  NumberField.fromJson(super.data, super.name)
+  NumberField.fromJson(super.data)
       : decimals = data["decimals"],
         super.fromJson();
 

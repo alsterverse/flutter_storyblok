@@ -4,7 +4,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 final class DateTimeField extends BaseField {
-  DateTimeField.fromJson(super.data, super.name) : super.fromJson();
+  DateTimeField.fromJson(super.data) : super.fromJson();
 
   @override
   TypeReference get type => referType(

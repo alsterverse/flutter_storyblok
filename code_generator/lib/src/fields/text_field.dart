@@ -4,7 +4,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 base class TextField extends BaseField {
-  TextField.fromJson(super.data, super.name) : super.fromJson();
+  TextField.fromJson(super.data) : super.fromJson();
 
   @override
   late final TypeReference type = referType(

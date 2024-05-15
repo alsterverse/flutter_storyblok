@@ -18,7 +18,7 @@ class StoryblokCodegen {
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
 
-  final _codeEmitter = CodeEmitter();
+  final codeEmitter = CodeEmitter();
 
   // Key is the datasource slug
   final List<Enum> datasourceData;
@@ -84,7 +84,7 @@ class StoryblokCodegen {
     }));
 
     final library = lib.build();
-    return _codeEmitter.codeFromSpec(library);
+    return codeEmitter.codeFromSpec(library);
   }
 
   Future<List<({String key, ClassBuilder builder})>> _buildComponents(LibraryBuilder lib) {
@@ -116,11 +116,7 @@ class StoryblokCodegen {
         final supportingClass = await field.buildSupportingClass();
         if (supportingClass != null) lib.body.add(supportingClass);
 
-        c.fields.add(Field((f) {
-          f.type = field.type;
-          f.modifier = FieldModifier.final$;
-          f.name = fieldName;
-        }));
+        c.fields.add(field.build(fieldName));
 
         con.initializers.add(
           fieldName.expression.assign(field.buildInitializer("json[${literal(name)}]".expression)).code,

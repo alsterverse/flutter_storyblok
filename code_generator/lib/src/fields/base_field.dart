@@ -19,11 +19,10 @@ import '../utils/utils.dart';
 
 abstract base class BaseField {
   final JSONMap data;
-  final String name;
   final bool isRequired;
   final int? position;
-  BaseField(this.data, this.name, this.isRequired, this.position);
-  BaseField.fromJson(this.data, this.name)
+  BaseField(this.data, this.isRequired, this.position);
+  BaseField.fromJson(this.data)
       : isRequired = data["required"] ?? false,
         position = data["pos"];
 
@@ -34,33 +33,37 @@ abstract base class BaseField {
     required String ownerName,
   }) {
     return switch (type) {
-      "bloks" => BlokField.fromJson(data, fieldName),
-      "text" => TextField.fromJson(data, fieldName),
-      "textarea" => TextAreaField.fromJson(data, fieldName),
-      "markdown" => MarkdownField.fromJson(data, fieldName),
-      "number" => NumberField.fromJson(data, fieldName),
-      "boolean" => BooleanField.fromJson(data, fieldName),
-      "datetime" => DateTimeField.fromJson(data, fieldName),
-      "asset" => AssetField.fromJson(data, fieldName),
-      "multiasset" => MultiAssetField.fromJson(data, fieldName),
-      "multilink" => LinkField.fromJson(data, fieldName),
+      "bloks" => BlokField.fromJson(data),
+      "text" => TextField.fromJson(data),
+      "textarea" => TextAreaField.fromJson(data),
+      "markdown" => MarkdownField.fromJson(data),
+      "number" => NumberField.fromJson(data),
+      "boolean" => BooleanField.fromJson(data),
+      "datetime" => DateTimeField.fromJson(data),
+      "asset" => AssetField.fromJson(data),
+      "multiasset" => MultiAssetField.fromJson(data),
+      "multilink" => LinkField.fromJson(data),
       "option" => OptionField.fromJson(data, fieldName, ownerName),
-      "table" => TableField.fromJson(data, fieldName),
       "options" => OptionsField.fromJson(data, fieldName, ownerName),
-      "custom" => PluginField.fromJson(data, fieldName),
-      "richtext" => RichTextField.fromJson(data, fieldName),
+      "table" => TableField.fromJson(data),
+      "custom" => PluginField.fromJson(data),
+      "richtext" => RichTextField.fromJson(data),
       _ => null,
     };
   }
 
   TypeReference get type;
 
-  void buildField(FieldBuilder f) {
-    f.name = name;
-    f.type = type;
-  }
-
   Expression buildInitializer(CodeExpression valueExpression) => valueExpression;
 
   Future<Spec?> buildSupportingClass() => Future.value(null);
+
+  Field build(String fieldName) {
+    return Field((f) => f
+          ..type = type
+          ..modifier = FieldModifier.final$
+          ..name = fieldName
+        //
+        );
+  }
 }

@@ -5,7 +5,7 @@ import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
 final class AssetField extends BaseField {
-  AssetField.fromJson(super.data, super.name)
+  AssetField.fromJson(super.data)
       : assetTypes = List.from(data["filetypes"] ?? []),
         super.fromJson();
   final List<String> assetTypes;
