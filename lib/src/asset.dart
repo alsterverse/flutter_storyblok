@@ -18,18 +18,34 @@ final class Asset {
         metadata = mapIfNotNull(json["metadata"] as Map?, (e) => JSONMap.from(e));
 }
 
-/*
-* Create different asset types to handle it in app
-*
-* You need to create blocks in block library in Storyblok that implements assets
-* and only takes images/videos/documents
-*
-* Note: If Storyblok send content_type we don't need this
-* */
 final class ImageAsset extends Asset {
-  ImageAsset.fromJson(super.json) : super.fromJson();
+  ImageAsset.fromJson(super.json)
+      : imageUrl = Uri.parse(json["filename"]),
+        super.fromJson();
+
+  final Uri imageUrl;
 }
 
 final class VideoAsset extends Asset {
-  VideoAsset.fromJson(super.json) : super.fromJson();
+  VideoAsset.fromJson(super.json)
+      : videoUrl = Uri.parse(json["filename"]),
+        super.fromJson();
+
+  final Uri videoUrl;
+}
+
+final class AudioAsset extends Asset {
+  AudioAsset.fromJson(super.json)
+      : audioUrl = Uri.parse(json["filename"]),
+        super.fromJson();
+
+  final Uri audioUrl;
+}
+
+final class TextAsset extends Asset {
+  TextAsset.fromJson(super.json)
+      : fileUrl = Uri.parse(json["filename"]),
+        super.fromJson();
+
+  final Uri fileUrl;
 }

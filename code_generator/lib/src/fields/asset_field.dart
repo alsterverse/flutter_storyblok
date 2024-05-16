@@ -15,6 +15,8 @@ final class AssetField extends BaseField {
     switch (assetTypes.length == 1 ? assetTypes.first : null) {
       "images" => "$ImageAsset",
       "videos" => "$VideoAsset",
+      "audios" => "$AudioAsset",
+      "texts" => "$TextAsset",
       _ => "$Asset",
     },
     importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
@@ -22,6 +24,10 @@ final class AssetField extends BaseField {
   );
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) => type //
-      .invokeNamed("fromJson", referJSONMap().invokeNamed("from", valueExpression));
+  Expression buildInitializer(CodeExpression valueExpression) {
+    final initializer = type.invokeNamed("fromJson", valueExpression);
+    return isRequired
+        ? initializer //
+        : valueExpression.equalTo(literalNull).conditional(literalNull, initializer);
+  }
 }

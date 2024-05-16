@@ -1,5 +1,6 @@
 import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/asset_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/blok_fields.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/boolean_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/datetime_field.dart';
@@ -304,6 +305,100 @@ void main() {
   // MARK: - MultiOption
 
   // MARK: - Asset
+  group("Test Asset field", () {
+    test("Test default asset", () {
+      final field = AssetField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Asset? foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("$valueExpression == null ? null : Asset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test required asset", () {
+      final field = AssetField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Asset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Asset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test image asset", () {
+      final field = AssetField.fromJson({
+        "required": true,
+        "filetypes": ["images"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final ImageAsset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("ImageAsset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test video asset", () {
+      final field = AssetField.fromJson({
+        "required": true,
+        "filetypes": ["videos"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final VideoAsset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("VideoAsset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test audio asset", () {
+      final field = AssetField.fromJson({
+        "required": true,
+        "filetypes": ["audios"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final AudioAsset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("AudioAsset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test text asset", () {
+      final field = AssetField.fromJson({
+        "required": true,
+        "filetypes": ["texts"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final TextAsset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("TextAsset.fromJson($valueExpression)"),
+      );
+    });
+    test("Test omni-asset", () {
+      final field = AssetField.fromJson({
+        "required": true,
+        "filetypes": ["images", "videos", "audios", "texts"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Asset foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Asset.fromJson($valueExpression)"),
+      );
+    });
+  });
 
   // MARK: - MultiAsset
 
