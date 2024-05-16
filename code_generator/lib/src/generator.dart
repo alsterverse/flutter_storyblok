@@ -18,18 +18,14 @@ class StoryblokCodegen {
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
 
-  final codeEmitter = CodeEmitter();
-
-  // Key is the datasource slug
   final List<Enum> datasourceData;
   final List<Component> components;
+  final codeEmitter = CodeEmitter();
 
   Future<String> generate() async {
     final lib = LibraryBuilder();
     lib.name = "bloks";
-    lib.generatedByComment = "storyblok_code_generator";
-
-    // lint ...
+    lib.generatedByComment = "flutter_storyblok_code_generator";
     lib.ignoreForFile.add("unused_import");
 
     final components = await _buildComponents(lib);
@@ -42,34 +38,32 @@ class StoryblokCodegen {
 
     // sealed class Blok {
     final blokClass = Class((c) {
-      c.docs.add("/// This class is generated, do not edit manually");
-      c.modifier = ClassModifier.final$;
+      c.docs.add("/// This is the base class for all blocks defined in \"Block Library\"");
       c.sealed = true;
       c.name = "Blok";
-      c.constructors.addAll([
-        Constructor(),
-        // Blok.fromJson(JSONMap json) {
-        Constructor((con) => con
-              ..factory = true
-              ..name = "fromJson"
-              ..requiredParameters.add(Parameter((p) => p
-                    ..type = refer("$JSONMap")
-                    ..name = "json"
-                  //
-                  ))
-              ..body = Block.of([
-                "switch (json[${literal("component")}] as String) {",
-                ...components.map(
-                  (e) => "case ${literal(e.key)}: return ${e.builder.name}.fromJson(json);",
-                ),
-                "default:",
-                "print('Unrecognized type \${json[${literal("component")}]}');",
-                "return ${unrecognizedBlokClass.name}();",
-                "}",
-              ].map(Code.new))
-            //
-            ),
-      ]);
+      c.constructors.add(Constructor());
+      // Blok.fromJson(JSONMap json) {
+      c.constructors.add(Constructor((con) => con
+            ..factory = true
+            ..name = "fromJson"
+            ..requiredParameters.add(Parameter((p) => p
+                  ..type = refer("$JSONMap")
+                  ..name = "json"
+                //
+                ))
+            ..body = Block.of([
+              "return switch (json[${literal("component")}] as $String) {",
+              ...components.map(
+                (e) => "${literal(e.key)} => ${e.builder.name}.fromJson(json),",
+              ),
+              "_ => (){",
+              "print('Unrecognized type \${json[${literal("component")}]}');",
+              "return ${unrecognizedBlokClass.name}();",
+              "}()",
+              "};",
+            ].map(Code.new))
+          //
+          ));
     });
     lib.body.add(blokClass);
 

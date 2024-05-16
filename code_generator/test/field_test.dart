@@ -159,7 +159,7 @@ void main() {
       final field = TextAreaField.fromJson({"required": true});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final String foo;"),
+        emitter.equalsCode("final String foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -174,22 +174,22 @@ void main() {
       final field = MarkdownField.fromJson({});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final Markdown? foo;"),
+        emitter.equalsCode("final $Markdown? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$valueExpression == null ? null : Markdown($valueExpression)"),
+        emitter.equalsCode("$valueExpression == null ? null : $Markdown($valueExpression)"),
       );
     });
     test("Test required markdown", () {
       final field = MarkdownField.fromJson({"required": true});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final Markdown foo;"),
+        emitter.equalsCode("final $Markdown foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("Markdown($valueExpression)"),
+        emitter.equalsCode("$Markdown($valueExpression)"),
       );
     });
   });
@@ -200,7 +200,7 @@ void main() {
       final field = NumberField.fromJson({});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final double? foo;"),
+        emitter.equalsCode("final double? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -211,7 +211,7 @@ void main() {
       final field = NumberField.fromJson({"required": true});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final double foo;"),
+        emitter.equalsCode("final double foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -222,7 +222,7 @@ void main() {
       final field = NumberField.fromJson({"decimals": 0});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final int? foo;"),
+        emitter.equalsCode("final int? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -233,7 +233,7 @@ void main() {
       final field = NumberField.fromJson({"required": true, "decimals": 0});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final int foo;"),
+        emitter.equalsCode("final int foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -248,7 +248,7 @@ void main() {
       final field = DateTimeField.fromJson({});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final DateTime? foo;"),
+        emitter.equalsCode("final DateTime? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
@@ -285,7 +285,7 @@ void main() {
       final field = BooleanField.fromJson({"required": true});
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final bool foo;"),
+        emitter.equalsCode("final bool foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
