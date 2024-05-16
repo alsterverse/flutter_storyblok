@@ -58,9 +58,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
         index: _selectedIndex,
         children: widget.bottomNav.items.map((item) {
           final page = item.page;
-          if (page is LinkTypeStory) {
-            final content = page.resolvedStory?.content;
-            if (content is bloks.Blok) return content.buildWidget(context);
+          if (page is LinkStory<bloks.Blok>) {
+            final content = storyblokClient.getResolvedStory(page.uuid)!.content;
+            return content.buildWidget(context);
           }
           return const Placeholder();
         }).toList(),

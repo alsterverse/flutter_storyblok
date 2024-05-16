@@ -24,9 +24,10 @@ class VideoItemWidget extends StatelessWidget {
   });
 
   factory VideoItemWidget.fromVideoItem(bloks.VideoItem videoItem, [bool small = false, bool portrait = false]) {
-    final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
-      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
-      LinkTypeURL() => null,
+    final videoLink = videoItem.videoLink;
+    final linkedVideoPage = switch (videoLink) {
+      LinkStory() => videoLink.getStory(storyblokClient.getResolvedStory)?.content,
+      LinkURL() => null,
     };
     if (linkedVideoPage == null) throw "Needs resolved story"; // TODO Dont throw
 
@@ -34,8 +35,8 @@ class VideoItemWidget extends StatelessWidget {
     final description = videoItem.description;
     return VideoItemWidget(
       thumbnailUrl: switch (linkedVideoPage.videoThumbnail) {
-        final LinkTypeURL urlLink => urlLink.url,
-        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+        final LinkURL urlLink => urlLink.url,
+        LinkStory() => throw "Cannot be story", // TODO Dont throw
       },
       title: title != null && title.isNotEmpty ? title : linkedVideoPage.videoTitle,
       description: small
@@ -52,8 +53,8 @@ class VideoItemWidget extends StatelessWidget {
   factory VideoItemWidget.fromVideoPage(bloks.VideoPage videoPage, [bool small = false, bool portrait = false]) {
     return VideoItemWidget(
       thumbnailUrl: switch (videoPage.videoThumbnail) {
-        final LinkTypeURL urlLink => urlLink.url,
-        LinkTypeStory() => throw "Cannot be story", // TODO Dont throw
+        final LinkURL urlLink => urlLink.url,
+        LinkStory() => throw "Cannot be story", // TODO Dont throw
       },
       title: videoPage.videoTitle,
       description: videoPage.videoDescription,

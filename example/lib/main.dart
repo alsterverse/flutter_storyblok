@@ -148,8 +148,8 @@ extension BlockWidget on bloks.Blok {
       final bloks.RichBlock rich => StoryblokRichTextContent(
           content: rich.richTextHeader?.content ?? [],
           onTapLink: (link) => switch (link) {
-            sb.LinkTypeURL() => print("Open URL: ${link.url}"),
-            sb.LinkTypeAsset() => Navigator.of(context).push(MaterialPageRoute(
+            sb.LinkURL() => print("Open URL: ${link.url}"),
+            sb.LinkAsset() => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => Scaffold(
                   appBar: AppBar(),
                   body: Center(
@@ -157,8 +157,8 @@ extension BlockWidget on bloks.Blok {
                   ),
                 ),
               )),
-            sb.LinkTypeEmail() => print("Send email to: ${link.email}"),
-            sb.LinkTypeStory() => Navigator.of(context).push(
+            sb.LinkEmail() => print("Send email to: ${link.email}"),
+            sb.LinkStory() => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => FutureStoryWidget(
                     storyFuture: storyblokClient.getStory(id: sb.StoryIdentifierUUID(link.uuid)),

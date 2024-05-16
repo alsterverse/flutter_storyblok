@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok_code_generator/src/names.dart';
 
 import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
@@ -7,28 +7,37 @@ import '../utils/code_builder_extensions.dart';
 final class LinkField extends BaseField {
   final bool isAssetAllowed;
   final bool isEmailAllowed;
-  // final bool restrictContentType;
-  // final List<String> restrictedTypes;
+  final bool restrictContentType;
+  final List<String> restrictedTypes;
   LinkField.fromJson(super.data)
       : isAssetAllowed = data["asset_link_type"] ?? false,
         isEmailAllowed = data["email_link_type"] ?? false,
-        // restrictContentType = data["restrict_content_types"] ?? false,
-        // restrictedTypes = List.from(data["component_whitelist"] ?? []),
+        restrictContentType = data["restrict_content_types"] ?? false,
+        restrictedTypes = List.from(data["component_whitelist"] ?? []),
         super.fromJson();
 
   @override
-  late final TypeReference type = referType(
-    switch ((isAssetAllowed, isEmailAllowed)) {
-      (true, true) => "$Link",
-      (true, _) => "$BaseWithAssetLinkTypes",
-      (_, true) => "$BaseWithEmailLinkTypes",
-      _ => "$BaseLinkTypes",
-    },
-    importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
-    nullable: !isRequired,
-  );
+  late final TypeReference type = () {
+    final storyType = restrictContentType && restrictedTypes.length == 1
+        ? sanitizeName(restrictedTypes.first, isClass: true)
+        : "Blok";
+    return referType(
+      switch ((isAssetAllowed, isEmailAllowed)) {
+        (true, true) => "Link<$storyType>",
+        (true, _) => "DefaultWithAssetLink<$storyType>",
+        (_, true) => "DefaultWithEmailLink<$storyType>",
+        _ => "DefaultLink<$storyType>",
+      },
+      importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
+      nullable: !isRequired,
+    );
+  }();
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) =>
-      type.invokeNamed("fromJson", referJSONMap().invokeNamed("from", valueExpression));
+  Expression buildInitializer(CodeExpression valueExpression) {
+    final initializer = type.invokeNamed("fromJson", valueExpression);
+    return isRequired
+        ? initializer //
+        : valueExpression.equalTo(literalNull).conditional(literalNull, initializer);
+  }
 }

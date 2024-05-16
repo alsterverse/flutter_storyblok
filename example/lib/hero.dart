@@ -1,4 +1,3 @@
-import 'package:example/bloks.generated.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
 import 'package:example/components/text.dart';
@@ -12,13 +11,14 @@ class HeroWidget extends StatelessWidget {
     required this.videoItem,
   });
 
-  final VideoItem videoItem;
+  final bloks.VideoItem videoItem;
 
   @override
   Widget build(BuildContext context) {
-    final bloks.VideoPage? linkedVideoPage = switch (videoItem.videoLink) {
-      LinkTypeURL() => null,
-      final LinkTypeStory storyLink => storyLink.resolvedStory?.content as bloks.VideoPage?,
+    final videoLink = videoItem.videoLink;
+    final bloks.VideoPage? linkedVideoPage = switch (videoLink) {
+      LinkStory() => videoLink.getStory(storyblokClient.getResolvedStory)?.content,
+      LinkURL() => null,
     };
     final title = videoItem.title;
     final description = videoItem.description;
@@ -45,8 +45,8 @@ class HeroWidget extends StatelessWidget {
                   ? null
                   : Image.network(
                       switch (linkedVideoPage.videoThumbnail) {
-                        final LinkTypeURL urlLink => urlLink.url.toString(),
-                        LinkTypeStory() => "",
+                        final LinkURL urlLink => urlLink.url.toString(),
+                        LinkStory() => "",
                       },
                       fit: BoxFit.cover,
                     ),

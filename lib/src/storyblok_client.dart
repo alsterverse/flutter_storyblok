@@ -8,8 +8,6 @@ import 'package:flutter_storyblok/src/tag.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:http/http.dart' as http;
 
-final Map<String, Story> resolvedStories = {};
-
 final class StoryblokClient<StoryContent> {
   static const _apiHost = "api.storyblok.com";
 
@@ -31,14 +29,18 @@ final class StoryblokClient<StoryContent> {
   final Map<String, String> baseParameters;
   final StoryContent Function(JSONMap) contentBuilder;
 
+  final Map<String, Story<StoryContent>> _resolvedStories = {};
+
   Future<Story<StoryContent>> getStory({
     required StoryIdentifier id,
     StoryblokVersion version = StoryblokVersion.draft,
     ResolveLinks resolveLinks = ResolveLinks.story,
+    bool resolve2Levels = true,
   }) async {
     final Map<String, String> queryParams = {
       "version": version.name,
       "resolve_links": resolveLinks.name,
+      if (resolve2Levels) "resolve_links_level": "2",
     };
     final json = await switch (id) {
       StoryIdentifierID(id: final id) => _getRequest(
@@ -57,12 +59,8 @@ final class StoryblokClient<StoryContent> {
           queryParameters: queryParams,
         ),
     };
-    if (resolveLinks == ResolveLinks.story) {
-      List<JSONMap>.from(json["links"])
-          .map((e) => Story.fromJson(e, contentBuilder))
-          .forEach((story) => resolvedStories[story.uuid] = story);
-    }
-    final story = Story.fromJson(json["story"], contentBuilder);
+    _storeResolvedLinks(resolveLinks, json);
+    final story = Story<StoryContent>.fromJson(json["story"], contentBuilder);
     return story;
   }
 
@@ -72,6 +70,7 @@ final class StoryblokClient<StoryContent> {
     Pagination? pagination,
     StoryblokVersion version = StoryblokVersion.draft,
     ResolveLinks resolveLinks = ResolveLinks.story,
+    bool resolve2Levels = true,
   }) async {
     final json = await _getRequest(
       path: _pathStories,
@@ -81,22 +80,33 @@ final class StoryblokClient<StoryContent> {
         if (pagination != null) ...pagination.toParameters(),
         "version": version.name,
         "resolve_links": resolveLinks.name,
+        if (resolve2Levels) "resolve_links_level": "2",
       },
     );
-    if (resolveLinks == ResolveLinks.story) {
-      List<JSONMap>.from(json["links"])
-          .map(
-            (e) => Story.fromJson(e, contentBuilder),
-          )
-          .forEach(
-            (story) => resolvedStories[story.uuid] = story,
-          );
-    }
-    return List<JSONMap>.from(json["stories"])
-        .map(
-          (e) => Story.fromJson(e, contentBuilder),
-        )
+    _storeResolvedLinks(resolveLinks, json);
+    return List<JSONMap>.from(json["stories"]) //
+        .map((e) => Story<StoryContent>.fromJson(e, contentBuilder))
         .toList();
+  }
+
+  void _storeResolvedLinks(ResolveLinks resolveLinks, JSONMap json) {
+    final links = List<JSONMap>.from(json["links"] ?? []);
+    switch (resolveLinks) {
+      case ResolveLinks.url:
+        break;
+      case ResolveLinks.link:
+        break;
+      case ResolveLinks.story:
+        final stories = links.map((e) => Story.fromJson(e, contentBuilder));
+        for (final story in stories) {
+          _resolvedStories[story.uuid] = story;
+        }
+    }
+  }
+
+  Story<StoryContent>? getResolvedStory(String uuid) {
+    final story = _resolvedStories[uuid];
+    return story;
   }
 
   Future<List<Datasource>> getDatasources({Pagination? pagination}) async {

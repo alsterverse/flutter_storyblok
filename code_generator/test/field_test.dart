@@ -1,8 +1,11 @@
+import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/blok_fields.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/boolean_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/datetime_field.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/link_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/number_field.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/plugin_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_area_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_markdown_field.dart';
@@ -305,6 +308,105 @@ void main() {
   // MARK: - MultiAsset
 
   // MARK: - Link
+  group("Test Link field", () {
+    test("Test default link", () {
+      final field = LinkField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final DefaultLink<Blok>? foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("$valueExpression == null ? null : DefaultLink<Blok>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test required link", () {
+      final field = LinkField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final DefaultLink<Blok> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("DefaultLink<Blok>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test asset link", () {
+      final field = LinkField.fromJson({
+        "required": true,
+        "asset_link_type": true,
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final DefaultWithAssetLink<Blok> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("DefaultWithAssetLink<Blok>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test email link", () {
+      final field = LinkField.fromJson({
+        "required": true,
+        "email_link_type": true,
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final DefaultWithEmailLink<Blok> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("DefaultWithEmailLink<Blok>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test omni-link", () {
+      final field = LinkField.fromJson({
+        "required": true,
+        "asset_link_type": true,
+        "email_link_type": true,
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Link<Blok> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Link<Blok>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test constrained story link", () {
+      final field = LinkField.fromJson({
+        "required": true,
+        "restrict_content_types": true,
+        "component_whitelist": ["foo"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final DefaultLink<Foo> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("DefaultLink<Foo>.fromJson($valueExpression)"),
+      );
+    });
+    test("Test constrained story omni-link", () {
+      final field = LinkField.fromJson({
+        "required": true,
+        "asset_link_type": true,
+        "email_link_type": true,
+        "restrict_content_types": true,
+        "component_whitelist": ["foo"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Link<Foo> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Link<Foo>.fromJson($valueExpression)"),
+      );
+    });
+  });
 
   // MARK: - Table
 

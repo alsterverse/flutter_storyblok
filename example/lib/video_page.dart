@@ -21,7 +21,7 @@ class _VideoPageWidgetState extends State<VideoPageWidget> {
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.networkUrl((videoPage.videoUrl as LinkTypeURL).url)
+    _videoPlayerController = VideoPlayerController.networkUrl((videoPage.videoUrl as LinkURL).url)
       ..initialize().then((_) {
         if (!mounted) return;
         _videoPlayerController.play();
