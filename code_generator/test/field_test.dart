@@ -309,4 +309,28 @@ void main() {
   // MARK: - Table
 
   // MARK: - Plugin
+  group("Test Plugin field", () {
+    test("Test default plugin", () {
+      final field = PluginField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final $Plugin? foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("$valueExpression is! Map<dynamic, dynamic> ? null : $Plugin.fromJson($valueExpression)"),
+      );
+    });
+    test("Test required plugin", () {
+      final field = PluginField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final $Plugin foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("$Plugin.fromJson($valueExpression)"),
+      );
+    });
+  });
 }
