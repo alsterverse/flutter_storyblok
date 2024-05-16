@@ -5,6 +5,7 @@ import 'package:flutter_storyblok_code_generator/src/fields/blok_fields.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/boolean_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/datetime_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/link_field.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/multi_asset_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/number_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/plugin_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_area_field.dart';
@@ -401,6 +402,114 @@ void main() {
   });
 
   // MARK: - MultiAsset
+  group("Test MultiAsset field", () {
+    test("Test default multiasset", () {
+      final field = MultiAssetField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<Asset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Asset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test required multiasset", () {
+      final field = MultiAssetField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<Asset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Asset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test image multiasset", () {
+      final field = MultiAssetField.fromJson({
+        "required": true,
+        "filetypes": ["images"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<ImageAsset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(ImageAsset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test video multiasset", () {
+      final field = MultiAssetField.fromJson({
+        "required": true,
+        "filetypes": ["videos"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<VideoAsset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(VideoAsset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test audio multiasset", () {
+      final field = MultiAssetField.fromJson({
+        "required": true,
+        "filetypes": ["audios"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<AudioAsset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(AudioAsset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test text multiasset", () {
+      final field = MultiAssetField.fromJson({
+        "required": true,
+        "filetypes": ["texts"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<TextAsset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(TextAsset.fromJson).toList()",
+        ),
+      );
+    });
+    test("Test omni-multiasset", () {
+      final field = MultiAssetField.fromJson({
+        "required": true,
+        "filetypes": ["images", "videos", "audios", "texts"],
+      });
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final List<Asset> foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode(
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Asset.fromJson).toList()",
+        ),
+      );
+    });
+  });
 
   // MARK: - Link
   group("Test Link field", () {

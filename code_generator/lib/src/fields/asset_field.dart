@@ -4,7 +4,7 @@ import 'package:flutter_storyblok/flutter_storyblok.dart';
 import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
-final class AssetField extends BaseField {
+base class AssetField extends BaseField {
   AssetField.fromJson(super.data)
       : assetTypes = List.from(data["filetypes"] ?? []),
         super.fromJson();

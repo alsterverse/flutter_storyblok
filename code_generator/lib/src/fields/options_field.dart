@@ -7,8 +7,10 @@ import '../enum.dart';
 final class OptionsField extends OptionField {
   OptionsField.fromJson(super.data, super.name, super.ownerName) : super.fromJson();
 
+  late final _type = super.type.nonNullable;
+
   @override
-  TypeReference get type => referList(type: super.type.nonNullable);
+  TypeReference get type => referList(type: _type);
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {
@@ -22,7 +24,7 @@ final class OptionsField extends OptionField {
           .invokeNamed("map", buildInstantiateEnum(enumName))
           .invokeNamed("toList"),
       OptionSource.internal_stories => expression //
-          .invokeNamed("map", super.type.nonNullable.property("new"))
+          .invokeNamed("map", _type.property("new"))
           .invokeNamed("toList"),
       OptionSource.internal_languages => expression,
       OptionSource.internal => expression //

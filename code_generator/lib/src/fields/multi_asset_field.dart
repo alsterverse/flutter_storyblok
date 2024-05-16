@@ -1,20 +1,15 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/asset_field.dart';
 
-import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
 
-final class MultiAssetField extends BaseField {
+final class MultiAssetField extends AssetField {
   MultiAssetField.fromJson(super.data) : super.fromJson();
 
-  late final TypeReference _type = referType(
-    "$Asset",
-    importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
-    nullable: false,
-  );
+  late final _type = super.type.nonNullable;
 
   @override
-  late final TypeReference type = referList(type: _type);
+  TypeReference get type => referList(type: _type);
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) => referList(type: referJSONMap()) //
