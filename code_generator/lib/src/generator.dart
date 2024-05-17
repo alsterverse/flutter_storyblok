@@ -11,6 +11,7 @@ import 'utils/utils.dart';
 
 class StoryblokCodegen {
   StoryblokCodegen({
+    required this.getDatasourceFromExternalSource,
     required List<DatasourceWithEntries> datasourceWithEntries,
     required this.components,
   }) : datasourceData = datasourceWithEntries.map((e) {
@@ -18,6 +19,7 @@ class StoryblokCodegen {
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
 
+  final Future<List<JSONMap>> Function(Uri) getDatasourceFromExternalSource;
   final List<Enum> datasourceData;
   final List<Component> components;
   final codeEmitter = CodeEmitter();
@@ -105,9 +107,12 @@ class StoryblokCodegen {
           if (!["section", "tab"].contains(type)) print("Unrecognized type $type");
           continue;
         }
+        if (field.shouldSkip) {
+          continue;
+        }
 
         // TODO: External JSON should be unique to the url not the field.
-        final supportingClass = await field.buildSupportingClass();
+        final supportingClass = await field.buildSupportingClass(getDatasourceFromExternalSource);
         if (supportingClass != null) lib.body.add(supportingClass);
 
         c.fields.add(field.build(fieldName));

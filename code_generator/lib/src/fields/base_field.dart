@@ -54,9 +54,11 @@ abstract base class BaseField {
 
   TypeReference get type;
 
+  bool get shouldSkip => false;
+
   Expression buildInitializer(CodeExpression valueExpression) => valueExpression;
 
-  Future<Spec?> buildSupportingClass() => Future.value(null);
+  Future<Spec?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) => Future.value(null);
 
   Field build(String fieldName) {
     return Field((f) => f

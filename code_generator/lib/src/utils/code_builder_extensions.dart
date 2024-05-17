@@ -54,3 +54,8 @@ TypeReference referJSONMap({
   bool? nullable,
 }) =>
     referType("$JSONMap", nullable: nullable);
+
+Expression initializerFromRequired(bool isRequired, CodeExpression valueExpression, Expression nonNullExpression) {
+  if (isRequired) return nonNullExpression;
+  return valueExpression.equalTo(literalNull).conditional(literalNull, nonNullExpression);
+}
