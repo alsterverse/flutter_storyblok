@@ -15,6 +15,7 @@ final class BlokField extends BaseField {
         super.fromJson();
 
   late final _isSingle = maximum == 1;
+  // TODO: Generate sealed class if more than 1 restricted type
   late final _isRestricted = restrictTypes && restrictedTypes.length == 1;
 
   late final TypeReference _type = referType(_isRestricted //

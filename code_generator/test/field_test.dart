@@ -10,6 +10,8 @@ import 'package:flutter_storyblok_code_generator/src/fields/multi_asset_field.da
 import 'package:flutter_storyblok_code_generator/src/fields/number_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/option_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/plugin_field.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/rich_text_field.dart';
+import 'package:flutter_storyblok_code_generator/src/fields/table_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_area_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/text_markdown_field.dart';
@@ -302,6 +304,31 @@ void main() {
   });
 
   // MARK: - RichText
+  group("Test RichText field", () {
+    test("Test default richtext", () {
+      final field = RichTextField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final RichText? foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("$valueExpression == null ? null : RichText.fromJson($valueExpression)"),
+      );
+    });
+
+    test("Test required richtext", () {
+      final field = RichTextField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final RichText foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("RichText.fromJson($valueExpression)"),
+      );
+    });
+  });
 
   // MARK: - SingleOption
   group("Test SingleOption field", () {
@@ -794,6 +821,30 @@ void main() {
   });
 
   // MARK: - Table
+  group("Test Table field", () {
+    test("Test default table", () {
+      final field = TableField.fromJson({});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Table foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Table.fromJson($valueExpression)"),
+      );
+    });
+    test("Test required table", () {
+      final field = TableField.fromJson({"required": true});
+      expect(
+        field.build("foo"),
+        emitter.equalsCode("final Table foo;"),
+      );
+      expect(
+        field.buildInitializer(valueExpression.expression),
+        emitter.equalsCode("Table.fromJson($valueExpression)"),
+      );
+    });
+  });
 
   // MARK: - Plugin
   group("Test Plugin field", () {
