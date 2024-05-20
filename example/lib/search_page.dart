@@ -4,6 +4,7 @@ import 'package:example/components/text.dart';
 import 'package:example/main.dart';
 import 'package:example/video_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 class SearchPage extends StatefulWidget {
   final bloks.SearchPage searchPage;
@@ -81,7 +82,11 @@ class _SearchPageState extends State<SearchPage> {
       return;
     }
     print("Search for: '$query'");
-    final stories = await storyblokClient.getStories(startsWith: "videos/", searchTerm: query);
+    final stories = await storyblokClient.getStories(
+      startsWith: "videos/",
+      searchTerm: query,
+      resolveLinks: ResolveLinks.story,
+    );
     print(stories.map((e) => e.name).toList().join(", "));
     setState(() {
       results = stories.map((e) => e.content).cast<bloks.VideoPage>().toList();

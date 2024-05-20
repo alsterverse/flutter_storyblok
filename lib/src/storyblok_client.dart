@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/src/content_link.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,21 +16,28 @@ final class StoryblokClient<StoryContent> {
   StoryblokClient({
     required String accessToken,
     StoryblokVersion? version,
+    bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
   })  : _baseParameters = {
           "token": accessToken,
         },
         _version = version,
+        _useCacheInvalidation = useCacheInvalidation,
         _storyContentBuilder = storyContentBuilder;
 
   final StoryblokVersion? _version;
   final Map<String, String> _baseParameters;
+  final bool _useCacheInvalidation;
   final StoryContent Function(JSONMap) _storyContentBuilder;
 
   /// Key is story UUID
   final Map<String, Story<StoryContent>> _resolvedStories = {};
 
-  String? _cacheVersion;
+  int? _cacheVersion;
+
+  void resetCacheVersion() {
+    _cacheVersion = null;
+  }
 
   //
   // MARK: - Story
@@ -222,7 +230,7 @@ final class StoryblokClient<StoryContent> {
   //
   // MARK: - Links
 
-  Future<List<Link>> getLinks({
+  Future<List<ContentLink>> getLinks({
     String? startsWith,
     // StoryblokVersion? version,
     // int? cacheVersion,
@@ -242,7 +250,7 @@ final class StoryblokClient<StoryContent> {
         "paginated": "1",
       },
     );
-    return List<JSONMap>.from(json["links"]).map(Link.fromJson).toList();
+    return List<JSONMap>.from(json["links"]).map(ContentLink.fromJson).toList();
   }
 
   //
@@ -269,6 +277,7 @@ final class StoryblokClient<StoryContent> {
     required String path,
     Map<String, String>? queryParameters,
   }) async {
+    final cacheVersion = _cacheVersion;
     // TODO: Rate limit https://www.storyblok.com/docs/api/content-delivery/v2/getting-started/rate-limit
     final uri = Uri.https(
       _apiHost,
@@ -285,6 +294,13 @@ final class StoryblokClient<StoryContent> {
     });
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as JSONMap;
+      final cv = tryCast<int>(json["cv"]);
+
+      // If use cache invalidation and if previous cacheVersion is older than the new one
+      if (_useCacheInvalidation && (cacheVersion == null || (cv != null && cacheVersion < cv))) {
+        _cacheVersion = cv;
+      }
+
       return json;
     } else {
       throw "Error code ${response.statusCode}, ${response.body}";

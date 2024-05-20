@@ -49,12 +49,18 @@ final router = GoRouter(routes: [
 
       if (slug != null) {
         return FutureStoryWidget(
-          storyFuture: storyblokClient.getStory(id: sb.StoryIdentifierFullSlug(slug)),
+          storyFuture: storyblokClient.getStory(
+            id: sb.StoryIdentifierFullSlug(slug),
+            resolveLinks: sb.ResolveLinks.story,
+          ),
         );
       }
 
       return FutureStoryWidget(
-        storyFuture: storyblokClient.getStory(id: const sb.StoryIdentifierID(rootPageId)),
+        storyFuture: storyblokClient.getStory(
+          id: const sb.StoryIdentifierID(rootPageId),
+          resolveLinks: sb.ResolveLinks.story,
+        ),
         delayed: true,
       );
     },
@@ -162,7 +168,10 @@ extension BlockWidget on bloks.Blok {
             sb.LinkStory() => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => FutureStoryWidget(
-                    storyFuture: storyblokClient.getStory(id: sb.StoryIdentifierUUID(link.uuid)),
+                    storyFuture: storyblokClient.getStory(
+                      id: sb.StoryIdentifierUUID(link.uuid),
+                      resolveLinks: sb.ResolveLinks.story,
+                    ),
                   ),
                 ),
               ),
