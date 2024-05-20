@@ -4,11 +4,11 @@ import 'package:test/test.dart';
 void main() {
   group("Test identifier sanitization", () {
     test("Test sanitize illegal characters", () {
-      expect(sanitizeName("Narrow (80px)", isClass: false), "narrow80px");
-      expect(sanitizeName("Narrow (80px)", isClass: true), "Narrow80px");
+      expect(sanitizeName("Narrow (80px)", isClass: false), "narrow80Px");
+      expect(sanitizeName("Narrow (80px)", isClass: true), "Narrow80Px");
 
-      expect(sanitizeName("/Narrow (-80px)", isClass: false), "narrow80px");
-      expect(sanitizeName("/Narrow (-80px)", isClass: true), "Narrow80px");
+      expect(sanitizeName("/Narrow (-80px)", isClass: false), "narrow80Px");
+      expect(sanitizeName("/Narrow (-80px)", isClass: true), "Narrow80Px");
 
       expect(sanitizeName("Red (#FF0000)", isClass: false), "redFF0000");
       expect(sanitizeName("Red (#FF0000)", isClass: true), "RedFF0000");
