@@ -29,10 +29,11 @@ import 'package:example/starter_blocks/page.dart' as starter_blocks;
 import 'package:collection/collection.dart';
 
 const rootPageId = 381723347;
+
 final storyblokClient = sb.StoryblokClient<bloks.Blok>(
   accessToken: "w6ZsTA1a0xxlQpd7Kkeqjgtt",
   version: sb.StoryblokVersion.draft,
-  contentBuilder: (json) => bloks.Blok.fromJson(json),
+  storyContentBuilder: (json) => bloks.Blok.fromJson(json),
 );
 
 void main() {

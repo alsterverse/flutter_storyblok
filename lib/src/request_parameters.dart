@@ -1,5 +1,3 @@
-//
-
 enum StoryblokVersion {
   draft,
   published,
@@ -25,10 +23,10 @@ final class StoryIdentifierFullSlug extends StoryIdentifier {
 }
 
 final class Pagination {
-  final int perPage;
   final int page;
+  final int perPage;
 
-  const Pagination({required this.perPage, required this.page});
+  const Pagination({required this.page, required this.perPage});
 
   Map<String, String> toParameters() => {
         "page": page.toString(),
