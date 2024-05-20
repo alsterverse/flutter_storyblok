@@ -29,7 +29,7 @@ class _TestMultiAssetsBlockScreenState extends State<TestMultiAssetsBlock> {
       child: DropDownMultiSelect(
         options: testOptions,
         selectedValues: selectedValues,
-        selected_values_style: const TextStyle(color: AppColors.white),
+        selectedValuesStyle: const TextStyle(color: AppColors.white),
         onChanged: (List<dynamic> value) {
           print("SELECTED");
           print("$selectedValues");
