@@ -37,7 +37,8 @@ class StoryblokHttpClient {
     return List<JSONMap>.from(data[key]).map(DatasourceEntry.fromJson).toList();
   }
 
-  static Future<List<JSONMap>> getDatasourceFromExternalSource(Uri url) async {
+  // TODO: Add way to configure fetching non-public resources
+  Future<List<JSONMap>> getDatasourceFromExternalSource(Uri url) async {
     final response = await http.get(url);
     final data = List<JSONMap>.from(jsonDecode(response.body));
     return data;

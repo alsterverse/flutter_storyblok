@@ -31,7 +31,7 @@ final class OptionsField extends OptionField {
           .invokeNamed("map", buildInstantiateEnum(data["datasource_slug"]))
           .invokeNamed("toList"),
       OptionSource.external => expression //
-          .invokeNamed("map", buildInstantiateEnum(externalEnumName))
+          .invokeNamed("map", buildInstantiateEnum(enumName))
           .invokeNamed("toList"),
     };
   }

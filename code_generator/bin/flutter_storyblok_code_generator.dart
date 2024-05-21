@@ -12,6 +12,7 @@ void main(List<String> args) async {
   final componentsFuture = apiClient.getComponents();
 
   final codegen = StoryblokCodegen(
+    getDatasourceFromExternalSource: apiClient.getDatasourceFromExternalSource,
     datasourceWithEntries: await datasourcesWithEntriesFuture,
     components: await componentsFuture,
   );

@@ -2,7 +2,6 @@ import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 import 'base_field.dart';
-import '../http_client.dart';
 import '../utils/code_builder_extensions.dart';
 import '../enum.dart';
 import '../names.dart';
@@ -11,12 +10,10 @@ import '../utils/utils.dart';
 base class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
-  final String externalEnumName;
 
   OptionField.fromJson(super.data, String name, String ownerName)
       : source = OptionSource.values.byName(data["source"] ?? OptionSource.self.name),
-        enumName = sanitizeName("${unsanitizedName("${name}_$ownerName")}_Option", isClass: true),
-        externalEnumName = sanitizeName("${unsanitizedName("${name}_$ownerName")}_ExternalOption", isClass: true),
+        enumName = sanitizeName("${unsanitizedName("${ownerName}_$name")}_Option", isClass: true),
         super.fromJson();
 
   @override
@@ -29,8 +26,32 @@ base class OptionField extends BaseField {
       ),
     OptionSource.internal_languages => referType("$String", nullable: !isRequired), // TODO Language enum
     OptionSource.internal => referType(sanitizeName(data["datasource_slug"], isClass: true)),
-    OptionSource.external => referType(externalEnumName),
+    OptionSource.external => referType(enumName),
   };
+
+  @override
+  late final bool shouldSkip = switch (source) {
+    OptionSource.self => tryCast<List>(data["options"])?.isEmpty ?? true,
+    OptionSource.internal_stories => false,
+    OptionSource.internal_languages => false,
+    OptionSource.internal => tryCast<String>(data["datasource_slug"])?.isEmpty ?? true,
+    OptionSource.external =>
+      mapIfNotNull(tryCast<String>(data["external_datasource"]), (v) => v.isEmpty || Uri.tryParse(v) == null) ?? true,
+  };
+
+  @override
+  Future<Spec?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) async {
+    return switch (source) {
+      OptionSource.self => _buildEnum(enumName, List<JSONMap>.from(data["options"])),
+      OptionSource.internal_stories => null,
+      OptionSource.internal_languages => null,
+      OptionSource.internal => null,
+      OptionSource.external => _buildEnum(
+          enumName,
+          (await getExternalSource(Uri.parse(data["external_datasource"]))).toList(),
+        ),
+    };
+  }
 
   Spec _buildEnum(String name, Iterable<JSONMap> cases) {
     return buildEnum(
@@ -40,28 +61,14 @@ base class OptionField extends BaseField {
   }
 
   @override
-  Future<Spec?> buildSupportingClass() async {
-    return switch (source) {
-      OptionSource.self => _buildEnum(enumName, List<JSONMap>.from(data["options"])),
-      OptionSource.internal_stories => null,
-      OptionSource.internal_languages => null,
-      OptionSource.internal => null,
-      OptionSource.external => await StoryblokHttpClient.getDatasourceFromExternalSource(
-          Uri.parse(data["external_datasource"]),
-        ).then(
-          (options) => _buildEnum(externalEnumName, options),
-        ),
-    };
-  }
-
-  @override
   Expression buildInitializer(CodeExpression valueExpression) {
     return switch (source) {
       OptionSource.self => buildInstantiateEnum(enumName, valueExpression.code.toString()),
-      OptionSource.internal_stories => type.invoke(valueExpression),
+      OptionSource.internal_stories =>
+        initializerFromRequired(isRequired, valueExpression, type.invoke(valueExpression)),
       OptionSource.internal_languages => valueExpression,
       OptionSource.internal => buildInstantiateEnum(data["datasource_slug"], valueExpression.code.toString()),
-      OptionSource.external => buildInstantiateEnum(externalEnumName, valueExpression.code.toString()),
+      OptionSource.external => buildInstantiateEnum(enumName, valueExpression.code.toString()),
     };
   }
 }

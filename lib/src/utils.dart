@@ -5,6 +5,10 @@ Out? mapIfNotNull<In, Out>(In? dataIn, Out? Function(In) mapper) {
   return null;
 }
 
+T? tryCast<T>(dynamic value) {
+  return value is T ? value : null;
+}
+
 extension IterableUtils<E> on Iterable<E> {
   bool containsWhere(bool Function(E) check) {
     for (final e in this) {

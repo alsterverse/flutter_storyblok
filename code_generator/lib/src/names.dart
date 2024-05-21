@@ -2,8 +2,11 @@ import 'package:characters/characters.dart';
 import 'package:dart_casing/dart_casing.dart';
 
 // Only ASCII, _ and $ characters allowed
-final _illegalCharacters = RegExp(r"[^_\$a-zA-Z0-9]");
-final _startIllegalCharacters = RegExp(r"[^_\$a-zA-Z]");
+const _startIllegalCharacters = r"_\$a-zA-Z";
+final _startIllegalCharactersRegex = RegExp("[^$_startIllegalCharacters]");
+final _illegalCharactersRegex = RegExp("[^${_startIllegalCharacters}0-9]");
+
+/// "(?=)" (lookahead) is a trick to keep the delimiter
 final _camelCasePattern = RegExp(r"(?=[A-Z])");
 
 Map<String, String> _sanitizedNames = {};
@@ -15,15 +18,15 @@ String sanitizeName(String raw, {required bool isClass}) {
   if (cached != null) return cached;
 
   // Trim and replace illegal identifiers with _
-  var sanitized = raw.trim().replaceAll(_illegalCharacters, "_");
+  var sanitized = raw.trim().replaceAll(_illegalCharactersRegex, "_");
 
-  // camelCase to snake_case to retain an already camelCase. "(?=)" (lookahead) is a trick to keep the delimiter.
+  // camelCase to snake_case to retain an already camelCase.
   sanitized = sanitized.split(_camelCasePattern).join("_");
 
   sanitized = isClass ? Casing.pascalCase(sanitized) : Casing.camelCase(sanitized);
 
   // If string starts with an illegal character, prefix the name with `$`.
-  if (sanitized.startsWith(_startIllegalCharacters)) {
+  if (sanitized.startsWith(_startIllegalCharactersRegex)) {
     sanitized = "\$$sanitized";
   }
   // If string is a Dart keyword, suffix the name with `$`. No need if it's a class name since it will be capitalized.

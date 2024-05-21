@@ -34,10 +34,6 @@ final class LinkField extends BaseField {
   }();
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) {
-    final initializer = type.invokeNamed("fromJson", valueExpression);
-    return isRequired
-        ? initializer //
-        : valueExpression.equalTo(literalNull).conditional(literalNull, initializer);
-  }
+  Expression buildInitializer(CodeExpression valueExpression) =>
+      initializerFromRequired(isRequired, valueExpression, type.invokeNamed("fromJson", valueExpression));
 }
