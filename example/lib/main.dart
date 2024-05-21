@@ -1,37 +1,30 @@
 import 'dart:async';
 
-import 'package:example/accelerometer_screen.dart';
+import 'package:example/banner.dart';
+import 'package:example/banner_reference.dart';
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/bottom_nav.dart';
-import 'package:example/camera_screen.dart';
-import 'package:example/carousel_block_widget.dart';
 import 'package:example/components/colors.dart';
-import 'package:example/hero.dart';
-import 'package:example/components/block_button.dart';
-import 'package:example/image_block_widget.dart';
+import 'package:example/featured_articles_section.dart';
+import 'package:example/form_section.dart';
+import 'package:example/grid_card.dart';
+import 'package:example/grid_section.dart';
+import 'package:example/hero_section.dart';
+import 'package:example/image_text_section.dart';
 import 'package:example/rich_text_content.dart';
-import 'package:example/search_page.dart';
 import 'package:example/splash_screen.dart';
-import 'package:example/start_page.dart';
-import 'package:example/video_block_widget.dart';
-import 'package:example/video_item_widget.dart';
-import 'package:example/video_page.dart';
+import 'package:example/tabbed_content_entry.dart';
+import 'package:example/tabbed_content_section.dart';
+import 'package:example/text_section.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart' as sb;
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:example/starter_blocks/teaser.dart';
-import 'package:example/starter_blocks/feature.dart';
-import 'package:example/starter_blocks/grid.dart';
 import 'package:example/starter_blocks/page.dart' as starter_blocks;
-import 'package:collection/collection.dart';
 
-const rootPageId = 381723347;
-
+const rootPageId = 494819167;
 final storyblokClient = sb.StoryblokClient<bloks.Blok>(
-  accessToken: "w6ZsTA1a0xxlQpd7Kkeqjgtt",
+  accessToken: "fBBGMz5rR5Jvc0F71v8X2Qtt", // Demo app
   version: sb.StoryblokVersion.draft,
   storyContentBuilder: (json) => bloks.Blok.fromJson(json),
 );
@@ -76,11 +69,25 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       title: 'Flutter x Storyblok',
       theme: ThemeData(
+        primarySwatch: Colors.blue,
         useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.black,
+        scaffoldBackgroundColor: AppColors.background,
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.black,
           foregroundColor: AppColors.white,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.black,
+          ),
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontSize: 16.0, color: AppColors.black, fontWeight: FontWeight.w400),
+          bodyMedium: TextStyle(fontSize: 14.0, color: AppColors.black, fontWeight: FontWeight.w400),
+          bodySmall: TextStyle(fontSize: 12.0, color: AppColors.black, fontWeight: FontWeight.w400),
+          headlineLarge: TextStyle(fontSize: 24.0, color: AppColors.black, fontWeight: FontWeight.w900),
+          headlineMedium: TextStyle(fontSize: 20.0, color: AppColors.black, fontWeight: FontWeight.w700),
+          headlineSmall: TextStyle(fontSize: 16.0, color: AppColors.black, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -108,7 +115,7 @@ class FutureStoryWidget extends StatelessWidget {
         if (story != null) {
           return Scaffold(
             body: story.content.buildWidget(context),
-            backgroundColor: AppColors.black,
+            backgroundColor: AppColors.white,
           );
         } else if (snapshot.hasError) {
           print(snapshot.error);
@@ -126,104 +133,133 @@ class FutureStoryWidget extends StatelessWidget {
 // TODO Generate resolver with lambdas for each blok
 extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
-    return switch (this) {
-      final bloks.HardwareButton button => BlockButton(
-          button.title,
-          onPressed: () => switch (button.sensor) {
-            bloks.PhoneHardware.camera =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CameraScreen())),
-            bloks.PhoneHardware.accelerometer =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AccelerometerScreen())),
-            bloks.PhoneHardware.vibration => HapticFeedback.vibrate(),
-            bloks.PhoneHardware.unknown => print("Unrecognized tap action"),
-          },
-        ),
-      final bloks.StartPage startPage => StartPage(startPage: startPage),
-      final bloks.VideoItem videoItem => VideoItemWidget.fromVideoItem(videoItem),
-      final bloks.VideoPage videoPage => VideoPageWidget(videoPage: videoPage),
-      final bloks.CarouselBlock carouselBlock => CarouselBlockWidget(carouselBlock: carouselBlock),
-      final bloks.TextBlock textBlock => Text(textBlock.body ?? "-"),
-      final bloks.BottomNavigation bottomNav => BottomNavigation(bottomNav: bottomNav),
-      final bloks.Hero hero => HeroWidget(videoItem: hero.video),
-      final bloks.SearchPage searchPage => SearchPage(searchPage: searchPage),
-      final bloks.ImageBlock imageBlock => ImageBlockWidget(imageBlock: imageBlock),
-      final bloks.VideoBlock videoBlock => VideoBlockWidget(videoBlock: videoBlock),
-      final bloks.Feature feature => Feature(name: feature.name),
-      final bloks.Teaser teaser => Teaser(headline: teaser.headline),
-      final bloks.Page page => starter_blocks.Page(page: page),
-      final bloks.Grid _ => const Grid(),
-      final bloks.RichBlock rich => StoryblokRichTextContent(
-          content: rich.richTextHeader?.content ?? [],
-          onTapLink: (link) => switch (link) {
-            sb.LinkURL() => print("Open URL: ${link.url}"),
-            sb.LinkAsset() => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Scaffold(
-                  appBar: AppBar(),
-                  body: Center(
-                    child: Image.network(link.url.toString()),
-                  ),
-                ),
-              )),
-            sb.LinkEmail() => print("Send email to: ${link.email}"),
-            sb.LinkStory() => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FutureStoryWidget(
-                    storyFuture: storyblokClient.getStory(
-                      id: sb.StoryIdentifierUUID(link.uuid),
-                      resolveLinks: sb.ResolveLinks.story,
-                    ),
-                  ),
-                ),
-              ),
-          },
-        ),
-      final bloks.TestBlock test => StoryblokRichTextContent(content: test.richtext2.content),
-      final bloks.TestTable table => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Center(
+      child: switch (this) {
+        bloks.ArticleOverviewPage blok => Text(blok.runtimeType.toString()),
+        bloks.ArticlePage blok => ArticlePageScreen(blok),
+        bloks.Author blok => Text(blok.runtimeType.toString()),
+        bloks.Badge blok => Text(blok.runtimeType.toString()),
+        bloks.Banner blok => BannerWidget(blok),
+        bloks.BannerReference blok => BannerReferenceWidget(blok),
+        bloks.Button blok => Text(blok.runtimeType.toString()),
+        bloks.Category blok => Text(blok.runtimeType.toString()),
+        bloks.ComplexHeroSection blok => Text(blok.runtimeType.toString()),
+        bloks.DefaultPage blok => starter_blocks.Page(page: blok),
+        bloks.FeaturedArticlesSection blok => FeaturedArticlesSectionWidget(blok),
+        bloks.FormSection blok => FormSectionWidget(blok),
+        bloks.GridCard blok => GridCardWidget(blok),
+        bloks.GridSection blok => GridSectionWidget(blok),
+        bloks.HeroSection blok => HeroSectionWidget(blok),
+        bloks.ImageTextSection blok => ImageTextSectionWidget(blok),
+        bloks.Label blok => Text(blok.runtimeType.toString()),
+        bloks.NavItem blok => Text(blok.runtimeType.toString()),
+        bloks.PersonalizedSection blok => Text(blok.runtimeType.toString()),
+        bloks.PriceCard blok => Text(blok.runtimeType.toString()),
+        bloks.RichtextYoutube blok => Text(blok.runtimeType.toString()),
+        bloks.RocketCustomizationPage blok => Text(blok.runtimeType.toString()),
+        bloks.RocketJourneyPage blok => Text(blok.runtimeType.toString()),
+        bloks.RocketJourneyScrollSection blok => Text(blok.runtimeType.toString()),
+        bloks.SingleProductSection blok => Text(blok.runtimeType.toString()),
+        bloks.SiteConfig blok => Text(blok.runtimeType.toString()),
+        bloks.TabbedContentEntry blok => TabbedContentEntryWidget(blok),
+        bloks.TabbedContentSection blok => TabbedContentSectionWidget(blok),
+        bloks.TextSection blok => TextSectionWidget(blok),
+        bloks.TwoColImageTextSection blok => Text(blok.runtimeType.toString()),
+        bloks.UnrecognizedBlok blok => Text(blok.toString()),
+        //TODO: remove this line before release
+        _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
+      },
+    );
+  }
+}
+
+class AuthorWidget extends StatelessWidget {
+  const AuthorWidget({this.name, required this.content, super.key});
+
+  final String? name;
+  final bloks.Author content;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
             Row(
-              mainAxisSize: MainAxisSize.max,
-              children: table.defaultTable.columns
-                  .map((column) => Expanded(
-                        child: Column(
-                          children: column
-                              .mapIndexed((i, e) => Text(
-                                    e,
-                                    style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
-                                  ))
-                              .toList(),
-                        ),
-                      ))
-                  .toList(),
+              children: [
+                ClipOval(
+                    child: Image.network(
+                  content.profilePicture?.fileName ?? "",
+                  fit: BoxFit.cover,
+                  width: 64,
+                  height: 64,
+                )),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Author", style: Theme.of(context).textTheme.headlineSmall),
+                      Text(name ?? "", style: Theme.of(context).textTheme.headlineMedium),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Table(
-              children: table.defaultTable.rows
-                  .mapIndexed((i, e) => TableRow(
-                        children: e
-                            .map((e) => Text(
-                                  e,
-                                  style: TextStyle(fontWeight: i != 0 ? null : FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ))
-                            .toList(),
-                      ))
-                  .toList(),
-            ),
+            const SizedBox(height: 16),
+            Text(content.description ?? ""),
           ],
         ),
-      final bloks.TestMultiOptions multi => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      ),
+    );
+  }
+}
+
+class ArticlePageScreen extends StatelessWidget {
+  const ArticlePageScreen(this.blok, {super.key});
+  final bloks.ArticlePage blok;
+
+  @override
+  Widget build(BuildContext context) {
+    final author = blok.author != null ? storyblokClient.getStory(id: blok.author!) : null;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          blok.headline ?? "",
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, letterSpacing: -.5),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            Text("Default: ${multi.default$.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
-            Text("Stories: ${multi.stories.map((e) => e.uuid).join(", ")}"),
-            Text("Languages: ${multi.languages.map((e) => e).join(", ")}"),
-            Text("Datasource: ${multi.datasource.map((e) => "${e.name}: '${e.raw}'").join(", ")}"),
-            Text("External: ${multi.external$.map((e) => e).join(", ")}"),
+            if (blok.image != null) Image.network(blok.image!.fileName),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(blok.subheadline ?? "", style: Theme.of(context).textTheme.headlineMedium),
+                  const SizedBox(height: 16),
+                  StoryblokRichTextContent(content: blok.text?.content ?? []),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+            if (author != null)
+              FutureBuilder(
+                future: author,
+                builder: (context, snapshot) {
+                  final data = snapshot.data;
+                  if (data == null) return const CircularProgressIndicator();
+                  if (snapshot.hasError) return Text(snapshot.error.toString());
+                  return AuthorWidget(name: data.name, content: data.content as bloks.Author);
+                },
+              ),
           ],
         ),
-      final bloks.TestPlugin plugin => Text(plugin.plugin?.data.toString() ?? ""),
-      //TODO: remove this line before release
-      _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
-    };
+      ),
+    );
   }
 }

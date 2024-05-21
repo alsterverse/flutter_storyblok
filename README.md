@@ -1,13 +1,8 @@
-# Flutter Storyblok README
-
+![](./flutter_storyblok.png)
+                                        
 This Flutter project integrates with Storyblok, a headless CMS, to dynamically
 fetch and render content. Follow the instructions below to set up and run the
 project.
-
-## Prerequisites
-
-- Dart SDK
-- Flutter SDK
 
 ## Getting Started
 
@@ -18,38 +13,34 @@ project.
    `Space`.
 
 ## Running the Generator
-
 Navigate to the project directory and run the following commands:
 
 ```bash
-dart run bin/storyblok_sourcegen.dart <space_id> <personal_access_token> "example/lib/bloks.generated.dart"
+dart run code_generator/bin/flutter_storyblok_code_generator.dart \
+  <space_id> \
+  <personal_access_token> \
+  "example/lib/bloks.generated.dart"
 ```
 
 ## Project Structure
-
-- `bin/`
-  > Contains the code generator for generating strongly typed classes for
-  > Storyblok Blocks found in the "Block library". It fetches the necessary data
-  > with the
-  > [Storyblok Management REST API](https://www.storyblok.com/docs/api/management).
-
-  - `field/`
-    > Contains the classes for parsing each field type e.g Text, Single-option,
-    > Blocks etc.
-
-- `lib/`
-  > Contains the Storyblok SDK Client for fetching storys with the
-  > [Storyblok Content Delivery REST API](https://www.storyblok.com/docs/api/content-delivery/v2/).
-
 The project utilizes a Dart SDK to fetch Storyblok components. A source
 generator is used to create Dart classes that parse these Bloks as JSON. The
 generated Bloks can then be utilized by a Flutter app to dynamically generate a
 page based on a Storyblok Story.
 
-## Preview
+- `code_generator/`
+  > Contains the code generator for generating strongly typed classes for
+  > Storyblok Blocks found in the "Block library". It fetches the necessary data
+  > with the
+  > [Storyblok Management REST API](https://www.storyblok.com/docs/api/management).
 
-A preview of the content from Storyblok is available within the Storyblok
-interface. Additionally, there is a Flutter web preview hosted on Netlify.
+  - `lib/fields/`
+    > Contains the classes for parsing each field type e.g Text, Single-option,
+    > Blocks etc.
+
+- `lib/`
+  > Contains the Storyblok SDK Client for fetching stories with the
+  > [Storyblok Content Delivery REST API](https://www.storyblok.com/docs/api/content-delivery/v2/).
 
 ## API Documentation
 

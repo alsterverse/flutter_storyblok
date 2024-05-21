@@ -9,12 +9,12 @@ final class Asset {
   final String fileName;
   final JSONMap? metadata;
   Asset.fromJson(JSONMap json)
-      : alt = json["alt"],
-        name = json["name"],
-        focus = json["focus"],
-        title = json["title"],
-        copyright = json["copyright"],
-        fileName = json["filename"],
+      : alt = json["alt"] ?? "",
+        name = json["name"] ?? "",
+        focus = json["focus"] ?? "",
+        title = json["title"] ?? "",
+        copyright = json["copyright"] ?? "",
+        fileName = json["filename"] ?? "",
         metadata = mapIfNotNull(json["metadata"] as Map?, (e) => JSONMap.from(e));
 }
 

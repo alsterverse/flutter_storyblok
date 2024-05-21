@@ -51,19 +51,18 @@ class SplashScreen extends StatelessWidget {
             durations: _durations,
             heightPercentages: _heightPercentages,
           ),
-          backgroundColor: const Color.fromARGB(255, 169, 133, 236),
+          backgroundColor: AppColors.black,
           size: const Size(double.infinity, double.infinity),
           waveAmplitude: 10,
           wavePhase: 999,
           waveFrequency: 3,
         ),
-        AnimatedPositioned(
-          duration: const Duration(seconds: 1),
-          child: Image.asset(
-            'assets/atv_logo.png',
-            width: 150,
-            height: 200,
-          ),
+        Text(
+          "Demo Space",
+          style: Theme.of(context)
+              .textTheme
+              .headlineLarge
+              ?.copyWith(color: AppColors.white, letterSpacing: -4, fontSize: 48),
         ),
       ],
     );
