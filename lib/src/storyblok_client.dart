@@ -178,7 +178,6 @@ final class StoryblokClient<StoryContent> {
       case ResolveLinks.story:
         final stories = links.map((e) => Story.fromJson(e, _storyContentBuilder));
         for (final story in stories) {
-          print("👏 ${story.uuid}");
           _resolvedStories[story.uuid] = story;
         }
     }
