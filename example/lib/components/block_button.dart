@@ -1,5 +1,4 @@
 import 'package:example/components/colors.dart';
-import 'package:example/components/text.dart';
 import 'package:flutter/material.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 
@@ -30,57 +29,56 @@ class BlockButton extends StatelessWidget {
     };
 
     var textColor = switch (blokButton.textColor) {
-      bloks.TextColorButtonOption.light => AppColors.white,
-      bloks.TextColorButtonOption.dark => AppColors.black,
-      bloks.TextColorButtonOption.unknown => AppColors.white,
+      bloks.ButtonTextColorOption.light => AppColors.white,
+      bloks.ButtonTextColorOption.dark => AppColors.black,
+      bloks.ButtonTextColorOption.unknown => AppColors.white,
     };
 
     borderColor = Colors.transparent;
 
     switch (blokButton.style) {
-      case bloks.StyleButtonOption.ghost:
+      case bloks.ButtonStyleOption.ghost:
         {
           textColor = backgroundColor;
           borderColor = backgroundColor;
           backgroundColor = Colors.transparent;
         }
-      case bloks.StyleButtonOption.semiTransparent:
+      case bloks.ButtonStyleOption.semiTransparent:
         {
           textColor = backgroundColor;
           borderColor = backgroundColor;
           backgroundColor = Colors.transparent;
         }
-      case bloks.StyleButtonOption.default$:
-      case bloks.StyleButtonOption.unknown:
+      case bloks.ButtonStyleOption.default$:
+      case bloks.ButtonStyleOption.unknown:
         break;
     }
 
     final border = switch (blokButton.style) {
-      bloks.StyleButtonOption.default$ => BorderSide.none,
-      bloks.StyleButtonOption.ghost => BorderSide(color: borderColor),
-      bloks.StyleButtonOption.semiTransparent => BorderSide(color: borderColor),
-      bloks.StyleButtonOption.unknown => BorderSide.none,
+      bloks.ButtonStyleOption.default$ => BorderSide.none,
+      bloks.ButtonStyleOption.ghost => BorderSide(color: borderColor),
+      bloks.ButtonStyleOption.semiTransparent => BorderSide(color: borderColor),
+      bloks.ButtonStyleOption.unknown => BorderSide.none,
     };
 
     final borderRadius = switch (blokButton.borderRadius) {
-      bloks.BorderRadiusButtonOption.default$ => BorderRadius.circular(999),
-      bloks.BorderRadiusButtonOption.small => BorderRadius.circular(4),
-      bloks.BorderRadiusButtonOption.unknown => BorderRadius.circular(8),
-      // TODO: Handle this case.
-    };
-
-    final padding = switch (blokButton.size) {
-      bloks.SizeButtonOption.small => const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      bloks.SizeButtonOption.medium => const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      bloks.SizeButtonOption.large => const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      bloks.SizeButtonOption.unknown => const EdgeInsets.symmetric(vertical: 12, horizontal: 16)
+      bloks.ButtonBorderRadiusOption.default$ => BorderRadius.circular(999),
+      bloks.ButtonBorderRadiusOption.small => BorderRadius.circular(4),
+      bloks.ButtonBorderRadiusOption.unknown => BorderRadius.circular(8),
     };
 
     final fontSize = switch (blokButton.size) {
-      bloks.SizeButtonOption.small => 12.0,
-      bloks.SizeButtonOption.medium => 14.0,
-      bloks.SizeButtonOption.large => 18.0,
-      bloks.SizeButtonOption.unknown => 14.0,
+      bloks.ButtonSizeOption.small => 12.0,
+      bloks.ButtonSizeOption.medium => 14.0,
+      bloks.ButtonSizeOption.large => 18.0,
+      bloks.ButtonSizeOption.unknown => 14.0,
+    };
+
+    final padding = switch (blokButton.size) {
+      bloks.ButtonSizeOption.small => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
+      bloks.ButtonSizeOption.medium => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
+      bloks.ButtonSizeOption.large => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
+      bloks.ButtonSizeOption.unknown => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2)
     };
 
     return TextButton(

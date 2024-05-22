@@ -1,4 +1,9 @@
 import 'dart:math';
+import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/components/snackbar.dart';
+import 'package:example/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 Out? mapIfNotNull<In, Out>(In? dataIn, Out? Function(In) mapper) {
   if (dataIn != null) return mapper(dataIn);
@@ -27,5 +32,39 @@ extension DoubleExtensions on double {
     assert(decimals >= 0);
     final n = pow(10, decimals);
     return (this * n).roundToDouble() / n;
+  }
+}
+
+void handleLinkPressed(BuildContext context, bloks.Button? button) async {
+  if (button == null) {
+    showSnackbar(context, "Button is null");
+    return;
+  }
+
+  final linkIdentifier = switch (button.link) {
+    LinkStory<bloks.Blok> blok => blok.uuid,
+    LinkURL<bloks.Blok> blok => blok.url,
+    _ => null,
+  };
+
+  if (linkIdentifier is String && linkIdentifier.isNotEmpty) {
+    final story = await storyblokClient.getStory(id: StoryIdentifierUUID(linkIdentifier));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => story.content.buildWidget(context)));
+    return;
+  }
+
+  if (linkIdentifier is String && linkIdentifier.isEmpty) {
+    showSnackbar(context, "Empty internal link", error: true);
+    return;
+  }
+
+  if (linkIdentifier is Uri) {
+    showSnackbar(context, "External URLs not implemented", error: true);
+    return;
+  }
+
+  if (linkIdentifier == null) {
+    showSnackbar(context, "Link is null", error: true);
+    return;
   }
 }

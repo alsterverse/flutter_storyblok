@@ -8,6 +8,7 @@ class AppColors {
   static const accent = Color(0xFF775E7C);
 
   static const blue = Color(0xFF385ECE);
+  static const red = Color(0xFFCE3838);
   static const teal = Color(0xFF02B3B0);
   static const light = Color(0xFFF8F8F8);
   static const medium = Color(0xFF435266);
@@ -20,4 +21,5 @@ class AppColors {
   static const primary = blue;
   static const secondary = teal;
   static const background = light;
+  static const danger = red;
 }

@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:example/article_overview_page.dart';
+import 'package:example/article_page_screen.dart';
 import 'package:example/banner.dart';
 import 'package:example/banner_reference.dart';
 import 'package:example/bloks.generated.dart' as bloks;
+import 'package:example/category.dart';
 import 'package:example/components/colors.dart';
 import 'package:example/featured_articles_section.dart';
 import 'package:example/form_section.dart';
@@ -10,7 +13,6 @@ import 'package:example/grid_card.dart';
 import 'package:example/grid_section.dart';
 import 'package:example/hero_section.dart';
 import 'package:example/image_text_section.dart';
-import 'package:example/rich_text_content.dart';
 import 'package:example/splash_screen.dart';
 import 'package:example/tabbed_content_entry.dart';
 import 'package:example/tabbed_content_section.dart';
@@ -75,6 +77,9 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.black,
           foregroundColor: AppColors.white,
+          elevation: 0,
+          titleTextStyle:
+              TextStyle(fontSize: 20.0, color: AppColors.white, fontWeight: FontWeight.w700, letterSpacing: -2),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -135,14 +140,14 @@ extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return Center(
       child: switch (this) {
-        bloks.ArticleOverviewPage blok => Text(blok.runtimeType.toString()),
+        bloks.ArticleOverviewPage blok => ArticleOverviewPageScreen(blok),
         bloks.ArticlePage blok => ArticlePageScreen(blok),
         bloks.Author blok => Text(blok.runtimeType.toString()),
         bloks.Badge blok => Text(blok.runtimeType.toString()),
         bloks.Banner blok => BannerWidget(blok),
         bloks.BannerReference blok => BannerReferenceWidget(blok),
         bloks.Button blok => Text(blok.runtimeType.toString()),
-        bloks.Category blok => Text(blok.runtimeType.toString()),
+        bloks.Category blok => CategoryScreen(blok),
         bloks.ComplexHeroSection blok => Text(blok.runtimeType.toString()),
         bloks.DefaultPage blok => starter_blocks.Page(page: blok),
         bloks.FeaturedArticlesSection blok => FeaturedArticlesSectionWidget(blok),
@@ -169,97 +174,6 @@ extension BlockWidget on bloks.Blok {
         //TODO: remove this line before release
         _ => kDebugMode ? const Placeholder() : const SizedBox.shrink(),
       },
-    );
-  }
-}
-
-class AuthorWidget extends StatelessWidget {
-  const AuthorWidget({this.name, required this.content, super.key});
-
-  final String? name;
-  final bloks.Author content;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                ClipOval(
-                    child: Image.network(
-                  content.profilePicture?.fileName ?? "",
-                  fit: BoxFit.cover,
-                  width: 64,
-                  height: 64,
-                )),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Author", style: Theme.of(context).textTheme.headlineSmall),
-                      Text(name ?? "", style: Theme.of(context).textTheme.headlineMedium),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(content.description ?? ""),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ArticlePageScreen extends StatelessWidget {
-  const ArticlePageScreen(this.blok, {super.key});
-  final bloks.ArticlePage blok;
-
-  @override
-  Widget build(BuildContext context) {
-    final author = blok.author != null ? storyblokClient.getStory(id: blok.author!) : null;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          blok.headline ?? "",
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.white, letterSpacing: -.5),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (blok.image != null) Image.network(blok.image!.fileName),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(blok.subheadline ?? "", style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: 16),
-                  StoryblokRichTextContent(content: blok.text?.content ?? []),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
-            if (author != null)
-              FutureBuilder(
-                future: author,
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  if (data == null) return const CircularProgressIndicator();
-                  if (snapshot.hasError) return Text(snapshot.error.toString());
-                  return AuthorWidget(name: data.name, content: data.content as bloks.Author);
-                },
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
