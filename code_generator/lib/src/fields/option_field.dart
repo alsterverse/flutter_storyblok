@@ -40,8 +40,8 @@ base class OptionField extends BaseField {
   };
 
   @override
-  Future<Spec?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) async {
-    return switch (source) {
+  Future<List<Spec>?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) async {
+    final spec = switch (source) {
       OptionSource.self => _buildEnum(enumName, List<JSONMap>.from(data["options"])),
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
@@ -51,6 +51,7 @@ base class OptionField extends BaseField {
           (await getExternalSource(Uri.parse(data["external_datasource"]))).toList(),
         ),
     };
+    return spec == null ? null : [spec];
   }
 
   Spec _buildEnum(String name, Iterable<JSONMap> cases) {

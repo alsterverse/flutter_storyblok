@@ -19,7 +19,17 @@ class CodeEmitter {
     return formattedCode;
   }
 
-  EqualsDart equalsCode(String code) {
-    return equalsDart(code, _dartEmitter) as EqualsDart;
+  String _format(String source) {
+    try {
+      return _dartFormatter.format(source);
+    } on FormatterException catch (_) {
+      return _dartFormatter.formatStatement(source);
+    }
+  }
+
+  equalsCode(String code) {
+    /// Should be invoked in `main()` of every test in `test/**_test.dart`.
+    EqualsDart.format = _format;
+    return equalsDart(code, _dartEmitter);
   }
 }
