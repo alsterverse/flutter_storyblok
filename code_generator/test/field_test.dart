@@ -889,7 +889,8 @@ void main() {
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$valueExpression == null ? null : DefaultLink<Blok>.fromJson($valueExpression)"),
+        emitter.equalsCode(
+            "$valueExpression is! Map<dynamic, dynamic> ? null : DefaultLink<Blok>.fromJson($valueExpression)"),
       );
     });
     test("Test required link", () {
@@ -1010,24 +1011,30 @@ void main() {
   group("Test Plugin field", () {
     test("Test default plugin", () {
       final field = PluginField.fromJson({});
+      expect(field.shouldSkip, true);
+    });
+    test("Test basic plugin", () {
+      final field = PluginField.fromJson({"field_type": "bar"});
+      expect(field.shouldSkip, false);
       expect(
         field.build("foo"),
         emitter.equalsCode("final $Plugin? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$valueExpression is! Map<dynamic, dynamic> ? null : $Plugin.fromJson($valueExpression)"),
+        emitter.equalsCode(
+            "$valueExpression is! Map<dynamic, dynamic> ? null : $Plugin.fromJson($valueExpression, 'bar', )"),
       );
     });
     test("Test required plugin", () {
-      final field = PluginField.fromJson({"required": true});
+      final field = PluginField.fromJson({"required": true, "field_type": "bar"});
       expect(
         field.build("foo"),
         emitter.equalsCode("final $Plugin foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$Plugin.fromJson($valueExpression)"),
+        emitter.equalsCode("$Plugin.fromJson($valueExpression, 'bar', )"),
       );
     });
   });
