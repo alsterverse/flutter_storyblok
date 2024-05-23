@@ -14,7 +14,6 @@ environment:
 dependencies:
   http: ^1.2.1
   collection: ^1.18.0
-  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   lints: ^4.0.0

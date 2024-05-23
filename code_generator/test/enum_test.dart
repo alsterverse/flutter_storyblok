@@ -3,7 +3,7 @@ import 'package:flutter_storyblok_code_generator/src/enum.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final emitter = CodeEmitter();
+  final emitter = CodeEmitter(scoped: false);
   group('Test code generator enums', () {
     test('Test generate enum class', () {
       expect(

@@ -33,7 +33,7 @@ abstract base class BaseField {
     required String ownerName,
   }) {
     return switch (type) {
-      "bloks" => BlokField.fromJson(data),
+      "bloks" => BlokField.fromJson(data, fieldName, ownerName),
       "text" => TextField.fromJson(data),
       "textarea" => TextAreaField.fromJson(data),
       "markdown" => MarkdownField.fromJson(data),
@@ -58,7 +58,7 @@ abstract base class BaseField {
 
   Expression buildInitializer(CodeExpression valueExpression) => valueExpression;
 
-  Future<Spec?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) => Future.value(null);
+  Future<List<Spec>?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) => Future.value(null);
 
   Field build(String fieldName) {
     return Field((f) => f
