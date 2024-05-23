@@ -6,6 +6,7 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/snackbar.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/fields.dart';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 Out? mapIfNotNull<In, Out>(In? dataIn, Out? Function(In) mapper) {

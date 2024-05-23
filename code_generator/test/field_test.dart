@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart' as cb;
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/fields.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/asset_field.dart';
 import 'package:flutter_storyblok_code_generator/src/fields/blok_fields.dart';

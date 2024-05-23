@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart' as sb;
+import 'package:flutter_storyblok/fields.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   const VideoPlayerWidget({super.key, required this.backgroundVideo});
 
-  final sb.VideoAsset backgroundVideo;
+  final VideoAsset backgroundVideo;
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();

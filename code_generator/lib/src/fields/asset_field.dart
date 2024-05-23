@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/fields.dart';
 
 import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
@@ -19,7 +19,7 @@ base class AssetField extends BaseField {
       "texts" => "$TextAsset",
       _ => "$Asset",
     },
-    importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
+    importUrl: 'package:flutter_storyblok/fields.dart',
     nullable: !isRequired,
   );
 

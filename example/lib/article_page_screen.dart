@@ -1,9 +1,9 @@
 import 'package:example/author.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/main.dart';
-import 'package:example/rich_text_content.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/widgets.dart';
 
 class ArticlePageScreen extends StatelessWidget {
   const ArticlePageScreen(this.blok, {super.key});
@@ -31,7 +31,9 @@ class ArticlePageScreen extends StatelessWidget {
                 children: [
                   Text(blok.subheadline ?? "", style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 16),
-                  StoryblokRichTextContent(content: blok.text?.content ?? []),
+                  StoryblokRichText(
+                      content: blok.text?.content ?? [],
+                      blockBuilder: (context, data) => bloks.Blok.fromJson(data).buildWidget(context)),
                   const SizedBox(height: 16),
                 ],
               ),

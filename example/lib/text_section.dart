@@ -1,9 +1,10 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
 import 'package:example/components/colors.dart';
-import 'package:example/rich_text_content.dart';
+import 'package:example/main.dart';
 import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/widgets.dart';
 
 class TextSectionWidget extends StatelessWidget {
   const TextSectionWidget(this.blok, {super.key});
@@ -41,7 +42,10 @@ class TextSectionWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(blok.lead ?? "", textAlign: alignment, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 16),
-            StoryblokRichTextContent(content: blok.text?.content ?? []),
+            StoryblokRichText(
+              content: blok.text?.content ?? [],
+              blockBuilder: (context, data) => bloks.Blok.fromJson(data).buildWidget(context),
+            ),
             const SizedBox(height: 32),
             if (button != null)
               BlockButton(

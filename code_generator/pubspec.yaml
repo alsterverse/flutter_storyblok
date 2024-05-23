@@ -11,6 +11,8 @@ environment:
   sdk: ^3.3.0
 
 dependencies:
+  flutter:
+      sdk: flutter
   flutter_storyblok:
     path: ../
   dart_style: any

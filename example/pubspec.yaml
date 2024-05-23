@@ -12,8 +12,6 @@ dependencies:
     sdk: flutter
   flutter_storyblok:
     path: ../
-  flutter_storyblok_code_generator:
-    path: ../code_generator
   go_router: ^13.1.0
   camera: ^0.10.5+4
   sensors_plus: ^4.0.2
@@ -29,6 +27,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_storyblok_code_generator:
+    path: ../code_generator
 
 dependency_overrides:
   code_builder: # Until fork gets merged

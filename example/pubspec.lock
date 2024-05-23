@@ -276,7 +276,7 @@ packages:
     source: path
     version: "1.0.0"
   flutter_storyblok_code_generator:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       path: "../code_generator"
       relative: true

@@ -28,7 +28,7 @@ final class LinkField extends BaseField {
         (_, true) => "DefaultWithEmailLink<$storyType>",
         _ => "DefaultLink<$storyType>",
       },
-      importUrl: 'package:flutter_storyblok/flutter_storyblok.dart',
+      importUrl: 'package:flutter_storyblok/fields.dart',
       nullable: !isRequired,
     );
   }();
