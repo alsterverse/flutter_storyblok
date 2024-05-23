@@ -19,7 +19,11 @@ class ArticleOverviewPageScreen extends StatelessWidget {
           future: storyblokClient.getStories(startsWith: "articles/", isStartpage: false),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 64),
+                child: CircularProgressIndicator(),
+              ));
             }
 
             final data = snapshot.data?.map((story) => story.content as bloks.ArticlePage).toList();
