@@ -11,7 +11,10 @@ final class PluginField extends BaseField {
       : fieldType = data["field_type"],
         super.fromJson();
 
-  final String fieldType;
+  final String? fieldType;
+
+  @override
+  bool get shouldSkip => fieldType == null;
 
   @override
   late final TypeReference type = referType(
@@ -22,7 +25,7 @@ final class PluginField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {
-    final expression = type.property('fromJson').call([valueExpression, literalString(fieldType)]);
+    final expression = type.property('fromJson').call([valueExpression, literalString(fieldType!)]);
     if (isRequired) return expression;
     return valueExpression.isNotA(refer("$Map")).conditional(literalNull, expression);
   }
