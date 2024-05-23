@@ -16,9 +16,9 @@ class GridCardWidget extends StatelessWidget {
     final hexColor = blok.backgroundColor?.data["value"] ?? "";
 
     final size = switch (blok.iconWidth) {
-      bloks.GridCardIconWidthOption.narrow80px => 80.0,
-      bloks.GridCardIconWidthOption.medium160px => 160.0,
-      bloks.GridCardIconWidthOption.wide240px => 240.0,
+      bloks.GridCardIconWidthOption.narrow80Px => 80.0,
+      bloks.GridCardIconWidthOption.medium160Px => 160.0,
+      bloks.GridCardIconWidthOption.wide240Px => 240.0,
       bloks.GridCardIconWidthOption.unknown => 80.0,
     };
 

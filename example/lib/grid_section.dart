@@ -36,9 +36,8 @@ class GridSectionWidget extends StatelessWidget {
               runSpacing: 16,
               children: blok.cards.map((card) {
                 return switch (card) {
-                  bloks.PriceCard blok => blok.buildWidget(context),
-                  bloks.GridCard blok => blok.buildWidget(context),
-                  _ => const SizedBox.shrink(),
+                  bloks.GridSectionCardsRestrictedTypesGridCard c => c.gridCard.buildWidget(context),
+                  bloks.GridSectionCardsRestrictedTypesPriceCard c => c.priceCard.buildWidget(context),
                 };
               }).toList(),
             ),
