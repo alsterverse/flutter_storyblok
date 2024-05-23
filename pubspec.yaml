@@ -1,6 +1,12 @@
 name: flutter_storyblok
-description: A new Flutter package project.
-version: 0.0.1+1
+description: Helps you integrate Storyblok with your app.
+version: 1.0.0
+homepage: https://www.alster.se/
+repository: https://github.com/alsterverse/flutter_storyblok
+issue_tracker: https://github.com/alsterverse/flutter_storyblok/issues
+topics:
+  - storyblok
+  - sdk
 
 environment:
   sdk: ^3.3.0

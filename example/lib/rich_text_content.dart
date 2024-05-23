@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:example/bloks.generated.dart';
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
@@ -16,10 +17,12 @@ class StoryblokRichTextContent extends StatelessWidget {
     super.key,
     required this.content,
     void Function(sb.Link)? onTapLink,
+    this.textAlign = TextAlign.start,
   }) : _contentData = _StoryblokRichTextContentData(onTapLink: onTapLink);
 
   final _StoryblokRichTextContentData _contentData;
   final List<sb.RichTextContainer> content;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +54,17 @@ extension _RichTextContainerWidget on sb.RichTextContainer {
       final sb.RichTextContainerHeading heading => heading.content.buildRichText(
           context,
           contentData,
-          textStyle: TextStyle(
-            fontSize: 24 / max(1, (heading.level / 4)),
-            fontWeight: FontWeight.bold,
-          ),
+          textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 24 / max(1, (heading.level / 4)),
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1,
+              ),
         ),
       final sb.RichTextContainerCode code => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey),
+            border: Border.all(color: AppColors.grey),
             color: const Color(0xFFEEEEEE),
           ),
           child: code.content.buildRichText(context, contentData),
@@ -69,7 +73,7 @@ extension _RichTextContainerWidget on sb.RichTextContainer {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(width: 4, color: Colors.grey),
+              Container(width: 4, color: AppColors.grey),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -79,7 +83,7 @@ extension _RichTextContainerWidget on sb.RichTextContainer {
             ],
           ),
         ),
-      final sb.RichTextContainerLine _ => Container(height: 1, color: Colors.black),
+      final sb.RichTextContainerLine _ => Container(height: 1, color: AppColors.black),
       final sb.RichTextContainerList list => Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,13 +119,13 @@ extension _RichTextLeafBuildWidget on List<sb.RichTextLeaf> {
   }) {
     return RichText(
       text: TextSpan(
-        style: DefaultTextStyle.of(context).style.merge(textStyle),
+        style: Theme.of(context).textTheme.bodyMedium?.merge(textStyle),
         children: map((e) => switch (e) {
               final sb.RichTextLeafText text => text.buildTextSpan(text.text, contentData),
               final sb.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
               final sb.RichTextLeafImage image => WidgetSpan(
                   style: image.buildTextStyle(),
-                  child: Image.network(image.imageUrl.toString()),
+                  child: Image(image: CachedNetworkImageProvider(image.imageUrl.toString())),
                 ),
               final sb.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
               final sb.RichTextContainerParagraph paragraph => WidgetSpan(
@@ -139,9 +143,9 @@ extension _RichTextLeafBuildWidget on List<sb.RichTextLeaf> {
 extension _RichTextLeafMarkableWidget on sb.RichTextLeafMarkable {
   TextStyle buildTextStyle() {
     final foregroundColor =
-        mapIfNotNull(this.foregroundColor?.colorHex, _HexColor.new) ?? (link != null ? AppColors.accent : null);
+        mapIfNotNull(this.foregroundColor?.colorHex, HexColor.new) ?? (link != null ? AppColors.accent : null);
     return TextStyle(
-      backgroundColor: isCode ? Colors.grey : mapIfNotNull(backgroundColor?.colorHex, _HexColor.new),
+      backgroundColor: isCode ? AppColors.grey : mapIfNotNull(backgroundColor?.colorHex, HexColor.new),
       color: foregroundColor,
       fontStyle: isItalic || isCode ? FontStyle.italic : null,
       fontWeight: isBold ? FontWeight.bold : null,
@@ -175,7 +179,7 @@ extension _RichTextLeafMarkableWidget on sb.RichTextLeafMarkable {
 
 // MARK: - HexColor
 
-class _HexColor extends Color {
+class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
@@ -184,5 +188,5 @@ class _HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 
-  _HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
