@@ -1,7 +1,8 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
-import 'package:example/components/colors.dart';
-import 'package:example/utils.dart';
+import 'package:example/colors.dart';
+import 'package:example/utils/blocks_extensions.dart';
+import 'package:example/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class BannerWidget extends StatelessWidget {
@@ -63,10 +64,9 @@ class BannerWidget extends StatelessWidget {
                     spacing: 16,
                     children: blok.buttons
                         .map((button) => BlockButton(
-                            blokButton: button,
-                            onPressed: () {
-                              handleLinkPressed(context, button);
-                            }))
+                              blokButton: button,
+                              onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
+                            ))
                         .toList())
               ],
             ),

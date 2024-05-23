@@ -1,4 +1,4 @@
-import 'package:example/components/colors.dart';
+import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 
 void showSnackbar(BuildContext context, String message, {bool error = false}) {

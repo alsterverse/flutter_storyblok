@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:example/banner.dart';
+import 'package:example/components/banner.dart';
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/components/colors.dart';
+import 'package:example/colors.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 

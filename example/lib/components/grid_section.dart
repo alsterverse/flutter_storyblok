@@ -1,6 +1,6 @@
+import 'package:example/block_widget_builder.dart';
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/components/colors.dart';
-import 'package:example/main.dart';
+import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 
 class GridSectionWidget extends StatelessWidget {

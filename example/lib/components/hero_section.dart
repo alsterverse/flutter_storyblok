@@ -1,7 +1,8 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
-import 'package:example/components/colors.dart';
-import 'package:example/utils.dart';
+import 'package:example/colors.dart';
+import 'package:example/utils/blocks_extensions.dart';
+import 'package:example/utils/utils.dart';
 import 'package:example/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -44,9 +45,7 @@ class HeroSectionWidget extends StatelessWidget {
                     children: blok.buttons
                         .map((button) => BlockButton(
                               blokButton: button,
-                              onPressed: () {
-                                handleLinkPressed(context, button);
-                              },
+                              onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
                             ))
                         .toList())
               ]),

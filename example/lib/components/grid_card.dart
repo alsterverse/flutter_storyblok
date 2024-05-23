@@ -1,9 +1,10 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
-import 'package:example/components/colors.dart';
-import 'package:flutter_storyblok/src/widgets/hex_color.dart';
-import 'package:example/utils.dart';
+import 'package:example/colors.dart';
+import 'package:example/utils/blocks_extensions.dart';
+import 'package:example/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storyblok/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class GridCardWidget extends StatelessWidget {
@@ -58,10 +59,9 @@ class GridCardWidget extends StatelessWidget {
           const SizedBox(height: 16),
           if (blok.button != null)
             BlockButton(
-                blokButton: blok.button!,
-                onPressed: () async {
-                  handleLinkPressed(context, blok.button);
-                }),
+              blokButton: blok.button!,
+              onPressed: () => mapIfNotNull(blok.button!.link, (link) => link.open(context)),
+            ),
         ],
       ),
     );

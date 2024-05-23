@@ -1,6 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/components/colors.dart';
-import 'package:example/utils.dart';
+import 'package:example/colors.dart';
+import 'package:example/utils/blocks_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AuthorWidget extends StatelessWidget {

@@ -1,8 +1,9 @@
+import 'package:example/block_widget_builder.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
-import 'package:example/components/colors.dart';
-import 'package:example/main.dart';
-import 'package:example/utils.dart';
+import 'package:example/colors.dart';
+import 'package:example/utils/blocks_extensions.dart';
+import 'package:example/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/widgets.dart';
 
@@ -50,9 +51,7 @@ class TextSectionWidget extends StatelessWidget {
             if (button != null)
               BlockButton(
                 blokButton: blok.button!,
-                onPressed: () {
-                  handleLinkPressed(context, blok.button);
-                },
+                onPressed: () => mapIfNotNull(blok.button!.link, (link) => link.open(context)),
               )
           ],
         ),

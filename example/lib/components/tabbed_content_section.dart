@@ -1,6 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
-import 'package:example/components/colors.dart';
-import 'package:example/tabbed_content_entry.dart';
+import 'package:example/colors.dart';
+import 'package:example/components/tabbed_content_entry.dart';
 import 'package:flutter/material.dart';
 
 class TabbedContentSectionWidget extends StatefulWidget {

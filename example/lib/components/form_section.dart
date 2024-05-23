@@ -1,7 +1,7 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/block_button.dart';
-import 'package:example/components/colors.dart';
-import 'package:example/components/snackbar.dart';
+import 'package:example/colors.dart';
+import 'package:example/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class FormSectionWidget extends StatelessWidget {

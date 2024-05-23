@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:example/components/colors.dart';
+import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/wave.dart';
 import 'package:wave/config.dart';
