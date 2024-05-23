@@ -58,7 +58,9 @@ sealed class Foo {
       expect(
         classes[0],
         emitter.equalsCode(r"""
-final class UnrecognizedFoo extends Foo {}
+final class UnrecognizedFoo extends Foo {
+  const UnrecognizedFoo();
+}
 """),
       );
       expect(

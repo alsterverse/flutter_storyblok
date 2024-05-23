@@ -10,7 +10,11 @@ import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
   required bool throwUnrecognized,
 }) {
   final sealedClassName = sanitizeName(name, isClass: true);
-  final unrecognizedBlokClass = throwUnrecognized ? null : (ClassBuilder()..name = "Unrecognized$sealedClassName");
+  final unrecognizedBlokClass = throwUnrecognized
+      ? null
+      : (ClassBuilder()
+        ..name = "Unrecognized$sealedClassName"
+        ..constructors.add(Constructor((con) => con..constant = true)));
   classes = classes.map((e) {
     e.builder.name = sanitizeName(e.builder.name!, isClass: true);
     return e;
