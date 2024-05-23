@@ -1,5 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
+import 'package:flutter_storyblok_code_generator/src/sealed.dart';
 
 import 'fields/base_field.dart';
 import 'http_client.dart';
@@ -35,49 +36,22 @@ class StoryblokCodegen {
     // enum <name> {
     lib.body.addAll(datasourceData);
 
-    // class UnrecognizedBlok
-    final unrecognizedBlokClass = ClassBuilder()..name = "UnrecognizedBlok";
-
     // sealed class Blok {
-    final blokClass = Class((c) {
-      c.docs.add("/// This is the base class for all blocks defined in \"Block Library\"");
-      c.sealed = true;
-      c.name = "Blok";
-      c.constructors.add(Constructor());
-      // Blok.fromJson(JSONMap json) {
-      c.constructors.add(Constructor((con) => con
-            ..factory = true
-            ..name = "fromJson"
-            ..requiredParameters.add(Parameter((p) => p
-                  ..type = refer("$JSONMap")
-                  ..name = "json"
-                //
-                ))
-            ..body = Block.of([
-              "return switch (json[${literal("component")}] as $String) {",
-              ...components.map(
-                (e) => "${literal(e.key)} => ${e.builder.name}.fromJson(json),",
-              ),
-              "_ => (){",
-              "print('Unrecognized type \${json[${literal("component")}]}');",
-              "return ${unrecognizedBlokClass.name}();",
-              "}()",
-              "};",
-            ].map(Code.new))
-          //
-          ));
-    });
-    lib.body.add(blokClass);
-
-    // final class <name> extends Blok {
-    lib.body.addAll([
-      ...components.map((e) => e.builder),
-      unrecognizedBlokClass,
-    ].map((c) {
-      c.modifier = ClassModifier.final$;
-      c.extend = blokClass.name.reference();
-      return c.build();
-    }));
+    final (:sealedClass, :classes) = buildBloksSealedClass(
+      name: "Blok",
+      classes: components
+          .map((e) => (
+                key: e.key,
+                builder: e.builder,
+                initializer: (Expression expression) => expression.code,
+              ))
+          .toList(),
+      throwUnrecognized: false,
+    );
+    lib.body.add((sealedClass //
+          ..docs.add("/// This is the base class for all blocks defined in `Block Library`"))
+        .build());
+    lib.body.addAll(classes);
 
     final library = lib.build();
     return codeEmitter.codeFromSpec(library);
@@ -113,7 +87,7 @@ class StoryblokCodegen {
 
         // TODO: External JSON should be unique to the url not the field.
         final supportingClass = await field.buildSupportingClass(getDatasourceFromExternalSource);
-        if (supportingClass != null) lib.body.add(supportingClass);
+        if (supportingClass != null) lib.body.addAll(supportingClass);
 
         c.fields.add(field.build(fieldName));
 

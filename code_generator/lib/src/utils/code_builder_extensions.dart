@@ -4,8 +4,10 @@ import 'utils.dart';
 
 extension CodeBuilderStringExtensions on String {
   CodeExpression get expression => CodeExpression(code);
-
   Code get code => Code(this);
+
+  /// The expression as a valid [Code] block with a trailing `;`.
+  Code get statement => expression.statement;
 
   Reference reference([String? url]) => refer(this, url);
 }
@@ -25,14 +27,16 @@ extension TypeReferenceExtensions on TypeReference {
 
 TypeReference referType(
   String symbol, {
-  bool? nullable,
   String? importUrl,
+  bool? nullable,
   List<TypeReference>? genericTypes,
+  Reference? bound,
 }) =>
     TypeReference((t) {
       t.symbol = symbol;
       t.url = importUrl;
       t.isNullable = nullable;
+      t.bound = bound;
       if (genericTypes != null) {
         t.types.addAll(genericTypes);
       }

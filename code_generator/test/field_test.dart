@@ -26,7 +26,7 @@ void main() {
   // MARK: - Blok
   group("Test Bloks field", () {
     test("Test default blok", () {
-      final field = BlokField.fromJson({});
+      final field = BlokField.fromJson({}, "foo", "bar");
       expect(
         field.build("foo"),
         emitter.equalsCode(r"final List<Blok> foo;"),
@@ -37,7 +37,7 @@ void main() {
       );
     });
     test("Test required blok", () {
-      final field = BlokField.fromJson({"required": true});
+      final field = BlokField.fromJson({"required": true}, "foo", "bar");
       expect(
         field.build("foo"),
         emitter.equalsCode(r"final List<Blok> foo;"),
@@ -51,7 +51,7 @@ void main() {
       final field = BlokField.fromJson({
         "restrict_components": true,
         "component_whitelist": ["foo"],
-      });
+      }, "foo", "bar");
       expect(
         field.build("foo"),
         emitter.equalsCode(r"final List<Foo> foo;"),
@@ -61,26 +61,32 @@ void main() {
         emitter.equalsCode("List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList()"),
       );
     });
-    test("Test multi-restricted blok", () {
+    test("Test multi-restricted blok", () async {
       final field = BlokField.fromJson({
         "restrict_components": true,
         "component_whitelist": ["foo", "bar"],
-      });
+      }, "foo", "bar");
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final List<Blok> foo;"),
+        emitter.equalsCode(r"final List<BarFooRestrictedTypes> foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Blok.fromJson).toList()"),
+        emitter.equalsCode(
+            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList()"),
       );
+      final enu = List<cb.Class>.from(await field.buildSupportingClass((_) async => []) ?? []);
+      expect(enu.length, 3);
+      expect(enu[0].name, "BarFooRestrictedTypes");
+      expect(enu[1].name, "BarFooRestrictedTypesFoo");
+      expect(enu[2].name, "BarFooRestrictedTypesBar");
     });
     test("Test single restricted blok", () {
       final field = BlokField.fromJson({
         "maximum": 1,
         "restrict_components": true,
         "component_whitelist": ["foo"],
-      });
+      }, "foo", "bar");
       expect(
         field.build("foo"),
         emitter.equalsCode(r"final Foo? foo;"),
@@ -97,7 +103,7 @@ void main() {
         "maximum": 1,
         "restrict_components": true,
         "component_whitelist": ["foo"],
-      });
+      }, "foo", "bar");
       expect(
         field.build("foo"),
         emitter.equalsCode(r"final Foo foo;"),
@@ -113,15 +119,15 @@ void main() {
         "maximum": 1,
         "restrict_components": true,
         "component_whitelist": ["foo", "bar"],
-      });
+      }, "foo", "bar");
       expect(
         field.build("foo"),
-        emitter.equalsCode(r"final Blok? foo;"),
+        emitter.equalsCode(r"final BarFooRestrictedTypes? foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Blok.fromJson).toList().firstOrNull"),
+            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList().firstOrNull"),
       );
     });
   });
@@ -354,9 +360,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
       );
-      final enu = await field.buildSupportingClass((_) async => []) as cb.Enum;
+      final enu = await field.buildSupportingClass((_) async => []);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
@@ -473,9 +480,10 @@ void main() {
       );
       final enu = await field.buildSupportingClass((_) async => [
             {"name": "Foo", "value": "foo123"},
-          ]) as cb.Enum;
+          ]);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
@@ -499,9 +507,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
       );
-      final enu = await field.buildSupportingClass((_) async => []) as cb.Enum;
+      final enu = await field.buildSupportingClass((_) async => []);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
@@ -535,9 +544,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
       );
-      final enu = await field.buildSupportingClass((_) async => []) as cb.Enum;
+      final enu = await field.buildSupportingClass((_) async => []);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
@@ -622,9 +632,10 @@ void main() {
       );
       final enu = await field.buildSupportingClass((_) async => [
             {"name": "Foo", "value": "foo123"},
-          ]) as cb.Enum;
+          ]);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
@@ -648,9 +659,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
       );
-      final enu = await field.buildSupportingClass((_) async => []) as cb.Enum;
+      final enu = await field.buildSupportingClass((_) async => []);
+      expect(enu?.length, 1);
       expect(
-        enu.values.map((e) => (
+        enu!.cast<cb.Enum>().first.values.map((e) => (
               e.name,
               e.arguments.first.code.toString(),
             )),
