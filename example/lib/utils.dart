@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/snackbar.dart';
 import 'package:example/main.dart';
@@ -66,5 +69,27 @@ void handleLinkPressed(BuildContext context, bloks.Button? button) async {
   if (linkIdentifier == null) {
     showSnackbar(context, "Link is null", error: true);
     return;
+  }
+}
+
+extension ImageAssetToWidget on ImageAsset {
+  Widget buildNetworkImage([Image Function(ImageProvider imageProvider)? imageBuilder]) {
+    final completer = Completer<ui.Image>();
+    final imageProvider = NetworkImage(fileName)
+      ..resolve(ImageConfiguration.empty).addListener(ImageStreamListener(
+        (image, _) => completer.complete(Future.value(image.image)),
+      ));
+    return FutureBuilder(
+      future: completer.future,
+      builder: (context, snapshot) {
+        final error = snapshot.error;
+        if (error != null) return Text(error.toString());
+        final data = snapshot.data;
+        if (data == null) return const Center(child: CircularProgressIndicator());
+        final image =
+            imageBuilder == null ? Image(image: imageProvider, fit: BoxFit.cover) : imageBuilder(imageProvider);
+        return AspectRatio(aspectRatio: data.width / data.height, child: image);
+      },
+    );
   }
 }

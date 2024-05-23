@@ -115,15 +115,12 @@ class FutureStoryWidget extends StatelessWidget {
     return FutureBuilder(
       future: Future.wait([
         storyFuture,
-        if (delayed) Future.delayed(const Duration(milliseconds: 2500)),
+        if (delayed) Future.delayed(const Duration(milliseconds: 500)),
       ]),
       builder: (context, snapshot) {
         final story = snapshot.data?.first as sb.Story<bloks.Blok>?;
         if (story != null) {
-          return Scaffold(
-            body: story.content.buildWidget(context),
-            backgroundColor: AppColors.white,
-          );
+          return story.content.buildWidget(context);
         } else if (snapshot.hasError) {
           print(snapshot.error);
           print(snapshot.stackTrace);
@@ -137,7 +134,6 @@ class FutureStoryWidget extends StatelessWidget {
   }
 }
 
-// TODO Generate resolver with lambdas for each blok
 extension BlockWidget on bloks.Blok {
   Widget buildWidget(BuildContext context) {
     return Center(

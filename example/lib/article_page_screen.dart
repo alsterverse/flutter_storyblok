@@ -2,6 +2,7 @@ import 'package:example/author.dart';
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/main.dart';
 import 'package:example/rich_text_content.dart';
+import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 
 class ArticlePageScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class ArticlePageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final author = blok.author != null ? storyblokClient.getStory(id: blok.author!) : null;
+    final image = blok.image?.buildNetworkImage();
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +23,7 @@ class ArticlePageScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            if (blok.image != null) Image.network(blok.image!.fileName),
+            if (image != null) image,
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(

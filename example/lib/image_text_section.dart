@@ -10,14 +10,12 @@ class ImageTextSectionWidget extends StatelessWidget {
   final bloks.ImageTextSection blok;
   @override
   Widget build(BuildContext context) {
+    final image = blok.image?.buildNetworkImage();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          Image.network(
-            blok.image?.fileName ?? "",
-            fit: BoxFit.cover,
-          ),
+          if (image != null) image,
           const SizedBox(height: 16),
           SingleChildScrollView(
             padding: const EdgeInsets.all(8),

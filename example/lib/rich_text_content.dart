@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:example/bloks.generated.dart';
 import 'package:example/components/colors.dart';
 import 'package:example/main.dart';
@@ -124,7 +125,7 @@ extension _RichTextLeafBuildWidget on List<sb.RichTextLeaf> {
               final sb.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
               final sb.RichTextLeafImage image => WidgetSpan(
                   style: image.buildTextStyle(),
-                  child: Image.network(image.imageUrl.toString()),
+                  child: Image(image: CachedNetworkImageProvider(image.imageUrl.toString())),
                 ),
               final sb.RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
               final sb.RichTextContainerParagraph paragraph => WidgetSpan(

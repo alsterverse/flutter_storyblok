@@ -15,13 +15,14 @@ class HeroSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundImage = blok.backgroundImage?.buildNetworkImage();
     return Stack(
       alignment: Alignment.center,
       children: [
         if (blok.backgroundVideo != null)
           VideoPlayerWidget(backgroundVideo: blok.backgroundVideo!)
-        else if (blok.backgroundImage != null)
-          Image.network(blok.backgroundImage?.fileName ?? ""),
+        else if (backgroundImage != null)
+          backgroundImage,
         Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

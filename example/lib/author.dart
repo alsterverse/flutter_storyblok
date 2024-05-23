@@ -1,5 +1,6 @@
 import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/components/colors.dart';
+import 'package:example/utils.dart';
 import 'package:flutter/material.dart';
 
 class AuthorWidget extends StatelessWidget {
@@ -9,6 +10,7 @@ class AuthorWidget extends StatelessWidget {
   final bloks.Author content;
   @override
   Widget build(BuildContext context) {
+    final profilePicture = content.profilePicture?.buildNetworkImage();
     return Container(
       color: AppColors.white,
       child: Padding(
@@ -17,24 +19,11 @@ class AuthorWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 32,
-                  child: ClipOval(
-                      child: Image.network(
-                    content.profilePicture?.fileName ?? "",
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const CircularProgressIndicator(
-                        strokeWidth: 10,
-                        backgroundColor: AppColors.background,
-                        color: AppColors.secondary,
-                      );
-                    },
-                    fit: BoxFit.cover,
-                    width: 64,
-                    height: 64,
-                  )),
-                ),
+                if (profilePicture != null)
+                  SizedBox.square(
+                    dimension: 64,
+                    child: ClipOval(child: profilePicture),
+                  ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(

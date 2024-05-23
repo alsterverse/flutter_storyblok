@@ -21,16 +21,11 @@ class BannerWidget extends StatelessWidget {
       bloks.Colors.unknown => AppColors.primary,
     };
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.network(
-          blok.backgroundImage?.fileName ?? "",
+    final backgroundImage = blok.backgroundImage?.buildNetworkImage((imageProvider) => Image(
+          image: imageProvider,
           fit: BoxFit.cover,
           width: double.infinity,
-          height: 500,
           errorBuilder: (context, error, stackTrace) => Container(
-            height: 500,
             color: switch (blok.textColor) {
               bloks.Colors.primary => AppColors.white,
               bloks.Colors.secondary => AppColors.white,
@@ -41,35 +36,43 @@ class BannerWidget extends StatelessWidget {
               bloks.Colors.unknown => AppColors.primary,
             },
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(blok.headline ?? "",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: textColor)),
-              const SizedBox(height: 16),
-              if (blok.subheadline != null && blok.subheadline!.isNotEmpty) ...[
-                Text(blok.subheadline ?? "",
+        ));
+
+    return SizedBox(
+      height: 500,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (backgroundImage != null) Positioned.fill(child: backgroundImage),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(blok.headline ?? "",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor)),
-                const SizedBox(height: 32),
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: textColor)),
+                const SizedBox(height: 16),
+                if (blok.subheadline != null && blok.subheadline!.isNotEmpty) ...[
+                  Text(blok.subheadline ?? "",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor)),
+                  const SizedBox(height: 32),
+                ],
+                Wrap(
+                    spacing: 16,
+                    children: blok.buttons
+                        .map((button) => BlockButton(
+                            blokButton: button,
+                            onPressed: () {
+                              handleLinkPressed(context, button);
+                            }))
+                        .toList())
               ],
-              Wrap(
-                  spacing: 16,
-                  children: blok.buttons
-                      .map((button) => BlockButton(
-                          blokButton: button,
-                          onPressed: () {
-                            handleLinkPressed(context, button);
-                          }))
-                      .toList())
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
