@@ -38,4 +38,4 @@ build/
 *.reflectable.dart
 
 # Generated bloks
-example/lib/*.generated.dart
+# example/lib/*.generated.dart
