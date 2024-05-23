@@ -25,8 +25,10 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:example/starter_blocks/page.dart' as starter_blocks;
 
 const rootPageId = 494819167;
+const accessToken = "fBBGMz5rR5Jvc0F71v8X2Qtt";
+
 final storyblokClient = sb.StoryblokClient<bloks.Blok>(
-  accessToken: "fBBGMz5rR5Jvc0F71v8X2Qtt", // Demo app
+  accessToken: accessToken, // Demo app
   version: sb.StoryblokVersion.draft,
   storyContentBuilder: (json) => bloks.Blok.fromJson(json),
 );
