@@ -53,10 +53,11 @@ extension _RichTextContainerWidget on sb.RichTextContainer {
       final sb.RichTextContainerHeading heading => heading.content.buildRichText(
           context,
           contentData,
-          textStyle: TextStyle(
-            fontSize: 24 / max(1, (heading.level / 4)),
-            fontWeight: FontWeight.bold,
-          ),
+          textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 24 / max(1, (heading.level / 4)),
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1,
+              ),
         ),
       final sb.RichTextContainerCode code => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -117,7 +118,7 @@ extension _RichTextLeafBuildWidget on List<sb.RichTextLeaf> {
   }) {
     return RichText(
       text: TextSpan(
-        style: DefaultTextStyle.of(context).style.merge(textStyle),
+        style: Theme.of(context).textTheme.bodyMedium?.merge(textStyle),
         children: map((e) => switch (e) {
               final sb.RichTextLeafText text => text.buildTextSpan(text.text, contentData),
               final sb.RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
