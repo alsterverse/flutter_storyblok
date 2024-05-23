@@ -1,0 +1,4 @@
+enum ContentVersion {
+  draft,
+  published,
+}

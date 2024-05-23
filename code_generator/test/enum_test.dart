@@ -1,5 +1,5 @@
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
-import 'package:flutter_storyblok_code_generator/src/enum.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/build_enum.dart';
 import 'package:test/test.dart';
 
 void main() {

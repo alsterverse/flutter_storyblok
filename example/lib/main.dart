@@ -29,7 +29,7 @@ const accessToken = "fBBGMz5rR5Jvc0F71v8X2Qtt";
 
 final storyblokClient = sb.StoryblokClient<bloks.Blok>(
   accessToken: accessToken, // Demo app
-  version: sb.StoryblokVersion.draft,
+  version: sb.ContentVersion.draft,
   storyContentBuilder: (json) => bloks.Blok.fromJson(json),
 );
 

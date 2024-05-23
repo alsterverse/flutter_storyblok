@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart';
 
 import 'option_field.dart';
 import '../utils/code_builder_extensions.dart';
-import '../enum.dart';
+import '../utils/build_enum.dart';
 
 final class OptionsField extends OptionField {
   OptionsField.fromJson(super.data, super.name, super.ownerName) : super.fromJson();

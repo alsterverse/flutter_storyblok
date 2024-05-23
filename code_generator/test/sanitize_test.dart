@@ -1,4 +1,4 @@
-import 'package:flutter_storyblok_code_generator/src/names.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/sanitize_name.dart';
 import 'package:test/test.dart';
 
 void main() {

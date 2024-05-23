@@ -1,4 +1,4 @@
-import 'package:flutter_storyblok/src/link.dart';
+import 'package:flutter_storyblok/src/fields/link.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 
 final class RichText {

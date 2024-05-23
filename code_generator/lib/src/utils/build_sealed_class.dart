@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok_code_generator/src/names.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/sanitize_name.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/code_builder_extensions.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter_storyblok_code_generator/src/models/component.dart';
+import 'package:flutter_storyblok_code_generator/src/models/datasource.dart';
+import 'package:flutter_storyblok_code_generator/src/models/datasource_entry.dart';
 import 'package:http/http.dart' as http;
 import 'package:collection/collection.dart';
 
-import 'data_models.dart';
 import 'utils/utils.dart';
 
 typedef DatasourceWithEntries = ({Datasource datasource, List<DatasourceEntry> entries});

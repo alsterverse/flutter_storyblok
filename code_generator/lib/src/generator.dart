@@ -1,12 +1,12 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
-import 'package:flutter_storyblok_code_generator/src/sealed.dart';
+import 'package:flutter_storyblok_code_generator/src/models/component.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/build_sealed_class.dart';
 
 import 'fields/base_field.dart';
 import 'http_client.dart';
-import 'data_models.dart';
-import 'enum.dart';
-import 'names.dart';
+import 'utils/build_enum.dart';
+import 'utils/sanitize_name.dart';
 import 'utils/code_builder_extensions.dart';
 import 'utils/utils.dart';
 

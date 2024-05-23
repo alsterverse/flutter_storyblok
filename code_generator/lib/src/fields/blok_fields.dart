@@ -1,10 +1,10 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_storyblok_code_generator/src/sealed.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/build_sealed_class.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
 import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
-import '../names.dart';
+import '../utils/sanitize_name.dart';
 
 final class BlokField extends BaseField {
   final int? maximum;

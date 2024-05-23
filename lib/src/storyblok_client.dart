@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_storyblok/flutter_storyblok.dart';
-import 'package:flutter_storyblok/src/content_link.dart';
+import 'package:flutter_storyblok/src/models/content_link.dart';
+import 'package:flutter_storyblok/src/models/pagination.dart';
+import 'package:flutter_storyblok/src/models/resolve_links.dart';
+import 'package:flutter_storyblok/src/models/story_identifier.dart';
+import 'package:flutter_storyblok/src/models/content_version.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +19,7 @@ final class StoryblokClient<StoryContent> {
 
   StoryblokClient({
     required String accessToken,
-    StoryblokVersion? version,
+    ContentVersion? version,
     bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
   })  : _baseParameters = {
@@ -25,7 +29,7 @@ final class StoryblokClient<StoryContent> {
         _useCacheInvalidation = useCacheInvalidation,
         _storyContentBuilder = storyContentBuilder;
 
-  final StoryblokVersion? _version;
+  final ContentVersion? _version;
   final Map<String, String> _baseParameters;
   final bool _useCacheInvalidation;
   final StoryContent Function(JSONMap) _storyContentBuilder;

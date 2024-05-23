@@ -3,8 +3,8 @@ import 'package:flutter_storyblok/flutter_storyblok.dart';
 
 import 'base_field.dart';
 import '../utils/code_builder_extensions.dart';
-import '../enum.dart';
-import '../names.dart';
+import '../utils/build_enum.dart';
+import '../utils/sanitize_name.dart';
 import '../utils/utils.dart';
 
 base class OptionField extends BaseField {

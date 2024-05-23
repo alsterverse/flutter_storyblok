@@ -18,11 +18,11 @@ sealed class Link<StoryContent> {
   const Link();
   factory Link.fromJson(JSONMap json) {
     final type = json["linktype"];
-    return switch (LinkType.fromName(type)) {
-      LinkType.url => LinkURL.fromJson(json),
-      LinkType.asset => LinkAsset.fromJson(json),
-      LinkType.email => LinkEmail.fromJson(json),
-      LinkType.story => LinkStory.fromJson(json),
+    return switch (type) {
+      "url" => LinkURL.fromJson(json),
+      "asset" => LinkAsset.fromJson(json),
+      "email" => LinkEmail.fromJson(json),
+      "story" => LinkStory.fromJson(json),
       _ => throw "Unrecognized linktype: $type",
     };
   }

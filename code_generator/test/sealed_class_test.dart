@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
-import 'package:flutter_storyblok_code_generator/src/sealed.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/build_sealed_class.dart';
 import 'package:test/test.dart';
 
 void main() {
