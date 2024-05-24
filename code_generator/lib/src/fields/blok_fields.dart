@@ -68,7 +68,7 @@ final class BlokField extends BaseField {
   Expression buildInitializer(CodeExpression valueExpression) {
     var expression = referList(type: referJSONMap())
         .invokeNamed("from", valueExpression.ifNullThen(literalEmptyList()))
-        .invokeNamed("map", _type.property("fromJson"))
+        .invokeNamed("map", _type.nonNullable.property("fromJson"))
         .invokeNamed("toList");
 
     if (_isSingle) {

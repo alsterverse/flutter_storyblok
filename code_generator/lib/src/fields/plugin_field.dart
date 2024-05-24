@@ -25,7 +25,7 @@ final class PluginField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {
-    final expression = type.property('fromJson').call([valueExpression, literalString(fieldType!)]);
+    final expression = type.nonNullable.property('fromJson').call([valueExpression, literalString(fieldType!)]);
     if (isRequired) return expression;
     return valueExpression.isNotA(refer("$Map")).conditional(literalNull, expression);
   }

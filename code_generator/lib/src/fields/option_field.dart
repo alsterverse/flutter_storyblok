@@ -66,7 +66,7 @@ base class OptionField extends BaseField {
     return switch (source) {
       OptionSource.self => buildInstantiateEnum(enumName, valueExpression.code.toString()),
       OptionSource.internal_stories =>
-        initializerFromRequired(isRequired, valueExpression, type.invoke(valueExpression)),
+        initializerFromRequired(isRequired, valueExpression, type.nonNullable.invoke(valueExpression)),
       OptionSource.internal_languages => valueExpression,
       OptionSource.internal => buildInstantiateEnum(data["datasource_slug"], valueExpression.code.toString()),
       OptionSource.external => buildInstantiateEnum(enumName, valueExpression.code.toString()),

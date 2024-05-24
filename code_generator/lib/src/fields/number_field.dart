@@ -17,5 +17,5 @@ final class NumberField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) =>
-      type.invokeNamed(isRequired ? "parse" : "tryParse", valueExpression);
+      type.nonNullable.invokeNamed(isRequired ? "parse" : "tryParse", valueExpression);
 }

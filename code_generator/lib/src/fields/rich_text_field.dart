@@ -16,5 +16,5 @@ final class RichTextField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) =>
-      initializerFromRequired(isRequired, valueExpression, type.invokeNamed("fromJson", valueExpression));
+      initializerFromRequired(isRequired, valueExpression, type.nonNullable.invokeNamed("fromJson", valueExpression));
 }

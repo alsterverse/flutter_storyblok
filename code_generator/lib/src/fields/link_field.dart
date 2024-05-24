@@ -35,7 +35,7 @@ final class LinkField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {
-    final expression = type.invokeNamed("fromJson", valueExpression);
+    final expression = type.nonNullable.invokeNamed("fromJson", valueExpression);
     if (isRequired) return expression;
     return valueExpression.isNotA(refer("$Map")).conditional(literalNull, expression);
   }

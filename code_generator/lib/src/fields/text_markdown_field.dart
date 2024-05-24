@@ -16,5 +16,5 @@ final class MarkdownField extends BaseField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) =>
-      initializerFromRequired(isRequired, valueExpression, type.invoke(valueExpression));
+      initializerFromRequired(isRequired, valueExpression, type.nonNullable.invoke(valueExpression));
 }
