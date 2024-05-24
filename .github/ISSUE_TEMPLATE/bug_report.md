@@ -6,7 +6,7 @@ labels: bug
 assignees: ''
 
 ---
-# Bug Description
+## Bug Description
 Provide a clear and concise description of the issue.
 
 ## Steps to Reproduce
