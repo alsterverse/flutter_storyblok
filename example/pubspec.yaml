@@ -10,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_storyblok:
-    path: ../
+  flutter_storyblok: any
   go_router: ^13.1.0
   camera: ^0.10.5+4
   sensors_plus: ^4.0.2
