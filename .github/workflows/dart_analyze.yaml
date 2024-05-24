@@ -21,7 +21,7 @@ jobs:
       - uses: subosito/flutter-action@v2
 
       - name: Install dependencies
-        run: flutter pub get
+        run: flutter pub get && flutter pub get -C code_generator
 
       - name: Verify formatting
         run: dart format --line-length 120 --output=none --set-exit-if-changed .
