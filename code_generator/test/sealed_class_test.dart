@@ -1,6 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_storyblok_code_generator/src/code_emitter.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/build_sealed_class.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/code_builder_extensions.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -30,7 +32,18 @@ sealed class Foo {
           classes: [
             (
               key: "bar",
-              builder: ClassBuilder()..name = "bar",
+              builder: ClassBuilder()
+                ..name = "bar"
+                ..fields.add(Field((f) => f
+                  ..modifier = FieldModifier.final$
+                  ..name = "bar"
+                  ..type = "String".reference()))
+                ..constructors.add(Constructor((con) => con
+                  ..name = "fromJson"
+                  ..requiredParameters.add(Parameter((p) => p
+                    ..type = "$JSONMap".reference()
+                    ..name = "json")) //
+                  ..initializers.add("bar".expression.assign("json".expression.index(literalString("bar"))).code))),
               initializer: (Expression expression) => expression.code,
             )
           ],
@@ -66,7 +79,11 @@ final class UnrecognizedFoo extends Foo {
       expect(
         classes[1],
         emitter.equalsCode(r"""
-final class Bar extends Foo {}
+final class Bar extends Foo {
+  Bar.fromJson(Map<String, dynamic> json) : bar = json['bar'];
+
+  final String bar;
+}
 """),
       );
     });
