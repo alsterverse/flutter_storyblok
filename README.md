@@ -1,6 +1,6 @@
 ![](./flutter_storyblok.png)
 
-This Flutter project integrates with Storyblok, a headless CMS, to dynamically
+This Flutter project integrates with [Storyblok](https://www.storyblok.com/), a headless CMS, to dynamically
 fetch and render content.
 
 ## SDK
