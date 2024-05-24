@@ -2,7 +2,7 @@
 /// Therefore `LinkTypes` is needed as a base class.
 /// A Link field can specify additional link types, email and asset.
 ///
-/// This creates a challenge with exhaustive switches
+/// This creates a challenge with exhaustive checking
 /// To resolve this challenge:
 /// DefaultLink is used if neither email nor asset is specified.
 /// DefaultWithEmailLink if only email is specified.
@@ -50,31 +50,34 @@ sealed class DefaultWithEmailLink<StoryContent> extends Link<StoryContent> {
 
 // MARK: - Concrete classes
 
+/// Link to a URL
 final class LinkURL<StoryContent> extends DefaultLink<StoryContent> {
+  LinkURL.fromJson(JSONMap json) : url = Uri.parse(json["url"] ?? json["href"]);
+
+  /// The external url
   final Uri url;
-  final String? target;
-  LinkURL(this.url, this.target);
-  factory LinkURL.fromJson(JSONMap json) => LinkURL(
-        Uri.parse(json["url"] ?? json["href"]),
-        json["target"],
-      );
 }
 
+/// Link to a story
+/// Generic type StoryContent is used to resolve a type-safe story
 final class LinkStory<StoryContent> extends DefaultLink<StoryContent> {
+  LinkStory.fromJson(JSONMap json)
+      : uuid = json["id"] ?? json["uuid"],
+        fullSlug = json["cached_url"] ?? json["href"],
+        anchor = json["anchor"],
+        target = json["target"];
+
+  /// UUID of the story
   final String uuid;
-  final String? cachedUrl;
+
+  /// Full slug to the story
+  final String? fullSlug;
+
+  /// Anchor ID
   final String? anchor;
+
+  /// Target value
   final String? target;
-  LinkStory({required this.uuid, this.cachedUrl, this.anchor, this.target});
-  factory LinkStory.fromJson(JSONMap json) {
-    String uuid = json["id"] ?? json["uuid"];
-    return LinkStory(
-      uuid: uuid,
-      cachedUrl: json["cached_url"] ?? json["href"],
-      anchor: json["anchor"],
-      target: json["target"],
-    );
-  }
 
   /// Intended to be used by passing StoryblokClient.getResolvedStory
   /// T is needed to couple the generic content type.
@@ -85,18 +88,23 @@ final class LinkStory<StoryContent> extends DefaultLink<StoryContent> {
   }
 }
 
+/// Link to an asset
 final class LinkAsset<StoryContent> extends DefaultWithAssetLink<StoryContent> {
+  LinkAsset.fromJson(JSONMap json)
+      : url = Uri.parse(json["url"] ?? json["href"]),
+        target = json["target"];
+
+  /// URL to the asset
   final Uri url;
-  LinkAsset(this.url);
-  factory LinkAsset.fromJson(JSONMap json) => LinkAsset(
-        Uri.parse(json["url"] ?? json["href"]),
-      );
+
+  /// Target value
+  final String? target;
 }
 
+/// Link to an email address
 final class LinkEmail<StoryContent> extends DefaultWithEmailLink<StoryContent> {
+  LinkEmail.fromJson(JSONMap json) : email = json["email"] ?? json["href"];
+
+  /// Email address
   final String email;
-  LinkEmail(this.email);
-  factory LinkEmail.fromJson(JSONMap json) => LinkEmail(
-        json["email"] ?? json["href"],
-      );
 }

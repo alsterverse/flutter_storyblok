@@ -1,5 +1,8 @@
 import 'package:flutter_storyblok/src/utils.dart';
 
+// TODO: Uncomment properties, was commented when building Link<StoryContent> to save time
+
+/// Storyblok Story, generic type Content depends on StoryblokClient.StoryContent generic type.
 final class Story<Content> {
   final String name; // "Home",
   // final DateTime createdAt; // "2023-09-11T11:30:29.377Z",

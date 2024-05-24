@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 
+/// Storyblok table
 final class Table {
   Table({
     required this.columns,

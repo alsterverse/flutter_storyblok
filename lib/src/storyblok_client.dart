@@ -4,6 +4,7 @@ import 'package:flutter_storyblok/src/fields/tag.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:http/http.dart' as http;
 
+/// Used to fetch content from the Storyblok Content Delivery API
 final class StoryblokClient<StoryContent> {
   static const _apiHost = "api.storyblok.com";
 
@@ -42,6 +43,7 @@ final class StoryblokClient<StoryContent> {
   //
   // MARK: - Story
 
+  /// Retrieve a single story by id
   Future<Story<StoryContent>> getStory({
     required StoryIdentifier id,
     // StoryblokVersion? version,
@@ -93,6 +95,7 @@ final class StoryblokClient<StoryContent> {
     return story;
   }
 
+  /// Retrieve multiple stories
   Future<List<Story<StoryContent>>> getStories({
     // int? cacheVersion,
     // StoryblokVersion? version,

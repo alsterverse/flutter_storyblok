@@ -11,6 +11,7 @@ import 'package:flutter_storyblok/src/widgets/hex_color.dart';
 
 typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
+/// Storyblok RichText to Flutter RichText bridge
 final class StoryblokRichText extends StatelessWidget {
   StoryblokRichText({
     super.key,
