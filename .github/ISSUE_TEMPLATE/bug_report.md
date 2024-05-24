@@ -1,12 +1,12 @@
 ---
 name: Bug report
 about: Report a bug to help us improve
-title: "[BUG]"
+title: ""
 labels: bug
 assignees: ''
 
 ---
-# Bug Description
+## Bug Description
 Provide a clear and concise description of the issue.
 
 ## Steps to Reproduce
