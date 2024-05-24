@@ -1,8 +1,12 @@
 name: flutter_storyblok_code_generator
-description: A new Flutter project.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
-
-version: 0.0.1+1
+description: Code generator for flutter_storyblok
+version: 1.0.0
+homepage: https://www.alster.se/
+repository: https://github.com/alsterverse/flutter_storyblok
+issue_tracker: https://github.com/alsterverse/flutter_storyblok/issues
+topics:
+  - storyblok
+  - sdk
 
 executables:
   codegen: main
@@ -13,8 +17,7 @@ environment:
 dependencies:
   flutter:
       sdk: flutter
-  flutter_storyblok:
-    path: ../
+  flutter_storyblok: any
   dart_style: any
   code_builder: ^4.10.0
   dart_casing: ^3.0.1

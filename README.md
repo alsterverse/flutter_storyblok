@@ -1,53 +1,70 @@
 ![](./flutter_storyblok.png)
-                                        
+
 This Flutter project integrates with Storyblok, a headless CMS, to dynamically
-fetch and render content. Follow the instructions below to set up and run the
-project.
+fetch and render content.
 
-## Getting Started
+## SDK
 
-1. **Personal Access Token:** Obtain your Personal Access Token from Storyblok.
-   You can find it under `My Account` > `Security` > `Personal Access Token`.
+This package contains an SDK for Storyblok Content Delivery API to fetch
+stories, datasources, links etc.
 
-2. **Space ID:** Find your Space ID in Storyblok under `Settings` > `General` >
-   `Space`.
+It is designed to use with the [Code generator](./code_generator/README.md) but
+one can opt to not use it as well.
 
-## Running the Generator
-Navigate to the project directory and run the following commands:
+### Installation
 
-```bash
-dart run code_generator/bin/flutter_storyblok_code_generator.dart \
-  <space_id> \
-  <personal_access_token> \
-  "example/lib/bloks.generated.dart"
+```shell
+flutter pub add flutter_storyblok
 ```
 
-## Project Structure
-The project utilizes a Dart SDK to fetch Storyblok components. A source
-generator is used to create Dart classes that parse these Bloks as JSON. The
-generated Bloks can then be utilized by a Flutter app to dynamically generate a
-page based on a Storyblok Story.
+### Usage
 
-- `code_generator/`
-  > Contains the code generator for generating strongly typed classes for
-  > Storyblok Blocks found in the "Block library". It fetches the necessary data
-  > with the
-  > [Storyblok Management REST API](https://www.storyblok.com/docs/api/management).
+```dart
+// With Code generator
+final storyblokClient = StoryblokClient(
+  accessToken: "<public_access_token>",
+  storyContentBuilder: (json) => Blok.fromJson(json),
+);
 
-  - `lib/fields/`
-    > Contains the classes for parsing each field type e.g Text, Single-option,
-    > Blocks etc.
+// Without Code generator
+final storyblokClient = StoryblokClient(
+  accessToken: "<public_access_token>",
+  storyContentBuilder: (json) => json,
+);
 
-- `lib/`
-  > Contains the Storyblok SDK Client for fetching stories with the
-  > [Storyblok Content Delivery REST API](https://www.storyblok.com/docs/api/content-delivery/v2/).
+final story = await storyblokClient.getStory(id: StoryIdentifierID(12345));
+
+// ...
+
+@override
+Widget build(BuildContext context) {
+  // With code generator, Exhaustiveness checking and automatic, type-safe, null-safe serializing.
+  return switch (story.content) {
+    DefaultPage page => Scaffold(
+      appBar: AppBar(title: Text(story.name)),
+      body: Center(child: Text(page.body)),
+    ),
+    UnrecognizedBlok _ => const Placeholder(),
+  };
+
+  // Without code generator, no Exhaustiveness checking, manual serializing.
+  return switch (story.content["component"]) {
+    "default-page" => Scaffold(
+      appBar: AppBar(title: Text(story.name)),
+      body: Center(child: Text(story.content["body"] is String ? story.content["body"] : "--")),
+    ),
+    _ => const Placeholder(),
+  }
+}
+```
+
+Check out the [Example](./example/) project for more advanced usage. The Example
+project can be run as-is and will display Storyblok's standard Demo Space
+project.
 
 ## API Documentation
 
 Refer to the following Storyblok API documentation for more details:
 
-- [Storyblok Content Delivery API V2 Reference](https://www.storyblok.com/docs/api/content-delivery)
+- [Storyblok Content Delivery API V2 Reference](https://www.storyblok.com/docs/api/content-delivery/v2/)
 - [Storyblok Management API Reference](https://www.storyblok.com/docs/api/management)
-
-Feel free to explore these resources for a deeper understanding of the
-integration and customization options.
