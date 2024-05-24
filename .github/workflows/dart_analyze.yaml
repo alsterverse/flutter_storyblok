@@ -6,6 +6,8 @@
 name: Dart
 
 on:
+  pull_request:
+    branches: [ "main" ]
   push:
     branches: [ "main" ]
 
@@ -22,7 +24,7 @@ jobs:
         run: flutter pub get
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --line-length 120 --output=none --set-exit-if-changed .
 
       - name: Analyze project source
         run: dart analyze
