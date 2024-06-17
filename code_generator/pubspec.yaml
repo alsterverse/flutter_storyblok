@@ -1,23 +1,23 @@
 name: flutter_storyblok_code_generator
 description: Code generator for flutter_storyblok
-version: 1.0.2
+version: 1.0.0
 homepage: https://www.alster.se/
-repository: https://github.com/alsterverse/flutter_storyblok
+repository: https://github.com/alsterverse/flutter_storyblok/tree/main/code_generator
 issue_tracker: https://github.com/alsterverse/flutter_storyblok/issues
 topics:
   - storyblok
   - sdk
-  - code_builder
+  - code-builder
 
 executables:
-  codegen: main
+  codegen: flutter_storyblok_code_generator
 
 environment:
   sdk: ^3.3.0
 
 dependencies:
-  flutter_storyblok: any
-  dart_style: any
+  flutter_storyblok: ^1.0.2
+  dart_style: ^2.3.6
   code_builder: ^4.10.0
   dart_casing: ^3.0.1
   http: ^1.2.1
