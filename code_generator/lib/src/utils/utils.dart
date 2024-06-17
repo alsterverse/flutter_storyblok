@@ -8,3 +8,7 @@ Out? mapIfNotNull<In, Out>(In? valueIn, Out? Function(In v) mapper) {
 T? tryCast<T>(dynamic value) {
   return value is T ? value : null;
 }
+
+Never throwMessage(String message) {
+  throw "❌ $message";
+}

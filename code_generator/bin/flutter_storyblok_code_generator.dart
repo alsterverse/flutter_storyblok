@@ -1,24 +1,81 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:args/command_runner.dart';
 import 'package:flutter_storyblok_code_generator/flutter_storyblok_code_generator.dart';
 
 void main(List<String> args) async {
-  final spaceId = args[0];
-  final authorization = args[1];
-  final outputPath = args[2];
+  final runner = CommandRunner("flutter_storyblok_code_generator", "Code generator for flutter_storyblok");
+  final generateCommand = GenerateCommand();
+  runner.addCommand(generateCommand);
+  try {
+    await runner.run(args);
+  } catch (ex) {
+    print("");
+    if (ex is ArgumentError) {
+      print("");
+      generateCommand.printUsage();
+      exit(64);
+    }
+    if (ex is! UsageException) rethrow;
+    print(ex);
+  }
+}
 
-  final apiClient = StoryblokHttpClient(spaceId, authorization);
-  final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
-  final componentsFuture = apiClient.getComponents();
+class GenerateCommand extends Command {
+  static const _nameSpaceId = "space_id";
+  static const _namePAT = "personal_access_token";
+  static const _nameOutputPath = "output_path";
+  static const _outPutFileName = "bloks.generated.dart";
 
-  final codegen = StoryblokCodegen(
-    getDatasourceFromExternalSource: apiClient.getDatasourceFromExternalSource,
-    datasourceWithEntries: await datasourcesWithEntriesFuture,
-    components: await componentsFuture,
-  );
+  GenerateCommand() {
+    argParser.addOption(
+      _nameSpaceId,
+      abbr: "s",
+      help: "Your Storyblok Space ID",
+      mandatory: true,
+    );
+    argParser.addOption(
+      _namePAT,
+      abbr: "p",
+      help: "Your Personal Access Token, not your Space access token",
+      mandatory: true,
+    );
+    argParser.addOption(
+      _nameOutputPath,
+      abbr: "o",
+      help: "A directory path where the output file \"$_outPutFileName\" will be created",
+      mandatory: false,
+      defaultsTo: "lib",
+    );
+  }
 
-  final code = await codegen.generate();
-  final file = File(outputPath);
-  if (await file.exists()) await file.delete();
-  await file.writeAsString(code);
+  @override
+  final String name = "generate";
+  @override
+  final String description = "Generate the Storyblok blocks into Dart classes";
+
+  @override
+  FutureOr? run() async {
+    final results = argResults!;
+    final spaceId = results[_nameSpaceId] as String;
+    final pat = results[_namePAT] as String;
+    final outputPath = results[_nameOutputPath] as String;
+
+    final apiClient = StoryblokHttpClient(spaceId, pat);
+    final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
+    final componentsFuture = apiClient.getComponents();
+
+    final codegen = StoryblokCodegen(
+      getDatasourceFromExternalSource: apiClient.getDatasourceFromExternalSource,
+      datasourceWithEntries: await datasourcesWithEntriesFuture,
+      components: await componentsFuture,
+    );
+
+    final code = await codegen.generate();
+    final file = File("$outputPath/$_outPutFileName");
+    if (await file.exists()) await file.delete();
+    await file.create(recursive: true);
+    await file.writeAsString(code);
+  }
 }

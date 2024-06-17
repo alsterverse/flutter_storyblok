@@ -20,13 +20,17 @@ class StoryblokHttpClient {
   Future<List<Component>> getComponents() async {
     const key = "components";
     final data = await _get(key);
-    return List<JSONMap>.from(data[key]).map(Component.fromJson).toList();
+    final jsons = tryCast<List>(data[key]);
+    if (jsons == null) throwMessage("Failed to fetch $key make sure your PAT is correct");
+    return List<JSONMap>.from(jsons).map(Component.fromJson).toList();
   }
 
   Future<List<DatasourceWithEntries>> getDatasourcesWithEntries() async {
     const key = "datasources";
     final data = await _get(key);
-    final datasources = List<JSONMap>.from(data[key]).map(Datasource.fromJson).toList();
+    final jsons = tryCast<List>(data[key]);
+    if (jsons == null) throwMessage("Failed to fetch $key make sure your PAT is correct");
+    final datasources = List<JSONMap>.from(jsons).map(Datasource.fromJson).toList();
 
     final entries = await Future.wait(datasources.map(_getDatasourceEntry));
     // TODO: Dimensions
@@ -53,8 +57,14 @@ class StoryblokHttpClient {
       Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
       headers: {"Authorization": authorization},
     );
-    final json = jsonDecode(response.body) as JSONMap;
-    return json;
+    final json = jsonDecode(response.body);
+    if (json is JSONMap) {
+      return json;
+    } else if (json is List) {
+      throwMessage("Failed to fetch $path make sure space_id is correct. Error body: $json");
+    } else {
+      throwMessage("Unknown error");
+    }
   }
 }
 
