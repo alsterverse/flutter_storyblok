@@ -8,9 +8,16 @@ topics:
   - storyblok
   - sdk
   - code-builder
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
 
 executables:
-  flutter_storyblok_code_generator
+  flutter_storyblok_code_generator: flutter_storyblok_code_generator
 
 environment:
   sdk: ^3.3.0

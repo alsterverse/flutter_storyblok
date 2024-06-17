@@ -16,10 +16,18 @@ to generate Dart classes from Blocks, Datasources etc.
 Navigate to the project directory and run the following commands:
 
 ```shell
-dart run flutter_storyblok_code_generator \
-  <space_id> \
-  <personal_access_token> \
-  <output_destination>
+dart run flutter_storyblok_code_generator generate -s <space_id> -p <pat>
+```
+
+### Usage
+
+```
+Usage: flutter_storyblok_code_generator generate [arguments]
+-h, --help                                 Print this usage information.
+-s, --space_id (mandatory)                 Your Storyblok Space ID
+-p, --personal_access_token (mandatory)    Your Personal Access Token, not your Space access token
+-o, --output_path                          A directory path where the output file "bloks.generated.dart" will be created
+                                           (defaults to "lib")
 ```
 
 This will call the Management API multiple times to fetch all Blocks under
