@@ -1,6 +1,6 @@
 name: flutter_storyblok
 description: Integrate Storyblok with your Flutter app using this SDK and code generator.
-version: 1.0.3
+version: 1.0.3+1
 homepage: https://www.alster.se/
 repository: https://github.com/alsterverse/flutter_storyblok
 issue_tracker: https://github.com/alsterverse/flutter_storyblok/issues

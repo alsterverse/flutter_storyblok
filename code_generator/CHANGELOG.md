@@ -1,3 +1,7 @@
+# v1.1.1
+
+Added a rate limit option and updated README.
+
 # v1.1.0
 
 Changed so external datasources will get resolved into a single enum with the
