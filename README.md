@@ -1,14 +1,15 @@
 ![](./flutter_storyblok.png)
 
-This Flutter project integrates with [Storyblok](https://www.storyblok.com/), a headless CMS, to dynamically
-fetch and render content.
+This Flutter project integrates with [Storyblok](https://www.storyblok.com/), a
+headless CMS, to dynamically fetch and render content.
 
 ## SDK
 
 This package contains an SDK for Storyblok Content Delivery API to fetch
 stories, datasources, links etc.
 
-It is designed to use with the [Code generator](./code_generator/README.md) but
+It is designed to be used with the
+[Code generator](https://pub.dev/packages/flutter_storyblok_code_generator) but
 one can opt to not use it as well.
 
 ### Installation
