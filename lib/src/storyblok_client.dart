@@ -175,9 +175,9 @@ final class StoryblokClient<StoryContent> {
     final links = List<JSONMap>.from(json["links"] ?? []);
     switch (resolveLinks) {
       case ResolveLinks.url:
-        break; // TODO:
+        break; // TODO: _resolvedUrls
       case ResolveLinks.link:
-        break; // TODO:
+        break; // TODO: _resolvedLinks
       case ResolveLinks.story:
         final stories = links.map((e) => Story.fromJson(e, _storyContentBuilder));
         for (final story in stories) {
