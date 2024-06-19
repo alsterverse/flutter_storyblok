@@ -21,17 +21,17 @@ final class OptionsField extends OptionField {
 
     return switch (source) {
       OptionSource.self => expression //
-          .invokeNamed("map", buildInstantiateEnum(enumName))
+          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
           .invokeNamed("toList"),
       OptionSource.internal_stories => expression //
           .invokeNamed("map", _type.property("new"))
           .invokeNamed("toList"),
       OptionSource.internal_languages => expression,
       OptionSource.internal => expression //
-          .invokeNamed("map", buildInstantiateEnum(data["datasource_slug"]))
+          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
           .invokeNamed("toList"),
       OptionSource.external => expression //
-          .invokeNamed("map", buildInstantiateEnum(enumName))
+          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
           .invokeNamed("toList"),
     };
   }

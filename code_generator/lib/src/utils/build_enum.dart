@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
 import 'sanitize_name.dart';
 import 'code_builder_extensions.dart';
@@ -62,4 +63,29 @@ Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
           //
           )),
   );
+}
+
+// MARK: - External source
+
+String externalSourceClassName(Uri url) {
+  return url.toString();
+}
+
+Future<Enum> buildEnumFromExternalSource(
+  Uri url,
+  Future<List<JSONMap>> Function(Uri) getExternalDatasourceEntries,
+) async {
+  Object? error;
+  final entries = await getExternalDatasourceEntries(url).onError((err, __) {
+    error = err;
+    return [];
+  });
+  final builder = buildEnum(
+    externalSourceClassName(url),
+    entries.map((e) => MapEntry(e["name"], e["value"])),
+  ).toBuilder();
+  builder.docs.add("// Datasource from $url");
+  if (error != null) builder.docs.add("// Error while fetching: $error");
+  final enumm = builder.build();
+  return enumm;
 }

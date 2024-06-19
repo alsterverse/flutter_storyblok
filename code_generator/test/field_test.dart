@@ -75,7 +75,7 @@ void main() {
         emitter.equalsCode(
             "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList()"),
       );
-      final enu = List<cb.Class>.from(await field.buildSupportingClass((_) async => []) ?? []);
+      final enu = List<cb.Class>.from(field.buildSupportingClass() ?? []);
       expect(enu.length, 3);
       expect(enu[0].name, "BarFooRestrictedTypes");
       expect(enu[1].name, "BarFooRestrictedTypesFoo");
@@ -360,13 +360,13 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
       );
-      final enu = await field.buildSupportingClass((_) async => []);
-      expect(enu?.length, 1);
+      final classes = field.buildSupportingClass();
+      expect(classes?.length, 1);
+      final enumm = classes!.cast<cb.Enum>().first;
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
+        enumm.values.map(
+          (e) => (e.name, e.arguments.first.code.toString()),
+        ),
         [
           ("foo", "'foo123'"),
           ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
@@ -387,7 +387,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("$valueExpression == null ? null : StoryIdentifierUUID($valueExpression)"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test required story singleoption", () {
       final field = OptionField.fromJson({
@@ -403,7 +406,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("StoryIdentifierUUID($valueExpression)"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test language singleoption", () {
       final field = OptionField.fromJson({
@@ -418,7 +424,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(valueExpression),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test required language singleoption", () {
       final field = OptionField.fromJson({
@@ -434,7 +443,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(valueExpression),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test default datasource singleoption", () {
       final field = OptionField.fromJson({
@@ -456,7 +468,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Foo.fromName($valueExpression)"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test default external singleoption", () {
       final field = OptionField.fromJson({
@@ -472,51 +487,42 @@ void main() {
       expect(field.shouldSkip, false);
       expect(
         field.build("foo"),
-        emitter.equalsCode("final BarFooOption foo;"),
+        emitter.equalsCode("final HttpsFooBarBazJson foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
+        emitter.equalsCode("HttpsFooBarBazJson.fromName($valueExpression)"),
       );
-      final enu = await field.buildSupportingClass((_) async => [
-            {"name": "Foo", "value": "foo123"},
-          ]);
-      expect(enu?.length, 1);
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
-        [
-          ("foo", "'foo123'"),
-          ("unknown", "'unknown'"),
-        ],
+        field.buildSupportingClass(),
+        null,
+      );
+      expect(
+        field.getExternalDatasourceUrl(),
+        Uri.parse("https://foo.bar/baz.json"),
       );
     });
     test("Test failed fetch external singleoption", () async {
       final field = OptionField.fromJson({
         "source": "external",
-        "external_datasource": "https://foo.bar/baz.json",
+        "external_datasource": "https://foo.bar/baz",
       }, "foo", "bar");
       expect(field.shouldSkip, false);
       expect(
         field.build("foo"),
-        emitter.equalsCode("final BarFooOption foo;"),
+        emitter.equalsCode("final HttpsFooBarBaz foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
+        emitter.equalsCode("HttpsFooBarBaz.fromName($valueExpression)"),
       );
-      final enu = await field.buildSupportingClass((_) async => []);
-      expect(enu?.length, 1);
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
-        [
-          ("unknown", "'unknown'"),
-        ],
+        field.buildSupportingClass(),
+        null,
+      );
+      expect(
+        field.getExternalDatasourceUrl(),
+        Uri.parse("https://foo.bar/baz"),
       );
     });
   });
@@ -544,13 +550,13 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
       );
-      final enu = await field.buildSupportingClass((_) async => []);
-      expect(enu?.length, 1);
+      final classes = field.buildSupportingClass();
+      expect(classes?.length, 1);
+      final enumm = classes!.cast<cb.Enum>().first;
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
+        enumm.values.map(
+          (e) => (e.name, e.arguments.first.code.toString()),
+        ),
         [
           ("foo", "'foo123'"),
           ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
@@ -571,7 +577,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(StoryIdentifierUUID.new).toList()"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test language multioption", () {
       final field = OptionsField.fromJson({
@@ -586,7 +595,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const [])"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test default datasource multioption", () {
       final field = OptionsField.fromJson({
@@ -608,7 +620,10 @@ void main() {
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(Foo.fromName).toList()"),
       );
-      field.buildSupportingClass((_) async => []).then(expectAsync1((v) => expect(v, null)));
+      expect(
+        field.buildSupportingClass(),
+        null,
+      );
     });
     test("Test default external multioption", () {
       final field = OptionsField.fromJson({
@@ -624,51 +639,42 @@ void main() {
       expect(field.shouldSkip, false);
       expect(
         field.build("foo"),
-        emitter.equalsCode("final List<BarFooOption> foo;"),
+        emitter.equalsCode("final List<HttpsFooBarBazJson> foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
+        emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(HttpsFooBarBazJson.fromName).toList()"),
       );
-      final enu = await field.buildSupportingClass((_) async => [
-            {"name": "Foo", "value": "foo123"},
-          ]);
-      expect(enu?.length, 1);
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
-        [
-          ("foo", "'foo123'"),
-          ("unknown", "'unknown'"),
-        ],
+        field.buildSupportingClass(),
+        null,
+      );
+      expect(
+        field.getExternalDatasourceUrl(),
+        Uri.parse("https://foo.bar/baz.json"),
       );
     });
     test("Test failed fetch external multioption", () async {
       final field = OptionsField.fromJson({
         "source": "external",
-        "external_datasource": "https://foo.bar/baz.json",
+        "external_datasource": "https://foo.bar/baz",
       }, "foo", "bar");
       expect(field.shouldSkip, false);
       expect(
         field.build("foo"),
-        emitter.equalsCode("final List<BarFooOption> foo;"),
+        emitter.equalsCode("final List<HttpsFooBarBaz> foo;"),
       );
       expect(
         field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
+        emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(HttpsFooBarBaz.fromName).toList()"),
       );
-      final enu = await field.buildSupportingClass((_) async => []);
-      expect(enu?.length, 1);
       expect(
-        enu!.cast<cb.Enum>().first.values.map((e) => (
-              e.name,
-              e.arguments.first.code.toString(),
-            )),
-        [
-          ("unknown", "'unknown'"),
-        ],
+        field.buildSupportingClass(),
+        null,
+      );
+      expect(
+        field.getExternalDatasourceUrl(),
+        Uri.parse("https://foo.bar/baz"),
       );
     });
   });

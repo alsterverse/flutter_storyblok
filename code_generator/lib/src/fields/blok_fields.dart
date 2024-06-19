@@ -32,8 +32,8 @@ final class BlokField extends BaseField {
       : referList(type: _type);
 
   @override
-  Future<List<Spec>?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) {
-    if (!_useRestrictedSealedClass) return super.buildSupportingClass(getExternalSource);
+  List<Spec>? buildSupportingClass() {
+    if (!_useRestrictedSealedClass) return super.buildSupportingClass();
 
     final (:sealedClass, :classes) = buildBloksSealedClass(
       name: restrictedTypesClassName,
@@ -61,7 +61,7 @@ final class BlokField extends BaseField {
       }).toList(),
       throwUnrecognized: true,
     );
-    return Future.value([sealedClass.build(), ...classes]);
+    return [sealedClass.build(), ...classes];
   }
 
   @override

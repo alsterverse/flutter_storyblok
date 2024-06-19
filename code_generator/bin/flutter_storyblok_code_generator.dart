@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:flutter_storyblok_code_generator/flutter_storyblok_code_generator.dart';
+import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
 void main(List<String> args) async {
   final runner = CommandRunner("flutter_storyblok_code_generator", "Code generator for flutter_storyblok");
@@ -55,6 +56,8 @@ class GenerateCommand extends Command {
   @override
   final String description = "Generate the Storyblok blocks into Dart classes";
 
+  final Map<Uri, List<JSONMap>> _externalDatasourceCache = {};
+
   @override
   FutureOr? run() async {
     final results = argResults!;
@@ -67,9 +70,15 @@ class GenerateCommand extends Command {
     final componentsFuture = apiClient.getComponents();
 
     final codegen = StoryblokCodegen(
-      getDatasourceFromExternalSource: apiClient.getDatasourceFromExternalSource,
-      datasourceWithEntries: await datasourcesWithEntriesFuture,
       components: await componentsFuture,
+      datasourceWithEntries: await datasourcesWithEntriesFuture,
+      getExternalDatasourceEntries: (url) async {
+        final cached = _externalDatasourceCache[url];
+        if (cached != null) return cached;
+        final data = await apiClient.getExternalDatasourceEntries(url);
+        _externalDatasourceCache[url] = data;
+        return data;
+      },
     );
 
     final code = await codegen.generate();
