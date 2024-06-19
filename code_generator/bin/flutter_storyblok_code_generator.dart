@@ -24,23 +24,31 @@ void main(List<String> args) async {
 }
 
 class GenerateCommand extends Command {
-  static const _nameSpaceId = "space_id";
-  static const _namePAT = "personal_access_token";
+  static const _optionSpaceId = "space_id";
+  static const _optionPAT = "personal_access_token";
+  static const _optionRateLimit = "rate_limit";
   static const _nameOutputPath = "output_path";
   static const _outPutFileName = "bloks.generated.dart";
 
   GenerateCommand() {
     argParser.addOption(
-      _nameSpaceId,
+      _optionSpaceId,
       abbr: "s",
       help: "Your Storyblok Space ID",
       mandatory: true,
     );
     argParser.addOption(
-      _namePAT,
+      _optionPAT,
       abbr: "p",
       help: "Your Personal Access Token, not your Space access token",
       mandatory: true,
+    );
+    argParser.addOption(
+      _optionRateLimit,
+      abbr: "r",
+      help: "Your rate limit (depending on your plan)",
+      mandatory: false,
+      defaultsTo: "3",
     );
     argParser.addOption(
       _nameOutputPath,
@@ -61,11 +69,12 @@ class GenerateCommand extends Command {
   @override
   FutureOr? run() async {
     final results = argResults!;
-    final spaceId = results[_nameSpaceId] as String;
-    final pat = results[_namePAT] as String;
+    final spaceId = results[_optionSpaceId] as String;
+    final pat = results[_optionPAT] as String;
+    final rateLimit = results[_optionRateLimit] as String;
     final outputPath = results[_nameOutputPath] as String;
 
-    final apiClient = StoryblokHttpClient(spaceId, pat);
+    final apiClient = StoryblokHttpClient(spaceId, pat, int.parse(rateLimit));
     final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
     final componentsFuture = apiClient.getComponents();
 

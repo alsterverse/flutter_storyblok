@@ -11,11 +11,15 @@ import 'utils/utils.dart';
 typedef DatasourceWithEntries = ({Datasource datasource, List<DatasourceEntry> entries});
 
 class StoryblokHttpClient {
+  StoryblokHttpClient(
+    this.spaceId,
+    this.authorization,
+    int rateLimit,
+  ) : _rateLimit = _RateLimit(rateLimit);
+
   final String spaceId;
   final String authorization;
-  StoryblokHttpClient(this.spaceId, this.authorization);
-
-  final _rateLimit = _RateLimit();
+  final _RateLimit _rateLimit;
 
   Future<List<Component>> getComponents() async {
     const key = "components";
@@ -69,7 +73,9 @@ class StoryblokHttpClient {
 }
 
 class _RateLimit {
-  static const _throttleLimit = 3;
+  _RateLimit(this._throttleLimit);
+
+  final int _throttleLimit;
 
   DateTime? _currentThrottleSessionStart;
   int _currentThrottleCounter = 0;
