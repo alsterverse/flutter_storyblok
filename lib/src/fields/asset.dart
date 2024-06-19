@@ -1,7 +1,7 @@
 import 'package:flutter_storyblok/src/utils.dart';
 
 /// Storyblok Asset field
-sealed class Asset {
+base class Asset {
   /// Alt text for the asset
   final String alt;
 
