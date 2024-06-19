@@ -11,10 +11,23 @@ base class OptionField extends BaseField {
   final OptionSource source;
   final String enumName;
 
+  /// If source is external, this must not be null
+  final Uri? externalSourceUrl;
+
   OptionField.fromJson(super.data, String name, String ownerName)
       : source = OptionSource.values.byName(data["source"] ?? OptionSource.self.name),
         enumName = sanitizeName("${unsanitizedName("${ownerName}_$name")}_Option", isClass: true),
+        externalSourceUrl = mapIfNotNull(tryCast<String>(data["external_datasource"]), Uri.parse),
         super.fromJson();
+
+  @override
+  late final bool shouldSkip = switch (source) {
+    OptionSource.self => tryCast<List>(data["options"])?.isEmpty ?? true,
+    OptionSource.internal_stories => false,
+    OptionSource.internal_languages => false,
+    OptionSource.internal => tryCast<String>(data["datasource_slug"])?.isEmpty ?? true,
+    OptionSource.external => externalSourceUrl == null,
+  };
 
   @override
   late final TypeReference type = switch (source) {
@@ -26,50 +39,35 @@ base class OptionField extends BaseField {
       ),
     OptionSource.internal_languages => referType("$String", nullable: !isRequired), // TODO Language enum
     OptionSource.internal => referType(sanitizeName(data["datasource_slug"], isClass: true)),
-    OptionSource.external => referType(enumName),
+    OptionSource.external => referType(sanitizeName(externalSourceClassName(externalSourceUrl!), isClass: true)),
   };
 
   @override
-  late final bool shouldSkip = switch (source) {
-    OptionSource.self => tryCast<List>(data["options"])?.isEmpty ?? true,
-    OptionSource.internal_stories => false,
-    OptionSource.internal_languages => false,
-    OptionSource.internal => tryCast<String>(data["datasource_slug"])?.isEmpty ?? true,
-    OptionSource.external =>
-      mapIfNotNull(tryCast<String>(data["external_datasource"]), (v) => v.isEmpty || Uri.tryParse(v) == null) ?? true,
-  };
-
-  @override
-  Future<List<Spec>?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) async {
-    final spec = switch (source) {
-      OptionSource.self => _buildEnum(enumName, List<JSONMap>.from(data["options"])),
+  List<Spec>? buildSupportingClass() {
+    return switch (source) {
+      OptionSource.self => [
+          buildEnum(enumName, List.from(data["options"]).map((e) => MapEntry(e["name"], e["value"])))
+        ],
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
       OptionSource.internal => null,
-      OptionSource.external => _buildEnum(
-          enumName,
-          (await getExternalSource(Uri.parse(data["external_datasource"]))).toList(),
-        ),
+      OptionSource.external => null
     };
-    return spec == null ? null : [spec];
-  }
-
-  Spec _buildEnum(String name, Iterable<JSONMap> cases) {
-    return buildEnum(
-      name,
-      cases.map((e) => MapEntry(e["name"], e["value"])),
-    );
   }
 
   @override
+  Uri? getExternalDatasourceUrl() => externalSourceUrl;
+
+  @override
   Expression buildInitializer(CodeExpression valueExpression) {
+    final type = this.type.nonNullable;
     return switch (source) {
-      OptionSource.self => buildInstantiateEnum(enumName, valueExpression.code.toString()),
+      OptionSource.self => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),
       OptionSource.internal_stories =>
-        initializerFromRequired(isRequired, valueExpression, type.nonNullable.invoke(valueExpression)),
+        initializerFromRequired(isRequired, valueExpression, type.invoke(valueExpression)),
       OptionSource.internal_languages => valueExpression,
-      OptionSource.internal => buildInstantiateEnum(data["datasource_slug"], valueExpression.code.toString()),
-      OptionSource.external => buildInstantiateEnum(enumName, valueExpression.code.toString()),
+      OptionSource.internal => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),
+      OptionSource.external => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),
     };
   }
 }

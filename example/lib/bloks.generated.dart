@@ -27,6 +27,62 @@ enum ButtonStyleOption {
   final String raw;
 }
 
+enum ButtonTextColorOption {
+  light('light'),
+  dark('dark'),
+  unknown('unknown');
+
+  const ButtonTextColorOption(this.raw);
+
+  factory ButtonTextColorOption.fromName(String? name) {
+    return switch (name) {
+      'light' => ButtonTextColorOption.light,
+      'dark' => ButtonTextColorOption.dark,
+      _ => ButtonTextColorOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum ButtonSizeOption {
+  small('small'),
+  medium('medium'),
+  large('large'),
+  unknown('unknown');
+
+  const ButtonSizeOption(this.raw);
+
+  factory ButtonSizeOption.fromName(String? name) {
+    return switch (name) {
+      'small' => ButtonSizeOption.small,
+      'medium' => ButtonSizeOption.medium,
+      'large' => ButtonSizeOption.large,
+      _ => ButtonSizeOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum ButtonBorderRadiusOption {
+  default$('default'),
+  small('small'),
+  unknown('unknown');
+
+  const ButtonBorderRadiusOption(this.raw);
+
+  factory ButtonBorderRadiusOption.fromName(String? name) {
+    return switch (name) {
+      'default' => ButtonBorderRadiusOption.default$,
+      'small' => ButtonBorderRadiusOption.small,
+      _ => ButtonBorderRadiusOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
 enum FeaturedArticlesSectionColsOption {
   two('2'),
   three('3'),
@@ -41,6 +97,80 @@ enum FeaturedArticlesSectionColsOption {
       '3' => FeaturedArticlesSectionColsOption.three,
       '4' => FeaturedArticlesSectionColsOption.four,
       _ => FeaturedArticlesSectionColsOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum FormSectionFormOption {
+  contact('contact'),
+  newsletter('newsletter'),
+  unknown('unknown');
+
+  const FormSectionFormOption(this.raw);
+
+  factory FormSectionFormOption.fromName(String? name) {
+    return switch (name) {
+      'contact' => FormSectionFormOption.contact,
+      'newsletter' => FormSectionFormOption.newsletter,
+      _ => FormSectionFormOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum FormSectionTextColorOption {
+  light('light'),
+  dark('dark'),
+  unknown('unknown');
+
+  const FormSectionTextColorOption(this.raw);
+
+  factory FormSectionTextColorOption.fromName(String? name) {
+    return switch (name) {
+      'light' => FormSectionTextColorOption.light,
+      'dark' => FormSectionTextColorOption.dark,
+      _ => FormSectionTextColorOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum GridCardIconWidthOption {
+  narrow80Px('80'),
+  medium160Px('160'),
+  wide240Px('240'),
+  unknown('unknown');
+
+  const GridCardIconWidthOption(this.raw);
+
+  factory GridCardIconWidthOption.fromName(String? name) {
+    return switch (name) {
+      '80' => GridCardIconWidthOption.narrow80Px,
+      '160' => GridCardIconWidthOption.medium160Px,
+      '240' => GridCardIconWidthOption.wide240Px,
+      _ => GridCardIconWidthOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum GridCardTextColorOption {
+  light('light'),
+  dark('dark'),
+  unknown('unknown');
+
+  const GridCardTextColorOption(this.raw);
+
+  factory GridCardTextColorOption.fromName(String? name) {
+    return switch (name) {
+      'light' => GridCardTextColorOption.light,
+      'dark' => GridCardTextColorOption.dark,
+      _ => GridCardTextColorOption.unknown,
     };
   }
 
@@ -72,42 +202,6 @@ final class GridSectionCardsRestrictedTypesPriceCard extends GridSectionCardsRes
   final PriceCard priceCard;
 }
 
-enum PersonalizedSectionPreviewOption {
-  newVisitor('new_visitor'),
-  returningVisitor('returning_visitor'),
-  unknown('unknown');
-
-  const PersonalizedSectionPreviewOption(this.raw);
-
-  factory PersonalizedSectionPreviewOption.fromName(String? name) {
-    return switch (name) {
-      'new_visitor' => PersonalizedSectionPreviewOption.newVisitor,
-      'returning_visitor' => PersonalizedSectionPreviewOption.returningVisitor,
-      _ => PersonalizedSectionPreviewOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum TextSectionAlignmentOption {
-  left('left'),
-  center('center'),
-  unknown('unknown');
-
-  const TextSectionAlignmentOption(this.raw);
-
-  factory TextSectionAlignmentOption.fromName(String? name) {
-    return switch (name) {
-      'left' => TextSectionAlignmentOption.left,
-      'center' => TextSectionAlignmentOption.center,
-      _ => TextSectionAlignmentOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
 enum GridSectionColsOption {
   two('2'),
   three('3'),
@@ -122,60 +216,6 @@ enum GridSectionColsOption {
       '3' => GridSectionColsOption.three,
       '4' => GridSectionColsOption.four,
       _ => GridSectionColsOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum ImageTextSectionImageLayoutOption {
-  proportional('proportional'),
-  fixedHeight('fixed-height'),
-  unknown('unknown');
-
-  const ImageTextSectionImageLayoutOption(this.raw);
-
-  factory ImageTextSectionImageLayoutOption.fromName(String? name) {
-    return switch (name) {
-      'proportional' => ImageTextSectionImageLayoutOption.proportional,
-      'fixed-height' => ImageTextSectionImageLayoutOption.fixedHeight,
-      _ => ImageTextSectionImageLayoutOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum ButtonTextColorOption {
-  light('light'),
-  dark('dark'),
-  unknown('unknown');
-
-  const ButtonTextColorOption(this.raw);
-
-  factory ButtonTextColorOption.fromName(String? name) {
-    return switch (name) {
-      'light' => ButtonTextColorOption.light,
-      'dark' => ButtonTextColorOption.dark,
-      _ => ButtonTextColorOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum FormSectionFormOption {
-  contact('contact'),
-  newsletter('newsletter'),
-  unknown('unknown');
-
-  const FormSectionFormOption(this.raw);
-
-  factory FormSectionFormOption.fromName(String? name) {
-    return switch (name) {
-      'contact' => FormSectionFormOption.contact,
-      'newsletter' => FormSectionFormOption.newsletter,
-      _ => FormSectionFormOption.unknown,
     };
   }
 
@@ -200,38 +240,74 @@ enum HeroSectionTextColorOption {
   final String raw;
 }
 
-enum ButtonSizeOption {
-  small('small'),
-  medium('medium'),
-  large('large'),
+enum HeroSectionHorizontalAlignmentOption {
+  left('left'),
+  center('center'),
   unknown('unknown');
 
-  const ButtonSizeOption(this.raw);
+  const HeroSectionHorizontalAlignmentOption(this.raw);
 
-  factory ButtonSizeOption.fromName(String? name) {
+  factory HeroSectionHorizontalAlignmentOption.fromName(String? name) {
     return switch (name) {
-      'small' => ButtonSizeOption.small,
-      'medium' => ButtonSizeOption.medium,
-      'large' => ButtonSizeOption.large,
-      _ => ButtonSizeOption.unknown,
+      'left' => HeroSectionHorizontalAlignmentOption.left,
+      'center' => HeroSectionHorizontalAlignmentOption.center,
+      _ => HeroSectionHorizontalAlignmentOption.unknown,
     };
   }
 
   final String raw;
 }
 
-enum FormSectionTextColorOption {
-  light('light'),
-  dark('dark'),
+enum HeroSectionVerticalAlignmentOption {
+  top('start'),
+  center('center'),
+  bottom('end'),
   unknown('unknown');
 
-  const FormSectionTextColorOption(this.raw);
+  const HeroSectionVerticalAlignmentOption(this.raw);
 
-  factory FormSectionTextColorOption.fromName(String? name) {
+  factory HeroSectionVerticalAlignmentOption.fromName(String? name) {
     return switch (name) {
-      'light' => FormSectionTextColorOption.light,
-      'dark' => FormSectionTextColorOption.dark,
-      _ => FormSectionTextColorOption.unknown,
+      'start' => HeroSectionVerticalAlignmentOption.top,
+      'center' => HeroSectionVerticalAlignmentOption.center,
+      'end' => HeroSectionVerticalAlignmentOption.bottom,
+      _ => HeroSectionVerticalAlignmentOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum ImageTextSectionImageLayoutOption {
+  proportional('proportional'),
+  fixedHeight('fixed-height'),
+  unknown('unknown');
+
+  const ImageTextSectionImageLayoutOption(this.raw);
+
+  factory ImageTextSectionImageLayoutOption.fromName(String? name) {
+    return switch (name) {
+      'proportional' => ImageTextSectionImageLayoutOption.proportional,
+      'fixed-height' => ImageTextSectionImageLayoutOption.fixedHeight,
+      _ => ImageTextSectionImageLayoutOption.unknown,
+    };
+  }
+
+  final String raw;
+}
+
+enum PersonalizedSectionPreviewOption {
+  newVisitor('new_visitor'),
+  returningVisitor('returning_visitor'),
+  unknown('unknown');
+
+  const PersonalizedSectionPreviewOption(this.raw);
+
+  factory PersonalizedSectionPreviewOption.fromName(String? name) {
+    return switch (name) {
+      'new_visitor' => PersonalizedSectionPreviewOption.newVisitor,
+      'returning_visitor' => PersonalizedSectionPreviewOption.returningVisitor,
+      _ => PersonalizedSectionPreviewOption.unknown,
     };
   }
 
@@ -256,94 +332,18 @@ enum SiteConfigFooterTextColorOption {
   final String raw;
 }
 
-enum GridCardIconWidthOption {
-  narrow80Px('80'),
-  medium160Px('160'),
-  wide240Px('240'),
-  unknown('unknown');
-
-  const GridCardIconWidthOption(this.raw);
-
-  factory GridCardIconWidthOption.fromName(String? name) {
-    return switch (name) {
-      '80' => GridCardIconWidthOption.narrow80Px,
-      '160' => GridCardIconWidthOption.medium160Px,
-      '240' => GridCardIconWidthOption.wide240Px,
-      _ => GridCardIconWidthOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum HeroSectionHorizontalAlignmentOption {
+enum TextSectionAlignmentOption {
   left('left'),
   center('center'),
   unknown('unknown');
 
-  const HeroSectionHorizontalAlignmentOption(this.raw);
+  const TextSectionAlignmentOption(this.raw);
 
-  factory HeroSectionHorizontalAlignmentOption.fromName(String? name) {
+  factory TextSectionAlignmentOption.fromName(String? name) {
     return switch (name) {
-      'left' => HeroSectionHorizontalAlignmentOption.left,
-      'center' => HeroSectionHorizontalAlignmentOption.center,
-      _ => HeroSectionHorizontalAlignmentOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum ButtonBorderRadiusOption {
-  default$('default'),
-  small('small'),
-  unknown('unknown');
-
-  const ButtonBorderRadiusOption(this.raw);
-
-  factory ButtonBorderRadiusOption.fromName(String? name) {
-    return switch (name) {
-      'default' => ButtonBorderRadiusOption.default$,
-      'small' => ButtonBorderRadiusOption.small,
-      _ => ButtonBorderRadiusOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum GridCardTextColorOption {
-  light('light'),
-  dark('dark'),
-  unknown('unknown');
-
-  const GridCardTextColorOption(this.raw);
-
-  factory GridCardTextColorOption.fromName(String? name) {
-    return switch (name) {
-      'light' => GridCardTextColorOption.light,
-      'dark' => GridCardTextColorOption.dark,
-      _ => GridCardTextColorOption.unknown,
-    };
-  }
-
-  final String raw;
-}
-
-enum HeroSectionVerticalAlignmentOption {
-  top('start'),
-  center('center'),
-  bottom('end'),
-  unknown('unknown');
-
-  const HeroSectionVerticalAlignmentOption(this.raw);
-
-  factory HeroSectionVerticalAlignmentOption.fromName(String? name) {
-    return switch (name) {
-      'start' => HeroSectionVerticalAlignmentOption.top,
-      'center' => HeroSectionVerticalAlignmentOption.center,
-      'end' => HeroSectionVerticalAlignmentOption.bottom,
-      _ => HeroSectionVerticalAlignmentOption.unknown,
+      'left' => TextSectionAlignmentOption.left,
+      'center' => TextSectionAlignmentOption.center,
+      _ => TextSectionAlignmentOption.unknown,
     };
   }
 

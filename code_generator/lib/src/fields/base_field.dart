@@ -58,7 +58,9 @@ abstract base class BaseField {
 
   Expression buildInitializer(CodeExpression valueExpression) => valueExpression;
 
-  Future<List<Spec>?> buildSupportingClass(Future<List<JSONMap>> Function(Uri) getExternalSource) => Future.value(null);
+  List<Spec>? buildSupportingClass() => null;
+
+  Uri? getExternalDatasourceUrl() => null;
 
   Field build(String fieldName) {
     return Field((f) => f

@@ -12,18 +12,20 @@ import 'utils/utils.dart';
 
 class StoryblokCodegen {
   StoryblokCodegen({
-    required this.getDatasourceFromExternalSource,
-    required List<DatasourceWithEntries> datasourceWithEntries,
     required this.components,
+    required List<DatasourceWithEntries> datasourceWithEntries,
+    required this.getExternalDatasourceEntries,
   }) : datasourceData = datasourceWithEntries.map((e) {
           final (:datasource, :entries) = e;
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
 
-  final Future<List<JSONMap>> Function(Uri) getDatasourceFromExternalSource;
-  final List<Enum> datasourceData;
   final List<Component> components;
+  final List<Enum> datasourceData;
+  final Future<List<JSONMap>> Function(Uri) getExternalDatasourceEntries;
   final codeEmitter = CodeEmitter();
+
+  final Set<Uri> _externalDatasourceUrls = {};
 
   Future<String> generate() async {
     final lib = LibraryBuilder();
@@ -31,10 +33,14 @@ class StoryblokCodegen {
     lib.generatedByComment = "flutter_storyblok_code_generator";
     lib.ignoreForFile.add("unused_import");
 
-    final components = await _buildComponents(lib);
+    final components = _buildComponents(lib).toList();
 
     // enum <name> {
     lib.body.addAll(datasourceData);
+    final externalDatasources = await Future.wait(
+      _externalDatasourceUrls.map((e) => buildEnumFromExternalSource(e, getExternalDatasourceEntries)),
+    );
+    lib.body.addAll(externalDatasources);
 
     // sealed class Blok {
     final (:sealedClass, :classes) = buildBloksSealedClass(
@@ -57,8 +63,8 @@ class StoryblokCodegen {
     return codeEmitter.codeFromSpec(library);
   }
 
-  Future<List<({String key, ClassBuilder builder})>> _buildComponents(LibraryBuilder lib) {
-    final list = components.map((component) async {
+  List<({String key, ClassBuilder builder})> _buildComponents(LibraryBuilder lib) {
+    return components.map((component) {
       final c = ClassBuilder();
       c.name = sanitizeName(component.name, isClass: true);
       final schema = component.schema;
@@ -85,8 +91,7 @@ class StoryblokCodegen {
           continue;
         }
 
-        // TODO: External JSON should be unique to the url not the field.
-        final supportingClass = await field.buildSupportingClass(getDatasourceFromExternalSource);
+        final supportingClass = field.buildSupportingClass();
         if (supportingClass != null) lib.body.addAll(supportingClass);
 
         c.fields.add(field.build(fieldName));
@@ -98,7 +103,5 @@ class StoryblokCodegen {
       c.constructors.add(con.build());
       return (key: component.name, builder: c);
     }).toList();
-
-    return Future.wait(list);
   }
 }
