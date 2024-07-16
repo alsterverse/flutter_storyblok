@@ -19,9 +19,11 @@ final class StoryblokRichText extends StatelessWidget {
     void Function(Link)? onTapLink,
     required BlockBuilder blockBuilder,
     this.textAlign = TextAlign.start,
+    TextStyle Function(RichTextLeafMarkable)? textStyleOverrides,
   }) : _contentData = _StoryblokRichTextContentData(
           onTapLink: onTapLink,
           buildBlok: blockBuilder,
+          textStyleOverrides: textStyleOverrides,
         );
 
   final _StoryblokRichTextContentData _contentData;
@@ -47,9 +49,11 @@ final class _StoryblokRichTextContentData {
   _StoryblokRichTextContentData({
     required this.onTapLink,
     required this.buildBlok,
+    this.textStyleOverrides,
   });
   final void Function(Link)? onTapLink;
   final BlockBuilder buildBlok;
+  final TextStyle Function(RichTextLeafMarkable)? textStyleOverrides;
 }
 
 // MARK: - Containers
@@ -179,7 +183,7 @@ extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
           (link) => TapGestureRecognizer()..onTap = () => onTapLink(link),
         ),
       ),
-      style: buildTextStyle(),
+      style: buildTextStyle().merge(contentData.textStyleOverrides?.call(this)),
     );
   }
 }
