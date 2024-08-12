@@ -98,12 +98,12 @@ class FutureStoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([
-        storyFuture,
-        if (delayed) Future.delayed(const Duration(milliseconds: 500)),
-      ]),
+      future: Future(() async {
+        if (delayed) await Future.delayed(const Duration(milliseconds: 500));
+        return storyFuture;
+      }),
       builder: (context, snapshot) {
-        final story = snapshot.data?.first as sb.Story<bloks.Blok>?;
+        final story = snapshot.data;
         if (story != null) {
           return story.content.buildWidget(context);
         } else if (snapshot.hasError) {
