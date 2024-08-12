@@ -46,12 +46,10 @@ final class StoryblokClient<StoryContent> {
   /// Retrieve a single story by id
   Future<Story<StoryContent>> getStory({
     required StoryIdentifier id,
-    // StoryblokVersion? version,
     ResolveLinks? resolveLinks,
     bool resolveLinks2Levels = true,
     List<String>? resolveRelations,
     String? fromRelease,
-    // int? cacheVersion,
     String? language,
     String? fallbackLanguage,
     int? resolveAssets,
@@ -97,8 +95,6 @@ final class StoryblokClient<StoryContent> {
 
   /// Retrieve multiple stories
   Future<List<Story<StoryContent>>> getStories({
-    // int? cacheVersion,
-    // StoryblokVersion? version,
     String? startsWith,
     String? searchTerm,
     String? sortBy,
@@ -235,8 +231,6 @@ final class StoryblokClient<StoryContent> {
 
   Future<List<ContentLink>> getLinks({
     String? startsWith,
-    // StoryblokVersion? version,
-    // int? cacheVersion,
     String? parentID,
     bool? includeDates,
     Pagination? pagination,
@@ -261,7 +255,6 @@ final class StoryblokClient<StoryContent> {
 
   Future<List<Tag>> getTags({
     String? startsWith,
-    // StoryblokVersion? version,
   }) async {
     final json = await _getRequest(
       path: _pathTags,
@@ -290,8 +283,6 @@ final class StoryblokClient<StoryContent> {
         if (queryParameters != null) ...queryParameters,
       },
     );
-    print(path);
-    print(queryParameters);
     final response = await http.get(uri, headers: {
       "Accept": "application/json",
     });
