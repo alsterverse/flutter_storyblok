@@ -7,7 +7,7 @@ final class HexColor extends Color {
     if (hexColor.length == 6) {
       hexColor = "FF$hexColor";
     }
-    return int.parse(hexColor, radix: 16);
+    return int.tryParse(hexColor, radix: 16) ?? 0xff000000;
   }
 
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
