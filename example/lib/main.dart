@@ -5,7 +5,8 @@ import 'package:example/bloks.generated.dart' as bloks;
 import 'package:example/colors.dart';
 import 'package:example/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart' as sb;
+import 'package:flutter_storyblok/models.dart' as sb;
+import 'package:flutter_storyblok/client.dart' as sb;
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 

@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_storyblok:
+    path: ../
   go_router: ^13.1.0
   camera: ^0.10.5+4
   sensors_plus: ^4.0.2
@@ -24,9 +26,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
   flutter_storyblok_code_generator:
     path: ../code_generator
+  flutter_lints: ^2.0.0
+
+dependency_overrides:
+  flutter_storyblok:
+    path: ../
 
 flutter:
   uses-material-design: true

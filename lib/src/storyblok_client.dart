@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/models.dart';
 import 'package:flutter_storyblok/src/fields/tag.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:http/http.dart' as http;
