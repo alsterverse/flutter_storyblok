@@ -1,3 +1,7 @@
+# v1.1.2
+
+Increased minimum flutter_storyblok version after critical bug fix.
+
 # v1.1.1
 
 Added a rate limit option and updated README.
