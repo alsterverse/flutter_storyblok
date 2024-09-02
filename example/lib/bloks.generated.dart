@@ -5,7 +5,7 @@
 library bloks; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:flutter_storyblok/fields.dart' as _i1;
-import 'package:flutter_storyblok/flutter_storyblok.dart' as _i2;
+import 'package:flutter_storyblok/models.dart' as _i2;
 
 enum ButtonStyleOption {
   default$('default'),

@@ -1,3 +1,9 @@
+# 1.1.0
+
+Separated StoryblokClient to its own client.dart export file and all the model
+exports into models.dart to fix dart:ui being imported when using the code
+generator.
+
 # 1.0.4
 
 Added remaining properties on Story.

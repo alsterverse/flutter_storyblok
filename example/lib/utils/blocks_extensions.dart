@@ -5,7 +5,7 @@ import 'package:example/main.dart';
 import 'package:example/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/fields.dart';
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/models.dart';
 
 extension LinkOpen<T> on Link<T> {
   void open(BuildContext context) async {

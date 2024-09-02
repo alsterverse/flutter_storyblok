@@ -10,7 +10,7 @@
 /// If both are specified Link is used.
 library;
 
-import 'package:flutter_storyblok/flutter_storyblok.dart';
+import 'package:flutter_storyblok/models.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 
 /// StoryContent is used to pass the Content type to LinkStory
