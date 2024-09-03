@@ -15,13 +15,13 @@ class StoryblokCodegen {
     required this.components,
     required List<DatasourceWithEntries> datasourceWithEntries,
     required this.getExternalDatasourceEntries,
-  }) : datasourceData = datasourceWithEntries.map((e) {
+  }) : internalDatasources = datasourceWithEntries.map((e) {
           final (:datasource, :entries) = e;
           return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
         }).toList();
 
   final List<Component> components;
-  final List<Enum> datasourceData;
+  final List<Enum> internalDatasources;
   final Future<List<JSONMap>> Function(Uri) getExternalDatasourceEntries;
   final codeEmitter = CodeEmitter();
 
@@ -36,11 +36,11 @@ class StoryblokCodegen {
     final components = _buildComponents(lib).toList();
 
     // enum <name> {
-    lib.body.addAll(datasourceData);
-    final externalDatasources = await Future.wait(
+    lib.body.addAll(internalDatasources);
+
+    lib.body.addAll(await Future.wait(
       _externalDatasourceUrls.map((e) => buildEnumFromExternalSource(e, getExternalDatasourceEntries)),
-    );
-    lib.body.addAll(externalDatasources);
+    ));
 
     // sealed class Blok {
     final (:sealedClass, :classes) = buildBloksSealedClass(
@@ -93,6 +93,9 @@ class StoryblokCodegen {
 
         final supportingClass = field.buildSupportingClass();
         if (supportingClass != null) lib.body.addAll(supportingClass);
+
+        final externalDatasourceUrl = field.getExternalDatasourceUrl();
+        if (externalDatasourceUrl != null) _externalDatasourceUrls.add(externalDatasourceUrl);
 
         c.fields.add(field.build(fieldName));
 
