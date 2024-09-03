@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart' as sb;
 import 'package:flutter_storyblok/src/fields/link.dart';
 import 'package:flutter_storyblok/src/fields/rich_text.dart';
 import 'package:flutter_storyblok/src/utils.dart';
-import 'package:flutter_storyblok/src/widgets/hex_color.dart';
+import 'package:flutter_storyblok/src/widgets/storyblok_color.dart';
 
 typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
