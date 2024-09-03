@@ -223,7 +223,7 @@ final class StoryblokClient<StoryContent> {
         if (pagination != null) ...pagination.toParameters(),
       },
     );
-    return List<JSONMap>.from(json["datasources"]).map(DatasourceEntry.fromJson).toList();
+    return List<JSONMap>.from(json["datasource_entries"]).map(DatasourceEntry.fromJson).toList();
   }
 
   //
