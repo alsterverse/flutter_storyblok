@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart' as sb;
 import 'package:flutter_storyblok/src/fields/link.dart';
 import 'package:flutter_storyblok/src/fields/rich_text.dart';
 import 'package:flutter_storyblok/src/utils.dart';
-import 'package:flutter_storyblok/src/widgets/storyblok_color.dart';
+import 'package:flutter_storyblok/widgets.dart';
 
 typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
@@ -153,10 +153,9 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
 
 extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
   TextStyle buildTextStyle() {
-    final foregroundColor = mapIfNotNull(this.foregroundColor?.colorString, StoryblokColor.fromString) ??
-        (link != null ? Colors.black : null);
+    final foregroundColor = this.foregroundColor?.color ?? (link != null ? Colors.black : null);
     return TextStyle(
-      backgroundColor: isCode ? Colors.grey : mapIfNotNull(backgroundColor?.colorString, StoryblokColor.fromString),
+      backgroundColor: isCode ? Colors.grey : backgroundColor?.color,
       color: foregroundColor,
       fontStyle: isItalic || isCode ? FontStyle.italic : null,
       fontWeight: isBold ? FontWeight.bold : null,
