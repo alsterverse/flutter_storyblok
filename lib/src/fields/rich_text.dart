@@ -226,7 +226,7 @@ final class RichTextLeafImage extends RichTextLeafMarkable implements RichTextLe
       source: json["source"],
       alt: json["alt"],
       copyright: json["copyright"],
-      metadata: JSONMap.from(json["meta_data"]),
+      metadata: JSONMap.from(tryCast(json["meta_data"]) ?? {}),
       marks: RichTextLeafMarkable.marksFromJson(json),
     );
   }
