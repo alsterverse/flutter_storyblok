@@ -1,3 +1,7 @@
+# v1.1.3
+
+Fixed bug external datasource enum not being generated.
+
 # v1.1.2
 
 Increased minimum flutter_storyblok version after critical bug fix.
