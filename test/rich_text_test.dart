@@ -32,7 +32,7 @@ void main() {
           }
         ]
       });
-      expect(text.foregroundColor!.colorHex, "#FF0000");
+      expect(text.foregroundColor!.colorString, "#FF0000");
     });
 
     test('Test parse rich-text text with foreground color css', () {
@@ -45,7 +45,7 @@ void main() {
           }
         ]
       });
-      expect(text.foregroundColor!.colorHex, "rgb(255, 0, 0)");
+      expect(text.foregroundColor!.colorString, "rgb(255, 0, 0)");
     });
 
     test('Test parse rich-text image', () {

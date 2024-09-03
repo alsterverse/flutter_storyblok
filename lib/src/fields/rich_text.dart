@@ -310,23 +310,23 @@ final class RichTextLeafMarkLink implements RichTextLeafMark {
 }
 
 final class RichTextLeafMarkTextStyle implements RichTextLeafMark {
-  RichTextLeafMarkTextStyle({required this.colorHex});
+  RichTextLeafMarkTextStyle({required this.colorString});
   factory RichTextLeafMarkTextStyle.fromJson(JSONMap json) => RichTextLeafMarkTextStyle(
-        colorHex: json["attrs"]["color"],
+        colorString: json["attrs"]["color"],
       );
 
-  /// CSS style color hex e.g. "#FAFAFA"
-  final String colorHex;
+  /// CSS style color hex e.g. "#FAFAFA" or "rgb(255, 255, 255)"
+  final String colorString;
 }
 
 final class RichTextLeafMarkHighlight implements RichTextLeafMark {
-  RichTextLeafMarkHighlight({required this.colorHex});
+  RichTextLeafMarkHighlight({required this.colorString});
   factory RichTextLeafMarkHighlight.fromJson(JSONMap json) => RichTextLeafMarkHighlight(
-        colorHex: json["attrs"]["color"],
+        colorString: json["attrs"]["color"],
       );
 
-  /// CSS style color hex e.g. "#FAFAFA"
-  final String colorHex;
+  /// CSS style color hex e.g. "#FAFAFA" or "rgb(255, 255, 255)"
+  final String colorString;
 }
 
 /// Base class of markable leaves

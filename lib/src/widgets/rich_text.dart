@@ -153,10 +153,10 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
 
 extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
   TextStyle buildTextStyle() {
-    final foregroundColor =
-        mapIfNotNull(this.foregroundColor?.colorHex, HexColor.new) ?? (link != null ? Colors.black : null);
+    final foregroundColor = mapIfNotNull(this.foregroundColor?.colorString, StoryblokColor.fromString) ??
+        (link != null ? Colors.black : null);
     return TextStyle(
-      backgroundColor: isCode ? Colors.grey : mapIfNotNull(backgroundColor?.colorHex, HexColor.new),
+      backgroundColor: isCode ? Colors.grey : mapIfNotNull(backgroundColor?.colorString, StoryblokColor.fromString),
       color: foregroundColor,
       fontStyle: isItalic || isCode ? FontStyle.italic : null,
       fontWeight: isBold ? FontWeight.bold : null,

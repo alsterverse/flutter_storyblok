@@ -31,7 +31,7 @@ class GridCardWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: hexColor.isEmpty ? AppColors.white : HexColor(hexColor),
+        color: hexColor.isEmpty ? AppColors.white : StoryblokColor.fromString(hexColor),
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withOpacity(0.1),

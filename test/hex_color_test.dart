@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('Test parsing colors from storyblok', () {
     test('Test parse color hexadecimal', () {
-      final color = HexColor("#FF8800");
+      final color = StoryblokColor.fromString("#FF8800");
       expect(color.alpha, 0xFF);
       expect(color.red, 0xFF);
       expect(color.green, 0x88);
@@ -12,7 +12,7 @@ void main() {
     });
 
     test('Test parse color css', () {
-      final color = HexColor("rgb(255, 136, 0)");
+      final color = StoryblokColor.fromString("rgb(255, 136, 0)");
       expect(color.alpha, 0xFF);
       expect(color.red, 255);
       expect(color.green, 136);
