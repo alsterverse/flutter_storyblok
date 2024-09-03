@@ -1,3 +1,7 @@
+# 1.2.1
+
+Bugfix for `StoryblokClient.getDataSourceEntries()`.
+
 # 1.2.0
 
 - Handles bug from Storyblok when copy-pasting rich-text in their visual editor
