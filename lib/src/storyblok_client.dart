@@ -6,8 +6,6 @@ import 'package:http/http.dart' as http;
 
 /// Used to fetch content from the Storyblok Content Delivery API
 final class StoryblokClient<StoryContent> {
-  static const _apiHost = "api.storyblok.com";
-
   static const _pathStories = "v2/cdn/stories";
   static const _pathDatasources = "v2/cdn/datasources";
   static const _pathDatasourceEntries = "v2/cdn/datasource_entries";
@@ -19,13 +17,16 @@ final class StoryblokClient<StoryContent> {
     ContentVersion? version,
     bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
+    String apiHost = "api.storyblok.com",
   })  : _baseParameters = {
           "token": accessToken,
         },
         _version = version,
         _useCacheInvalidation = useCacheInvalidation,
-        _storyContentBuilder = storyContentBuilder;
+        _storyContentBuilder = storyContentBuilder,
+        _apiHost = apiHost;
 
+  final String _apiHost;
   final ContentVersion? _version;
   final Map<String, String> _baseParameters;
   final bool _useCacheInvalidation;
