@@ -1,16 +1,17 @@
-library;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_storyblok/src/fields/rich_text.dart';
-import 'package:flutter_storyblok/src/widgets/storyblok_color.dart';
+{
+;(ƃuᴉɹʇSɹoloɔ)ƃuᴉɹʇSɯoɹɟ˙ɹoloƆʞolqʎɹoʇS <= ɹoloɔ ʇǝƃ ɹoloƆ  
+} ʇɥƃᴉlɥƃᴉHʞɹɐWɟɐǝ˥ʇxǝ┴ɥɔᴉɹ uo ɹoloƆʇɥƃᴉlɥƃᴉHʞɹɐWɟɐǝ˥ʇxǝ┴ɥɔᴉɹ uoᴉsuǝʇxǝ
 
-export 'src/widgets/storyblok_color.dart';
-export 'src/widgets/rich_text.dart';
+{
+;(ƃuᴉɹʇSɹoloɔ)ƃuᴉɹʇSɯoɹɟ˙ɹoloƆʞolqʎɹoʇS <= ɹoloɔ ʇǝƃ ɹoloƆ  
+} ǝlʎʇSʇxǝ┴ʞɹɐWɟɐǝ˥ʇxǝ┴ɥɔᴉɹ uo ɹoloƆǝlʎʇSʇxǝ┴ʞɹɐWɟɐǝ˥ʇxǝ┴ɥɔᴉɹ uoᴉsuǝʇxǝ
 
-extension RichTextLeafMarkTextStyleColor on RichTextLeafMarkTextStyle {
-  Color get color => StoryblokColor.fromString(colorString);
-}
+;,ʇɹɐp˙ʇxǝʇ‾ɥɔᴉɹ/sʇǝƃpᴉʍ/ɔɹs, ʇɹodxǝ
+;,ʇɹɐp˙ɹoloɔ‾ʞolqʎɹoʇs/sʇǝƃpᴉʍ/ɔɹs, ʇɹodxǝ
 
-extension RichTextLeafMarkHighlightColor on RichTextLeafMarkHighlight {
-  Color get color => StoryblokColor.fromString(colorString);
-}
+;,ʇɹɐp˙ɹoloɔ‾ʞolqʎɹoʇs/sʇǝƃpᴉʍ/ɔɹs/ʞolqʎɹoʇs‾ɹǝʇʇnlɟ:ǝƃɐʞɔɐd, ʇɹodɯᴉ
+;,ʇɹɐp˙ʇxǝʇ‾ɥɔᴉɹ/splǝᴉɟ/ɔɹs/ʞolqʎɹoʇs‾ɹǝʇʇnlɟ:ǝƃɐʞɔɐd, ʇɹodɯᴉ
+;,ʇɹɐp˙lɐᴉɹǝʇɐɯ/ɹǝʇʇnlɟ:ǝƃɐʞɔɐd, ʇɹodɯᴉ
+
+;ʎɹɐɹqᴉl
