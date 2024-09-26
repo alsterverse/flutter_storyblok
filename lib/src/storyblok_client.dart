@@ -6,26 +6,27 @@ import 'package:http/http.dart' as http;
 
 /// Used to fetch content from the Storyblok Content Delivery API
 final class StoryblokClient<StoryContent> {
-  static const _apiHost = "api.storyblok.com";
-
-  static const _pathStories = "v2/cdn/stories";
-  static const _pathDatasources = "v2/cdn/datasources";
-  static const _pathDatasourceEntries = "v2/cdn/datasource_entries";
-  static const _pathLinks = "v2/cdn/links";
-  static const _pathTags = "v2/cdn/tags";
+  static const _pathStories = "cdn/stories";
+  static const _pathDatasources = "cdn/datasources";
+  static const _pathDatasourceEntries = "cdn/datasource_entries";
+  static const _pathLinks = "cdn/links";
+  static const _pathTags = "cdn/tags";
 
   StoryblokClient({
     required String accessToken,
     ContentVersion? version,
     bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
+    Region region = Region.eu,
   })  : _baseParameters = {
           "token": accessToken,
         },
         _version = version,
         _useCacheInvalidation = useCacheInvalidation,
-        _storyContentBuilder = storyContentBuilder;
+        _storyContentBuilder = storyContentBuilder,
+        _apiHost = region.host;
 
+  final String _apiHost;
   final ContentVersion? _version;
   final Map<String, String> _baseParameters;
   final bool _useCacheInvalidation;
@@ -274,15 +275,19 @@ final class StoryblokClient<StoryContent> {
     Map<String, String>? queryParameters,
   }) async {
     final cacheVersion = _cacheVersion;
+    final cleanApiHost = _apiHost.replaceAll('/v2', '');
+    final usesV2 = _apiHost.contains('/v2');
+
     // TODO: Rate limit https://www.storyblok.com/docs/api/content-delivery/v2/getting-started/rate-limit
     final uri = Uri.https(
-      _apiHost,
-      path,
+      cleanApiHost,
+      usesV2 ? "/v2/$path" : path,
       {
         ..._baseParameters,
         if (queryParameters != null) ...queryParameters,
       },
     );
+
     final response = await http.get(uri, headers: {
       "Accept": "application/json",
     });
