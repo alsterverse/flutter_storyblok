@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_storyblok_code_generator/src/models/component.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource_entry.dart';
+import 'package:flutter_storyblok_code_generator/src/models/region.dart';
 import 'package:http/http.dart' as http;
 import 'package:collection/collection.dart';
 
@@ -14,11 +15,15 @@ class StoryblokHttpClient {
   StoryblokHttpClient(
     this.spaceId,
     this.authorization,
+    this.region,
     int rateLimit,
-  ) : _rateLimit = _RateLimit(rateLimit);
+  )   : _rateLimit = _RateLimit(rateLimit),
+        apiHost = region.host;
 
+  final String apiHost;
   final String spaceId;
   final String authorization;
+  final Region region;
   final _RateLimit _rateLimit;
 
   Future<List<Component>> getComponents() async {
@@ -58,14 +63,14 @@ class StoryblokHttpClient {
     await _rateLimit();
 
     final response = await http.get(
-      Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
+      Uri.https(apiHost, "/v1/spaces/$spaceId/$path", params),
       headers: {"Authorization": authorization},
     );
     final json = jsonDecode(response.body);
     if (json is JSONMap) {
       return json;
     } else if (json is List) {
-      throwMessage("Failed to fetch $path make sure space_id is correct. Error body: $json");
+      throwMessage("Failed to fetch $path make sure space_id and region is correct. Error body: $json");
     } else {
       throwMessage("Unknown error");
     }
