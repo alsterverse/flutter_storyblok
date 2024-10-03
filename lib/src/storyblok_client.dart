@@ -6,27 +6,27 @@ import 'package:http/http.dart' as http;
 
 /// Used to fetch content from the Storyblok Content Delivery API
 final class StoryblokClient<StoryContent> {
-  static const _pathStories = "cdn/stories";
-  static const _pathDatasources = "cdn/datasources";
-  static const _pathDatasourceEntries = "cdn/datasource_entries";
-  static const _pathLinks = "cdn/links";
-  static const _pathTags = "cdn/tags";
+  static const _pathStories = "stories";
+  static const _pathDatasources = "datasources";
+  static const _pathDatasourceEntries = "datasource_entries";
+  static const _pathLinks = "links";
+  static const _pathTags = "tags";
 
   StoryblokClient({
+    Region region = Region.eu,
     required String accessToken,
     ContentVersion? version,
     bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
-    Region region = Region.eu,
   })  : _baseParameters = {
           "token": accessToken,
         },
         _version = version,
         _useCacheInvalidation = useCacheInvalidation,
         _storyContentBuilder = storyContentBuilder,
-        _apiHost = region.host;
+        _region = region;
 
-  final String _apiHost;
+  final Region _region;
   final ContentVersion? _version;
   final Map<String, String> _baseParameters;
   final bool _useCacheInvalidation;
@@ -275,19 +275,15 @@ final class StoryblokClient<StoryContent> {
     Map<String, String>? queryParameters,
   }) async {
     final cacheVersion = _cacheVersion;
-    final cleanApiHost = _apiHost.replaceAll('/v2', '');
-    final usesV2 = _apiHost.contains('/v2');
 
     // TODO: Rate limit https://www.storyblok.com/docs/api/content-delivery/v2/getting-started/rate-limit
-    final uri = Uri.https(
-      cleanApiHost,
-      usesV2 ? "/v2/$path" : path,
-      {
+    final uri = _region.buildUri(
+      path: path,
+      queryParameters: {
         ..._baseParameters,
         if (queryParameters != null) ...queryParameters,
       },
     );
-
     final response = await http.get(uri, headers: {
       "Accept": "application/json",
     });
@@ -315,5 +311,26 @@ extension _DateTimeFormat on DateTime {
     var hour = this.hour.toString().padLeft(2, "0");
     var minute = this.minute.toString().padLeft(2, "0");
     return "$year-$month-$day $hour:$minute";
+  }
+}
+
+extension RegionUrl on Region {
+  String get baseUrl {
+    switch (this) {
+      case Region.eu:
+        return "https://api.storyblok.com/v2/cdn";
+      case Region.us:
+        return "https://api-us.storyblok.com/v2/cdn";
+      case Region.ca:
+        return "https://api-ca.storyblok.com/v2/cdn";
+      case Region.ap:
+        return "https://api-ap.storyblok.com/v2/cdn";
+      case Region.cn:
+        return "https://app.storyblokchina.cn";
+    }
+  }
+
+  Uri buildUri({required String path, Map<String, String>? queryParameters}) {
+    return Uri.parse("$baseUrl/$path").replace(queryParameters: queryParameters);
   }
 }

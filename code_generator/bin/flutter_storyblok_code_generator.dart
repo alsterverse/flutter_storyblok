@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/flutter_storyblok_code_generator.dart';
 import 'package:flutter_storyblok_code_generator/src/models/region.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
@@ -48,9 +49,10 @@ class GenerateCommand extends Command {
     argParser.addOption(
       _optionLocation,
       abbr: "l",
-      help: "The location of the space (eu, us, ap, ca, cn)",
+      help: "The server location of the space",
       mandatory: false,
-      defaultsTo: "eu",
+      allowed: sb.Region.values.map((e) => e.name),
+      defaultsTo: sb.Region.eu.name,
     );
     argParser.addOption(
       _optionRateLimit,
@@ -84,7 +86,7 @@ class GenerateCommand extends Command {
     final outputPath = results[_nameOutputPath] as String;
     final region = results[_optionLocation] as String;
 
-    final apiClient = StoryblokHttpClient(spaceId, pat, stringToRegion(region), int.parse(rateLimit));
+    final apiClient = StoryblokHttpClient(spaceId, pat, RegionCodeGen.fromString(region), int.parse(rateLimit));
     final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
     final componentsFuture = apiClient.getComponents();
 

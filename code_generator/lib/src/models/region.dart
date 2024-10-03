@@ -1,45 +1,36 @@
+import 'package:flutter_storyblok/models.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
-enum Region {
-  eu,
-  us,
-  ap,
-  ca,
-  cn,
-}
+extension RegionCodeGen on Region {
+  static Region fromString(String string) {
+    final nameMap = Region.values.asNameMap();
+    final region = nameMap[string];
+    if (region != null) {
+      return region;
+    }
+    throwMessage(
+      "Invalid location '$string'. Available options are ${Region.values.map((e) => "'${e.name}'").join(", ")}",
+    );
+  }
 
-extension RegionExtension on Region {
-  String get host {
+  String get baseUrl {
     switch (this) {
       case Region.eu:
-        return "mapi.storyblok.com";
+        return "https://mapi.storyblok.com";
       case Region.us:
-        return "api-us.storyblok.com";
+        return "https://api-us.storyblok.com";
       case Region.ap:
-        return "api-ap.storyblok.com";
+        return "https://api-ap.storyblok.com";
       case Region.ca:
-        return "api-ca.storyblok.com";
+        return "https://api-ca.storyblok.com";
       case Region.cn:
-        return "app.storyblokchina.cn";
+        return "https://app.storyblokchina.cn";
       default:
-        return "mapi.storyblok.com";
+        return "https://mapi.storyblok.com";
     }
   }
-}
 
-Region stringToRegion(String region) {
-  switch (region.toLowerCase()) {
-    case 'eu':
-      return Region.eu;
-    case 'us':
-      return Region.us;
-    case 'ap':
-      return Region.ap;
-    case 'ca':
-      return Region.ca;
-    case 'cn':
-      return Region.cn;
-    default:
-      throwMessage("Invalid region '$region'. Available options are 'eu', 'us', 'ap', 'ca', 'cn'");
+  Uri buildUri({required String path, JSONMap? queryParameters}) {
+    return Uri.parse("$baseUrl/$path").replace(queryParameters: queryParameters);
   }
 }

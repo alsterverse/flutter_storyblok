@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/src/models/component.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource_entry.dart';
@@ -17,13 +18,11 @@ class StoryblokHttpClient {
     this.authorization,
     this.region,
     int rateLimit,
-  )   : _rateLimit = _RateLimit(rateLimit),
-        apiHost = region.host;
+  ) : _rateLimit = _RateLimit(rateLimit);
 
-  final String apiHost;
   final String spaceId;
   final String authorization;
-  final Region region;
+  final sb.Region region;
   final _RateLimit _rateLimit;
 
   Future<List<Component>> getComponents() async {
@@ -63,7 +62,7 @@ class StoryblokHttpClient {
     await _rateLimit();
 
     final response = await http.get(
-      Uri.https(apiHost, "/v1/spaces/$spaceId/$path", params),
+      region.buildUri(path: "v1/spaces/$spaceId/$path", queryParameters: params),
       headers: {"Authorization": authorization},
     );
     final json = jsonDecode(response.body);
