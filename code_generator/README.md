@@ -36,8 +36,8 @@ Usage: flutter_storyblok_code_generator generate [arguments]
 -h, --help                                 Print this usage information.
 -s, --space_id (mandatory)                 Your Storyblok Space ID
 -p, --personal_access_token (mandatory)    Your Personal Access Token, not your Space access token
--l, --space_location                       The location of the space (eu, us, ap, ca, cn)
-                                           (defaults to "eu")
+-l, --space_location                       The server location of the space
+                                           [eu (default), us, ca, ap, cn]
 -r, --rate_limit                           Your rate limit (depending on your plan)
                                            (defaults to "3")
 -o, --output_path                          A directory path where the output file "bloks.generated.dart" will be created
