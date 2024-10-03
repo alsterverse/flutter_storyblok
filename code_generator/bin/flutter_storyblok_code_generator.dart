@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/flutter_storyblok_code_generator.dart';
-import 'package:flutter_storyblok_code_generator/src/models/region.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
 void main(List<String> args) async {
@@ -86,7 +85,7 @@ class GenerateCommand extends Command {
     final outputPath = results[_nameOutputPath] as String;
     final region = results[_optionLocation] as String;
 
-    final apiClient = StoryblokHttpClient(spaceId, pat, RegionCodeGen.fromString(region), int.parse(rateLimit));
+    final apiClient = StoryblokHttpClient(spaceId, pat, sb.Region.values.byName(region), int.parse(rateLimit));
     final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
     final componentsFuture = apiClient.getComponents();
 

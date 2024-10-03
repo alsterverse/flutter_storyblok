@@ -4,7 +4,6 @@ import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/src/models/component.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource_entry.dart';
-import 'package:flutter_storyblok_code_generator/src/models/region.dart';
 import 'package:http/http.dart' as http;
 import 'package:collection/collection.dart';
 
@@ -102,5 +101,28 @@ class _RateLimit {
       }
     }
     _currentThrottleCounter += 1;
+  }
+}
+
+extension RegionCodeGen on sb.Region {
+  String get baseUrl {
+    switch (this) {
+      case sb.Region.eu:
+        return "https://mapi.storyblok.com";
+      case sb.Region.us:
+        return "https://api-us.storyblok.com";
+      case sb.Region.ap:
+        return "https://api-ap.storyblok.com";
+      case sb.Region.ca:
+        return "https://api-ca.storyblok.com";
+      case sb.Region.cn:
+        return "https://app.storyblokchina.cn";
+      default:
+        return "https://mapi.storyblok.com";
+    }
+  }
+
+  Uri buildUri({required String path, JSONMap? queryParameters}) {
+    return Uri.parse("$baseUrl/$path").replace(queryParameters: queryParameters);
   }
 }
