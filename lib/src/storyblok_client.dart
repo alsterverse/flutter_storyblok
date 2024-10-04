@@ -6,15 +6,14 @@ import 'package:http/http.dart' as http;
 
 /// Used to fetch content from the Storyblok Content Delivery API
 final class StoryblokClient<StoryContent> {
-  static const _apiHost = "api.storyblok.com";
-
-  static const _pathStories = "v2/cdn/stories";
-  static const _pathDatasources = "v2/cdn/datasources";
-  static const _pathDatasourceEntries = "v2/cdn/datasource_entries";
-  static const _pathLinks = "v2/cdn/links";
-  static const _pathTags = "v2/cdn/tags";
+  static const _pathStories = "stories";
+  static const _pathDatasources = "datasources";
+  static const _pathDatasourceEntries = "datasource_entries";
+  static const _pathLinks = "links";
+  static const _pathTags = "tags";
 
   StoryblokClient({
+    Region region = Region.eu,
     required String accessToken,
     ContentVersion? version,
     bool useCacheInvalidation = true,
@@ -24,8 +23,10 @@ final class StoryblokClient<StoryContent> {
         },
         _version = version,
         _useCacheInvalidation = useCacheInvalidation,
-        _storyContentBuilder = storyContentBuilder;
+        _storyContentBuilder = storyContentBuilder,
+        _region = region;
 
+  final Region _region;
   final ContentVersion? _version;
   final Map<String, String> _baseParameters;
   final bool _useCacheInvalidation;
@@ -274,11 +275,11 @@ final class StoryblokClient<StoryContent> {
     Map<String, String>? queryParameters,
   }) async {
     final cacheVersion = _cacheVersion;
+
     // TODO: Rate limit https://www.storyblok.com/docs/api/content-delivery/v2/getting-started/rate-limit
-    final uri = Uri.https(
-      _apiHost,
-      path,
-      {
+    final uri = _region.buildUri(
+      path: path,
+      queryParameters: {
         ..._baseParameters,
         if (queryParameters != null) ...queryParameters,
       },
@@ -310,5 +311,26 @@ extension _DateTimeFormat on DateTime {
     var hour = this.hour.toString().padLeft(2, "0");
     var minute = this.minute.toString().padLeft(2, "0");
     return "$year-$month-$day $hour:$minute";
+  }
+}
+
+extension RegionUrl on Region {
+  String get baseUrl {
+    switch (this) {
+      case Region.eu:
+        return "https://api.storyblok.com/v2/cdn";
+      case Region.us:
+        return "https://api-us.storyblok.com/v2/cdn";
+      case Region.ca:
+        return "https://api-ca.storyblok.com/v2/cdn";
+      case Region.ap:
+        return "https://api-ap.storyblok.com/v2/cdn";
+      case Region.cn:
+        return "https://app.storyblokchina.cn";
+    }
+  }
+
+  Uri buildUri({required String path, Map<String, String>? queryParameters}) {
+    return Uri.parse("$baseUrl/$path").replace(queryParameters: queryParameters);
   }
 }

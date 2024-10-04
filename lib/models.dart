@@ -7,3 +7,4 @@ export 'src/models/pagination.dart';
 export 'src/models/resolve_links.dart';
 export 'src/models/story_identifier.dart';
 export 'src/models/story.dart';
+export 'src/models/region.dart';

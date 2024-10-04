@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/flutter_storyblok_code_generator.dart';
 import 'package:flutter_storyblok_code_generator/src/utils/utils.dart';
 
@@ -26,6 +27,7 @@ void main(List<String> args) async {
 class GenerateCommand extends Command {
   static const _optionSpaceId = "space_id";
   static const _optionPAT = "personal_access_token";
+  static const _optionLocation = "space_location";
   static const _optionRateLimit = "rate_limit";
   static const _nameOutputPath = "output_path";
   static const _outPutFileName = "bloks.generated.dart";
@@ -42,6 +44,14 @@ class GenerateCommand extends Command {
       abbr: "p",
       help: "Your Personal Access Token, not your Space access token",
       mandatory: true,
+    );
+    argParser.addOption(
+      _optionLocation,
+      abbr: "l",
+      help: "The server location of the space",
+      mandatory: false,
+      allowed: sb.Region.values.map((e) => e.name),
+      defaultsTo: sb.Region.eu.name,
     );
     argParser.addOption(
       _optionRateLimit,
@@ -73,8 +83,9 @@ class GenerateCommand extends Command {
     final pat = results[_optionPAT] as String;
     final rateLimit = results[_optionRateLimit] as String;
     final outputPath = results[_nameOutputPath] as String;
+    final region = results[_optionLocation] as String;
 
-    final apiClient = StoryblokHttpClient(spaceId, pat, int.parse(rateLimit));
+    final apiClient = StoryblokHttpClient(spaceId, pat, sb.Region.values.byName(region), int.parse(rateLimit));
     final datasourcesWithEntriesFuture = apiClient.getDatasourcesWithEntries();
     final componentsFuture = apiClient.getComponents();
 

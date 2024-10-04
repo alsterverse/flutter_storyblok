@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_storyblok/models.dart' as sb;
 import 'package:flutter_storyblok_code_generator/src/models/component.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource.dart';
 import 'package:flutter_storyblok_code_generator/src/models/datasource_entry.dart';
@@ -14,11 +15,13 @@ class StoryblokHttpClient {
   StoryblokHttpClient(
     this.spaceId,
     this.authorization,
+    this.region,
     int rateLimit,
   ) : _rateLimit = _RateLimit(rateLimit);
 
   final String spaceId;
   final String authorization;
+  final sb.Region region;
   final _RateLimit _rateLimit;
 
   Future<List<Component>> getComponents() async {
@@ -58,14 +61,14 @@ class StoryblokHttpClient {
     await _rateLimit();
 
     final response = await http.get(
-      Uri.https("mapi.storyblok.com", "/v1/spaces/$spaceId/$path", params),
+      region.buildUri(path: "v1/spaces/$spaceId/$path", queryParameters: params),
       headers: {"Authorization": authorization},
     );
     final json = jsonDecode(response.body);
     if (json is JSONMap) {
       return json;
     } else if (json is List) {
-      throwMessage("Failed to fetch $path make sure space_id is correct. Error body: $json");
+      throwMessage("Failed to fetch $path make sure space_id and region is correct. Error body: $json");
     } else {
       throwMessage("Unknown error");
     }
@@ -98,5 +101,28 @@ class _RateLimit {
       }
     }
     _currentThrottleCounter += 1;
+  }
+}
+
+extension RegionCodeGen on sb.Region {
+  String get baseUrl {
+    switch (this) {
+      case sb.Region.eu:
+        return "https://mapi.storyblok.com";
+      case sb.Region.us:
+        return "https://api-us.storyblok.com";
+      case sb.Region.ap:
+        return "https://api-ap.storyblok.com";
+      case sb.Region.ca:
+        return "https://api-ca.storyblok.com";
+      case sb.Region.cn:
+        return "https://app.storyblokchina.cn";
+      default:
+        return "https://mapi.storyblok.com";
+    }
+  }
+
+  Uri buildUri({required String path, JSONMap? queryParameters}) {
+    return Uri.parse("$baseUrl/$path").replace(queryParameters: queryParameters);
   }
 }
