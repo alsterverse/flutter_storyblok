@@ -1,3 +1,7 @@
+# 1.3.0
+
+Added support for regions outside of EU
+
 # 1.2.1
 
 Bugfix for `StoryblokClient.getDataSourceEntries()`.

@@ -1,3 +1,7 @@
+# v1.2.0
+
+Added support for regions outside of EU
+
 # v1.1.3
 
 Fixed bug external datasource enum not being generated.
