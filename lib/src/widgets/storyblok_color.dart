@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// Used to convert a color hex string to a Flutter Color
 final class StoryblokColor extends Color {

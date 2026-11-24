@@ -2,16 +2,21 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/widgets.dart' as sb;
 import 'package:flutter_storyblok/src/fields/link.dart';
 import 'package:flutter_storyblok/src/fields/rich_text.dart';
 import 'package:flutter_storyblok/src/utils.dart';
 import 'package:flutter_storyblok/widgets.dart';
 
+const _black = Color(0xFF000000);
+const _grey = Color(0xFF9E9E9E);
+
 typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
 /// Storyblok RichText to Flutter RichText bridge
+///
+/// Text inherits the ambient [DefaultTextStyle], which a Material ancestor such as a `Scaffold` provides.
 final class StoryblokRichText extends StatelessWidget {
   StoryblokRichText({
     super.key,
@@ -59,13 +64,14 @@ final class _StoryblokRichTextContentData {
 // MARK: - Containers
 
 extension _RichTextContainerWidget on RichTextContainer {
+  /// Builds the widget for this container, using [contentData] for link, blok and style callbacks.
   Widget buildContainerWidget(BuildContext context, _StoryblokRichTextContentData contentData) {
     return switch (this) {
       final RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
       final RichTextContainerHeading heading => heading.content.buildRichText(
         context,
         contentData,
-        textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        textStyle: TextStyle(
           fontSize: 24 / max(1, (heading.level / 4)),
           fontWeight: FontWeight.bold,
           letterSpacing: -1,
@@ -75,7 +81,7 @@ extension _RichTextContainerWidget on RichTextContainer {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: _grey),
           color: const Color(0xFFEEEEEE),
         ),
         child: code.content.buildRichText(context, contentData),
@@ -84,7 +90,7 @@ extension _RichTextContainerWidget on RichTextContainer {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(width: 4, color: Colors.grey),
+            Container(width: 4, color: _grey),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -94,7 +100,7 @@ extension _RichTextContainerWidget on RichTextContainer {
           ],
         ),
       ),
-      final RichTextContainerLine _ => Container(height: 1, color: Colors.black),
+      final RichTextContainerLine _ => Container(height: 1, color: _black),
       final RichTextContainerList list => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -125,6 +131,7 @@ extension _RichTextContainerWidget on RichTextContainer {
 // MARK: - Leaves
 
 extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
+  /// Builds these leaves as one [sb.RichText], merging [textStyle] onto the ambient [DefaultTextStyle] of [context].
   Widget buildRichText(
     BuildContext context,
     _StoryblokRichTextContentData contentData, {
@@ -132,7 +139,7 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
   }) {
     return sb.RichText(
       text: TextSpan(
-        style: Theme.of(context).textTheme.bodyMedium?.merge(textStyle),
+        style: DefaultTextStyle.of(context).style.merge(textStyle),
         children: map(
           (e) => switch (e) {
             final RichTextLeafText text => text.buildTextSpan(text.text, contentData),
@@ -156,14 +163,15 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
 // MARK: - Markable TextStyle
 
 extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
+  /// Returns the [TextStyle] described by the marks on this leaf.
   TextStyle buildTextStyle() {
-    final foregroundColor = this.foregroundColor?.color ?? (link != null ? Colors.black : null);
+    final foregroundColor = this.foregroundColor?.color ?? (link != null ? _black : null);
     return TextStyle(
-      backgroundColor: isCode ? Colors.grey : backgroundColor?.color,
+      backgroundColor: isCode ? _grey : backgroundColor?.color,
       color: foregroundColor,
       fontStyle: isItalic || isCode ? FontStyle.italic : null,
       fontWeight: isBold ? FontWeight.bold : null,
-      decorationColor: link == null ? foregroundColor : Colors.black,
+      decorationColor: link == null ? foregroundColor : _black,
       decorationStyle: TextDecorationStyle.solid,
       decoration: TextDecoration.combine([
         if (isStriked) TextDecoration.lineThrough,
