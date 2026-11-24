@@ -16,7 +16,8 @@ typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
 /// Storyblok RichText to Flutter RichText bridge
 ///
-/// Text inherits the ambient [DefaultTextStyle], which a Material ancestor such as a `Scaffold` provides.
+/// Text, links and horizontal rules inherit the ambient [DefaultTextStyle], which a Material ancestor such as a
+/// `Scaffold` provides. Code uses dark text on its own light background.
 final class StoryblokRichText extends StatefulWidget {
   StoryblokRichText({
     super.key,
@@ -50,6 +51,7 @@ final class _StoryblokRichTextState extends State<StoryblokRichText> {
     super.dispose();
   }
 
+  /// Builds [content] as a column that is only as tall as its children.
   @override
   Widget build(BuildContext context) {
     final contentData = _StoryblokRichTextContentData(
@@ -59,6 +61,7 @@ final class _StoryblokRichTextState extends State<StoryblokRichText> {
       recognizers: _recognizers,
     );
     final column = Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: widget.content
           .map((e) => e.buildContainerWidget(context, contentData)) //
@@ -122,7 +125,7 @@ extension _RichTextContainerWidget on RichTextContainer {
           border: Border.all(color: _grey),
           color: const Color(0xFFEEEEEE),
         ),
-        child: code.content.buildRichText(context, contentData),
+        child: code.content.buildRichText(context, contentData, textStyle: const TextStyle(color: _black)),
       ),
       final RichTextContainerQuote quote => IntrinsicHeight(
         child: Row(
@@ -138,7 +141,10 @@ extension _RichTextContainerWidget on RichTextContainer {
           ],
         ),
       ),
-      final RichTextContainerLine _ => Container(height: 1, color: _black),
+      final RichTextContainerLine _ => Container(
+        height: 1,
+        color: DefaultTextStyle.of(context).style.color ?? _black,
+      ),
       final RichTextContainerList list => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -203,13 +209,13 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
 extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
   /// Returns the [TextStyle] described by the marks on this leaf.
   TextStyle buildTextStyle() {
-    final foregroundColor = this.foregroundColor?.color ?? (link != null ? _black : null);
+    final foregroundColor = this.foregroundColor?.color ?? (isCode ? _black : null);
     return TextStyle(
       backgroundColor: isCode ? _grey : backgroundColor?.color,
       color: foregroundColor,
       fontStyle: isItalic || isCode ? FontStyle.italic : null,
       fontWeight: isBold ? FontWeight.bold : null,
-      decorationColor: link == null ? foregroundColor : _black,
+      decorationColor: foregroundColor,
       decorationStyle: TextDecorationStyle.solid,
       decoration: TextDecoration.combine([
         if (isStriked) TextDecoration.lineThrough,

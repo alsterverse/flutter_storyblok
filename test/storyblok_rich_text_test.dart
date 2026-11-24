@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storyblok/fields.dart' as fields;
 import 'package:flutter_storyblok/widgets.dart';
@@ -50,6 +49,16 @@ TextSpan leafSpan(WidgetTester tester, String text) => rootSpan(tester, text).ch
 /// Returns the `bodyMedium` style of the Material theme surrounding the subject.
 TextStyle bodyMedium(WidgetTester tester) =>
     Theme.of(tester.element(find.byType(StoryblokRichText))).textTheme.bodyMedium!;
+
+/// Returns the WCAG contrast ratio between [a] and [b], from 1 to 21.
+double contrast(Color a, Color b) {
+  final luminances = [a.computeLuminance(), b.computeLuminance()]..sort();
+  return (luminances.last + 0.05) / (luminances.first + 0.05);
+}
+
+/// Returns the colour the first leaf of the rich text [text] is painted with, falling back to the base style.
+Color leafColor(WidgetTester tester, String text) =>
+    leafSpan(tester, text).style?.color ?? rootSpan(tester, text).style!.color!;
 
 void main() {
   group('Test base style inside a Scaffold', () {
@@ -206,8 +215,8 @@ void main() {
       final tapped = <fields.Link>[];
       await tester.pumpWidget(inScaffold(buildSubject([linkParagraph], onTapLink: tapped.add)));
       final style = leafSpan(tester, "Hello").style!;
-      expect(style.color, isSameColorAs(Colors.black));
-      expect(style.decorationColor, isSameColorAs(Colors.black));
+      expect(style.color, isNull);
+      expect(style.decorationColor, isNull);
       expect(style.decoration, TextDecoration.combine([TextDecoration.underline]));
 
       await tester.tapOnText(find.textRange.ofSubstring("Hello"));
@@ -230,7 +239,7 @@ void main() {
           ),
         ),
       );
-      expect(leafSpan(tester, "Hello").recognizer, isNot(isA<TapGestureRecognizer>()));
+      expect(leafSpan(tester, "Hello").recognizer, isNull);
     });
   });
 
@@ -282,7 +291,7 @@ void main() {
       );
       expect(find.text("quote", findRichText: true), findsOneWidget);
       final colors = tester.widgetList<Container>(find.byType(Container)).map((e) => e.color).toList();
-      expect(colors, [isSameColorAs(Colors.grey), isSameColorAs(Colors.black)]);
+      expect(colors, [isSameColorAs(Colors.grey), isSameColorAs(bodyMedium(tester).color!)]);
     });
 
     testWidgets('Test lists', (tester) async {
@@ -339,4 +348,159 @@ void main() {
       expect(find.text("blok hero"), findsOneWidget);
     });
   });
+
+  group('Test base style in other Material slots', () {
+    final slots = <String, Widget Function(Widget child)>{
+      'AppBar title': (child) => Scaffold(appBar: AppBar(title: child)),
+      'ListTile title': (child) => Scaffold(body: ListTile(title: child)),
+      'AlertDialog title': (child) => AlertDialog(title: child),
+    };
+    for (final MapEntry(key: name, value: slot) in slots.entries) {
+      testWidgets('Test $name styles rich text like a Text', (tester) async {
+        await tester.pumpWidget(MaterialApp(home: slot(const Text("Hello"))));
+        final textStyle = rootSpan(tester, "Hello").style;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: slot(
+              buildSubject([
+                paragraphJson([textJson("Hello")]),
+              ]),
+            ),
+          ),
+        );
+        expect(rootSpan(tester, "Hello").style, textStyle);
+        expect(rootSpan(tester, "Hello").style!.fontSize, isNot(bodyMedium(tester).fontSize));
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
+  group('Test MaterialApp without a Material ancestor', () {
+    testWidgets('Test fallback style is inherited and headings are smaller than body', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: buildSubject([
+            paragraphJson([textJson("Hello")]),
+            containerJson("heading", [textJson("H1")], attrs: {"level": 1}),
+          ]),
+        ),
+      );
+      final style = rootSpan(tester, "Hello").style!;
+      expect(style.color, isSameColorAs(const Color(0xD0FF0000)));
+      expect(style.fontFamily, "monospace");
+      expect(style.fontSize, 48);
+      expect(style.decoration, TextDecoration.underline);
+      expect(style.decorationStyle, TextDecorationStyle.double);
+      expect(style.decorationColor, isSameColorAs(const Color(0xFFFFFF00)));
+      expect(rootSpan(tester, "H1").style!.fontSize, 24);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('Test leaves without marks remove the fallback underline', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: buildSubject([
+            paragraphJson([textJson("Hello")]),
+          ]),
+        ),
+      );
+      expect(leafSpan(tester, "Hello").style!.decoration, TextDecoration.none);
+    });
+  });
+
+  group('Test contrast', () {
+    const textRatio = 4.5;
+    const graphicRatio = 3.0;
+    for (final (name, theme) in [('light', ThemeData.light()), ('dark', ThemeData.dark())]) {
+      testWidgets('Test link is readable, $name', (tester) async {
+        await tester.pumpWidget(
+          inScaffold(
+            theme: theme,
+            buildSubject([
+              paragraphJson([
+                textJson("Hello", [
+                  {
+                    "type": "link",
+                    "attrs": {"linktype": "url", "href": "https://example.com/"},
+                  },
+                ]),
+              ]),
+            ]),
+          ),
+        );
+        final background = theme.scaffoldBackgroundColor;
+        expect(contrast(leafColor(tester, "Hello"), background), greaterThanOrEqualTo(textRatio));
+        expect(
+          contrast(leafSpan(tester, "Hello").style!.decorationColor ?? leafColor(tester, "Hello"), background),
+          greaterThanOrEqualTo(graphicRatio),
+        );
+      });
+
+      testWidgets('Test horizontal rule is visible, $name', (tester) async {
+        await tester.pumpWidget(
+          inScaffold(
+            theme: theme,
+            buildSubject([
+              {"type": "horizontal_rule"},
+            ]),
+          ),
+        );
+        final color = tester.widget<Container>(find.byType(Container)).color!;
+        expect(contrast(color, theme.scaffoldBackgroundColor), greaterThanOrEqualTo(graphicRatio));
+      });
+
+      testWidgets('Test code block is readable, $name', (tester) async {
+        await tester.pumpWidget(
+          inScaffold(
+            theme: theme,
+            buildSubject([
+              containerJson("code_block", [textJson("code")], attrs: {"class": "language-dart"}),
+            ]),
+          ),
+        );
+        final box = tester.widget<Container>(find.byType(Container));
+        final background = (box.decoration! as BoxDecoration).color!;
+        expect(contrast(leafColor(tester, "code"), background), greaterThanOrEqualTo(textRatio));
+      });
+
+      testWidgets('Test inline code is readable, $name', (tester) async {
+        await tester.pumpWidget(
+          inScaffold(
+            theme: theme,
+            buildSubject([
+              paragraphJson([
+                textJson("code", [
+                  {"type": "code"},
+                ]),
+              ]),
+            ]),
+          ),
+        );
+        final background = leafSpan(tester, "code").style!.backgroundColor!;
+        expect(contrast(leafColor(tester, "code"), background), greaterThanOrEqualTo(textRatio));
+      });
+    }
+  });
+
+  testWidgets(
+    'Test AlertDialog content shrinks to fit',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AlertDialog(
+            content: buildSubject([
+              paragraphJson([textJson("Hello")]),
+            ]),
+          ),
+        ),
+      );
+      final dialog = find.descendant(of: find.byType(AlertDialog), matching: find.byType(Material)).first;
+      final height = tester.getSize(dialog).height;
+      expect(
+        height,
+        lessThan(tester.view.physicalSize.height / tester.view.devicePixelRatio / 2),
+      );
+    },
+  );
 }
