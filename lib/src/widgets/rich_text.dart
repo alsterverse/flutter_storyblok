@@ -14,11 +14,13 @@ const _grey = Color(0xFF9E9E9E);
 
 typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 
+typedef _RecognizerKey = (String text, Object link, int occurrence);
+
 /// Storyblok RichText to Flutter RichText bridge
 ///
 /// Text, links and horizontal rules inherit the ambient [DefaultTextStyle], which a Material ancestor such as a
 /// `Scaffold` provides. Code uses dark text on its own light background.
-final class StoryblokRichText extends StatelessWidget {
+final class StoryblokRichText extends StatefulWidget {
   StoryblokRichText({
     super.key,
     required this.content,
@@ -26,27 +28,56 @@ final class StoryblokRichText extends StatelessWidget {
     required BlockBuilder blockBuilder,
     this.textAlign = TextAlign.start,
     TextStyle Function(RichTextLeafMarkable)? textStyleOverrides,
-  }) : _contentData = _StoryblokRichTextContentData(
-         onTapLink: onTapLink,
-         buildBlok: blockBuilder,
-         textStyleOverrides: textStyleOverrides,
-       );
+  }) : _onTapLink = onTapLink,
+       _blockBuilder = blockBuilder,
+       _textStyleOverrides = textStyleOverrides;
 
-  final _StoryblokRichTextContentData _contentData;
+  final void Function(Link)? _onTapLink;
+  final BlockBuilder _blockBuilder;
+  final TextStyle Function(RichTextLeafMarkable)? _textStyleOverrides;
   final List<RichTextContainer> content;
   final TextAlign textAlign;
+
+  @override
+  State<StoryblokRichText> createState() => _StoryblokRichTextState();
+}
+
+final class _StoryblokRichTextState extends State<StoryblokRichText> {
+  final _recognizers = <_RecognizerKey, TapGestureRecognizer>{};
+
+  @override
+  void dispose() {
+    for (final recognizer in _recognizers.values) {
+      recognizer.dispose();
+    }
+    super.dispose();
+  }
 
   /// Builds [content] as a column that is only as tall as its children.
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final contentData = _StoryblokRichTextContentData(
+      onTapLink: widget._onTapLink,
+      buildBlok: widget._blockBuilder,
+      textStyleOverrides: widget._textStyleOverrides,
+      recognizers: _recognizers,
+    );
+    final column = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: content
-          .map((e) => e.buildContainerWidget(context, _contentData)) //
+      children: widget.content
+          .map((e) => e.buildContainerWidget(context, contentData)) //
           .separatedBy(() => const SizedBox(height: 16))
           .toList(),
     );
+    // Recognizers are kept across rebuilds, even of re-parsed content, so a tap in progress survives; only those whose
+    // text and link are gone from this build are disposed.
+    _recognizers.removeWhere((key, recognizer) {
+      if (contentData.usedRecognizerKeys.contains(key)) return false;
+      recognizer.dispose();
+      return true;
+    });
+    return column;
   }
 }
 
@@ -58,11 +89,32 @@ final class _StoryblokRichTextContentData {
     required this.onTapLink,
     required this.buildBlok,
     this.textStyleOverrides,
+    required this.recognizers,
   });
   final void Function(Link)? onTapLink;
   final BlockBuilder buildBlok;
   final TextStyle Function(RichTextLeafMarkable)? textStyleOverrides;
+
+  final Map<_RecognizerKey, TapGestureRecognizer> recognizers;
+  final usedRecognizerKeys = <_RecognizerKey>{};
+  final _occurrences = <(String, Object), int>{};
+
+  TapGestureRecognizer tapRecognizer(String text, Link link, VoidCallback onTap) {
+    final linkKey = _linkKey(link);
+    final occurrence = _occurrences.update((text, linkKey), (count) => count + 1, ifAbsent: () => 0);
+    final key = (text, linkKey, occurrence);
+    usedRecognizerKeys.add(key);
+    return (recognizers[key] ??= TapGestureRecognizer())..onTap = onTap;
+  }
 }
+
+/// Returns a value that is equal for links to the same target, as [Link] does not define equality.
+Object _linkKey(Link link) => switch (link) {
+  LinkURL(:final url) => (LinkURL, url),
+  LinkAsset(:final url) => (LinkAsset, url),
+  LinkEmail(:final email) => (LinkEmail, email),
+  LinkStory(:final uuid, :final anchor) => (LinkStory, uuid, anchor),
+};
 
 // MARK: - Containers
 
@@ -197,7 +249,7 @@ extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
         contentData.onTapLink,
         (onTapLink) => mapIfNotNull(
           link?.link,
-          (link) => TapGestureRecognizer()..onTap = () => onTapLink(link),
+          (link) => contentData.tapRecognizer(text, link, () => onTapLink(link)),
         ),
       ),
       style: buildTextStyle().merge(contentData.textStyleOverrides?.call(this)),
