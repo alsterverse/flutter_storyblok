@@ -7,8 +7,5 @@ base class TextField extends BaseField {
   TextField.fromJson(super.data) : super.fromJson();
 
   @override
-  late final TypeReference type = referType(
-    "$String",
-    nullable: !isRequired,
-  );
+  late final TypeReference type = referType("$String", nullable: !isRequired);
 }

@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/wave.dart';
-import 'package:wave/config.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -46,11 +45,7 @@ class SplashScreen extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         WaveWidget(
-          config: CustomConfig(
-            colors: _colors,
-            durations: _durations,
-            heightPercentages: _heightPercentages,
-          ),
+          config: CustomConfig(colors: _colors, durations: _durations, heightPercentages: _heightPercentages),
           backgroundColor: AppColors.black,
           size: const Size(double.infinity, double.infinity),
           waveAmplitude: 10,
@@ -59,10 +54,9 @@ class SplashScreen extends StatelessWidget {
         ),
         Text(
           "Demo Space",
-          style: Theme.of(context)
-              .textTheme
-              .headlineLarge
-              ?.copyWith(color: AppColors.white, letterSpacing: -4, fontSize: 48),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineLarge?.copyWith(color: AppColors.white, letterSpacing: -4, fontSize: 48),
         ),
       ],
     );

@@ -7,10 +7,7 @@ import 'package:example/video_player.dart';
 import 'package:flutter/material.dart';
 
 class HeroSectionWidget extends StatelessWidget {
-  const HeroSectionWidget(
-    this.blok, {
-    super.key,
-  });
+  const HeroSectionWidget(this.blok, {super.key});
 
   final bloks.HeroSection blok;
 
@@ -26,30 +23,38 @@ class HeroSectionWidget extends StatelessWidget {
           backgroundImage,
         Center(
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(blok.headline ?? "",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: blok.textColor == bloks.HeroSectionTextColorOption.light ? AppColors.white : null)),
-                Text(
-                  blok.subheadline ?? "",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: blok.textColor == bloks.HeroSectionTextColorOption.light ? AppColors.white : null),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                blok.headline ?? "",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  color: blok.textColor == bloks.HeroSectionTextColorOption.light ? AppColors.white : null,
                 ),
-                const SizedBox(height: 16),
-                Wrap(
-                    spacing: 16,
-                    children: blok.buttons
-                        .map((button) => BlockButton(
-                              blokButton: button,
-                              onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
-                            ))
-                        .toList())
-              ]),
-        )
+              ),
+              Text(
+                blok.subheadline ?? "",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: blok.textColor == bloks.HeroSectionTextColorOption.light ? AppColors.white : null,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 16,
+                children: blok.buttons
+                    .map(
+                      (button) => BlockButton(
+                        blokButton: button,
+                        onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

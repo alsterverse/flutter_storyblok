@@ -16,11 +16,7 @@ class ArticlePageScreen extends StatelessWidget {
     final image = blok.image?.buildNetworkImage();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          blok.headline ?? "",
-        ),
-      ),
+      appBar: AppBar(title: Text(blok.headline ?? "")),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -33,8 +29,9 @@ class ArticlePageScreen extends StatelessWidget {
                   Text(blok.subheadline ?? "", style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 16),
                   StoryblokRichText(
-                      content: blok.text?.content ?? [],
-                      blockBuilder: (context, data) => bloks.Blok.fromJson(data).buildWidget(context)),
+                    content: blok.text?.content ?? [],
+                    blockBuilder: (context, data) => bloks.Blok.fromJson(data).buildWidget(context),
+                  ),
                   const SizedBox(height: 16),
                 ],
               ),

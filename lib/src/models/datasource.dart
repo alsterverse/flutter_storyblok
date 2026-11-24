@@ -14,11 +14,11 @@ final class Datasource {
   });
 
   factory Datasource.fromJson(JSONMap json) => Datasource(
-        id: json["id"],
-        name: json["name"],
-        slug: json["slug"],
-        dimensions: List<JSONMap>.from(json["dimensions"]).map(DatasourceDimension.fromJson).toList(),
-      );
+    id: json["id"],
+    name: json["name"],
+    slug: json["slug"],
+    dimensions: List<JSONMap>.from(json["dimensions"]).map(DatasourceDimension.fromJson).toList(),
+  );
 }
 
 final class DatasourceDimension {
@@ -39,13 +39,13 @@ final class DatasourceDimension {
   });
 
   factory DatasourceDimension.fromJson(JSONMap json) => DatasourceDimension(
-        id: json["id"],
-        datasourceId: json["datasourceId"],
-        name: json["name"],
-        entryValue: json["entryValue"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-      );
+    id: json["id"],
+    datasourceId: json["datasourceId"],
+    name: json["name"],
+    entryValue: json["entryValue"],
+    createdAt: DateTime.parse(json["createdAt"]),
+    updatedAt: DateTime.parse(json["updatedAt"]),
+  );
 }
 
 final class DatasourceEntry {
@@ -62,9 +62,9 @@ final class DatasourceEntry {
   });
 
   factory DatasourceEntry.fromJson(JSONMap json) => DatasourceEntry(
-        id: json["id"],
-        name: json["name"],
-        value: json["value"],
-        dimensionValue: json["dimensionValue"],
-      );
+    id: json["id"],
+    name: json["name"],
+    value: json["value"],
+    dimensionValue: json["dimensionValue"],
+  );
 }

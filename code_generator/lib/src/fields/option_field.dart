@@ -15,10 +15,10 @@ base class OptionField extends BaseField {
   final Uri? externalSourceUrl;
 
   OptionField.fromJson(super.data, String name, String ownerName)
-      : source = OptionSource.values.byName(data["source"] ?? OptionSource.self.name),
-        enumName = sanitizeName("${unsanitizedName("${ownerName}_$name")}_Option", isClass: true),
-        externalSourceUrl = mapIfNotNull(tryCast<String>(data["external_datasource"]), Uri.parse),
-        super.fromJson();
+    : source = OptionSource.values.byName(data["source"] ?? OptionSource.self.name),
+      enumName = sanitizeName("${unsanitizedName("${ownerName}_$name")}_Option", isClass: true),
+      externalSourceUrl = mapIfNotNull(tryCast<String>(data["external_datasource"]), Uri.parse),
+      super.fromJson();
 
   @override
   late final bool shouldSkip = switch (source) {
@@ -33,10 +33,10 @@ base class OptionField extends BaseField {
   late final TypeReference type = switch (source) {
     OptionSource.self => referType(enumName),
     OptionSource.internal_stories => referType(
-        "$StoryIdentifierUUID",
-        importUrl: 'package:flutter_storyblok/models.dart',
-        nullable: !isRequired,
-      ),
+      "$StoryIdentifierUUID",
+      importUrl: 'package:flutter_storyblok/models.dart',
+      nullable: !isRequired,
+    ),
     OptionSource.internal_languages => referType("$String", nullable: !isRequired), // TODO Language enum
     OptionSource.internal => referType(sanitizeName(data["datasource_slug"], isClass: true)),
     OptionSource.external => referType(sanitizeName(externalSourceClassName(externalSourceUrl!), isClass: true)),
@@ -46,12 +46,12 @@ base class OptionField extends BaseField {
   List<Spec>? buildSupportingClass() {
     return switch (source) {
       OptionSource.self => [
-          buildEnum(enumName, List.from(data["options"]).map((e) => MapEntry(e["name"], e["value"])))
-        ],
+        buildEnum(enumName, List.from(data["options"]).map((e) => MapEntry(e["name"], e["value"]))),
+      ],
       OptionSource.internal_stories => null,
       OptionSource.internal_languages => null,
       OptionSource.internal => null,
-      OptionSource.external => null
+      OptionSource.external => null,
     };
   }
 
@@ -63,8 +63,11 @@ base class OptionField extends BaseField {
     final type = this.type.nonNullable;
     return switch (source) {
       OptionSource.self => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),
-      OptionSource.internal_stories =>
-        initializerFromRequired(isRequired, valueExpression, type.invoke(valueExpression)),
+      OptionSource.internal_stories => initializerFromRequired(
+        isRequired,
+        valueExpression,
+        type.invoke(valueExpression),
+      ),
       OptionSource.internal_languages => valueExpression,
       OptionSource.internal => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),
       OptionSource.external => buildInstantiateEnum(type.symbol, valueExpression.code.toString()),

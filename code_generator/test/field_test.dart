@@ -27,10 +27,7 @@ void main() {
   group("Test Bloks field", () {
     test("Test default blok", () {
       final field = BlokField.fromJson({}, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final List<Blok> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final List<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Blok.fromJson).toList()"),
@@ -38,42 +35,42 @@ void main() {
     });
     test("Test required blok", () {
       final field = BlokField.fromJson({"required": true}, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final List<Blok> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final List<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Blok.fromJson).toList()"),
       );
     });
     test("Test restricted blok", () {
-      final field = BlokField.fromJson({
-        "restrict_components": true,
-        "component_whitelist": ["foo"],
-      }, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final List<Foo> foo;"),
+      final field = BlokField.fromJson(
+        {
+          "restrict_components": true,
+          "component_whitelist": ["foo"],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.build("foo"), emitter.equalsCode(r"final List<Foo> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList()"),
       );
     });
     test("Test multi-restricted blok", () async {
-      final field = BlokField.fromJson({
-        "restrict_components": true,
-        "component_whitelist": ["foo", "bar"],
-      }, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final List<BarFooRestrictedTypes> foo;"),
+      final field = BlokField.fromJson(
+        {
+          "restrict_components": true,
+          "component_whitelist": ["foo", "bar"],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.build("foo"), emitter.equalsCode(r"final List<BarFooRestrictedTypes> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList()"),
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList()",
+        ),
       );
       final enu = List<cb.Class>.from(field.buildSupportingClass() ?? []);
       expect(enu.length, 3);
@@ -82,52 +79,58 @@ void main() {
       expect(enu[2].name, "BarFooRestrictedTypesBar");
     });
     test("Test single restricted blok", () {
-      final field = BlokField.fromJson({
-        "maximum": 1,
-        "restrict_components": true,
-        "component_whitelist": ["foo"],
-      }, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final Foo? foo;"),
+      final field = BlokField.fromJson(
+        {
+          "maximum": 1,
+          "restrict_components": true,
+          "component_whitelist": ["foo"],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.build("foo"), emitter.equalsCode(r"final Foo? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList().firstOrNull"),
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList().firstOrNull",
+        ),
       );
     });
     test("Test required single restricted blok", () {
-      final field = BlokField.fromJson({
-        "required": true,
-        "maximum": 1,
-        "restrict_components": true,
-        "component_whitelist": ["foo"],
-      }, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final Foo foo;"),
+      final field = BlokField.fromJson(
+        {
+          "required": true,
+          "maximum": 1,
+          "restrict_components": true,
+          "component_whitelist": ["foo"],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.build("foo"), emitter.equalsCode(r"final Foo foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList().first"),
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(Foo.fromJson).toList().first",
+        ),
       );
     });
     test("Test single multi-restricted blok", () {
-      final field = BlokField.fromJson({
-        "maximum": 1,
-        "restrict_components": true,
-        "component_whitelist": ["foo", "bar"],
-      }, "foo", "bar");
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final BarFooRestrictedTypes? foo;"),
+      final field = BlokField.fromJson(
+        {
+          "maximum": 1,
+          "restrict_components": true,
+          "component_whitelist": ["foo", "bar"],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.build("foo"), emitter.equalsCode(r"final BarFooRestrictedTypes? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList().firstOrNull"),
+          "List<Map<String, dynamic>>.from($valueExpression ?? const []).map(BarFooRestrictedTypes.fromJson).toList().firstOrNull",
+        ),
       );
     });
   });
@@ -136,25 +139,13 @@ void main() {
   group("Test Text field", () {
     test("Test default text", () {
       final field = TextField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final String? foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final String? foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
     });
     test("Test required text", () {
       final field = TextField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final String foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final String foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
     });
   });
 
@@ -162,25 +153,13 @@ void main() {
   group("Test TextArea field", () {
     test("Test default textarea", () {
       final field = TextAreaField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final String? foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final String? foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
     });
     test("Test required textarea", () {
       final field = TextAreaField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final String foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final String foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
     });
   });
 
@@ -188,10 +167,7 @@ void main() {
   group("Test Markdown field", () {
     test("Test default markdown", () {
       final field = MarkdownField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final $Markdown? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final $Markdown? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("$valueExpression == null ? null : $Markdown($valueExpression)"),
@@ -199,14 +175,8 @@ void main() {
     });
     test("Test required markdown", () {
       final field = MarkdownField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final $Markdown foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$Markdown($valueExpression)"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final $Markdown foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("$Markdown($valueExpression)"));
     });
   });
 
@@ -214,10 +184,7 @@ void main() {
   group("Test Number field", () {
     test("Test default number", () {
       final field = NumberField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final double? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final double? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("double.tryParse($valueExpression)"),
@@ -225,36 +192,18 @@ void main() {
     });
     test("Test required number", () {
       final field = NumberField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final double foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("double.parse($valueExpression)"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final double foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("double.parse($valueExpression)"));
     });
     test("Test zero-decimal number", () {
       final field = NumberField.fromJson({"decimals": 0});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final int? foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("int.tryParse($valueExpression)"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final int? foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("int.tryParse($valueExpression)"));
     });
     test("Test required zero-decimal number", () {
       final field = NumberField.fromJson({"required": true, "decimals": 0});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final int foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("int.parse($valueExpression)"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final int foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("int.parse($valueExpression)"));
     });
   });
 
@@ -262,10 +211,7 @@ void main() {
   group("Test DateTime field", () {
     test("Test default datetime", () {
       final field = DateTimeField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DateTime? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final DateTime? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DateTime.tryParse($valueExpression)"),
@@ -273,10 +219,7 @@ void main() {
     });
     test("Test required datetime", () {
       final field = DateTimeField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final DateTime foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final DateTime foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DateTime.parse($valueExpression)"),
@@ -288,25 +231,13 @@ void main() {
   group("Test Boolean field", () {
     test("Test default boolean", () {
       final field = BooleanField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode(r"final bool foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("$valueExpression ?? false"),
-      );
+      expect(field.build("foo"), emitter.equalsCode(r"final bool foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("$valueExpression ?? false"));
     });
     test("Test required datetime", () {
       final field = BooleanField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final bool foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final bool foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
     });
   });
 
@@ -314,10 +245,7 @@ void main() {
   group("Test RichText field", () {
     test("Test default richtext", () {
       final field = RichTextField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final RichText? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final RichText? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("$valueExpression == null ? null : RichText.fromJson($valueExpression)"),
@@ -326,10 +254,7 @@ void main() {
 
     test("Test required richtext", () {
       final field = RichTextField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final RichText foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final RichText foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("RichText.fromJson($valueExpression)"),
@@ -344,18 +269,19 @@ void main() {
       expect(field.shouldSkip, true);
     });
     test("Test self singleoption", () async {
-      final field = OptionField.fromJson({
-        "source": "self",
-        "options": [
-          {"name": "Foo", "value": "foo123"},
-          {"name": "Bar", "value": "  bar !?=)€(%&/& 123 åäö "},
-        ],
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final BarFooOption foo;"),
+      final field = OptionField.fromJson(
+        {
+          "source": "self",
+          "options": [
+            {"name": "Foo", "value": "foo123"},
+            {"name": "Bar", "value": "  bar !?=)€(%&/& 123 åäö "},
+          ],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final BarFooOption foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("BarFooOption.fromName($valueExpression)"),
@@ -363,167 +289,90 @@ void main() {
       final classes = field.buildSupportingClass();
       expect(classes?.length, 1);
       final enumm = classes!.cast<cb.Enum>().first;
-      expect(
-        enumm.values.map(
-          (e) => (e.name, e.arguments.first.code.toString()),
-        ),
-        [
-          ("foo", "'foo123'"),
-          ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
-          ("unknown", "'unknown'"),
-        ],
-      );
+      expect(enumm.values.map((e) => (e.name, e.arguments.first.code.toString())), [
+        ("foo", "'foo123'"),
+        ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
+        ("unknown", "'unknown'"),
+      ]);
     });
     test("Test story singleoption", () {
-      final field = OptionField.fromJson({
-        "source": "internal_stories",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"source": "internal_stories"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final StoryIdentifierUUID? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final StoryIdentifierUUID? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("$valueExpression == null ? null : StoryIdentifierUUID($valueExpression)"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.buildSupportingClass(), null);
     });
     test("Test required story singleoption", () {
-      final field = OptionField.fromJson({
-        "required": true,
-        "source": "internal_stories",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"required": true, "source": "internal_stories"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final StoryIdentifierUUID foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final StoryIdentifierUUID foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("StoryIdentifierUUID($valueExpression)"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.buildSupportingClass(), null);
     });
     test("Test language singleoption", () {
-      final field = OptionField.fromJson({
-        "source": "internal_languages",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"source": "internal_languages"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final String? foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.build("foo"), emitter.equalsCode("final String? foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
+      expect(field.buildSupportingClass(), null);
     });
     test("Test required language singleoption", () {
-      final field = OptionField.fromJson({
-        "required": true,
-        "source": "internal_languages",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"required": true, "source": "internal_languages"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final String foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode(valueExpression),
-      );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.build("foo"), emitter.equalsCode("final String foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode(valueExpression));
+      expect(field.buildSupportingClass(), null);
     });
     test("Test default datasource singleoption", () {
-      final field = OptionField.fromJson({
-        "source": "internal",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"source": "internal"}, "foo", "bar");
       expect(field.shouldSkip, true);
     });
     test("Test internal singleoption", () {
-      final field = OptionField.fromJson({
-        "source": "internal",
-        "datasource_slug": "foo",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"source": "internal", "datasource_slug": "foo"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Foo foo;"),
-      );
-      expect(
-        field.buildInitializer(valueExpression.expression),
-        emitter.equalsCode("Foo.fromName($valueExpression)"),
-      );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Foo foo;"));
+      expect(field.buildInitializer(valueExpression.expression), emitter.equalsCode("Foo.fromName($valueExpression)"));
+      expect(field.buildSupportingClass(), null);
     });
     test("Test default external singleoption", () {
-      final field = OptionField.fromJson({
-        "source": "external",
-      }, "foo", "bar");
+      final field = OptionField.fromJson({"source": "external"}, "foo", "bar");
       expect(field.shouldSkip, true);
     });
     test("Test external singleoption", () async {
-      final field = OptionField.fromJson({
-        "source": "external",
-        "external_datasource": "https://foo.bar/baz.json",
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final HttpsFooBarBazJson foo;"),
+      final field = OptionField.fromJson(
+        {"source": "external", "external_datasource": "https://foo.bar/baz.json"},
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final HttpsFooBarBazJson foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("HttpsFooBarBazJson.fromName($valueExpression)"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
-      expect(
-        field.getExternalDatasourceUrl(),
-        Uri.parse("https://foo.bar/baz.json"),
-      );
+      expect(field.buildSupportingClass(), null);
+      expect(field.getExternalDatasourceUrl(), Uri.parse("https://foo.bar/baz.json"));
     });
     test("Test failed fetch external singleoption", () async {
-      final field = OptionField.fromJson({
-        "source": "external",
-        "external_datasource": "https://foo.bar/baz",
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final HttpsFooBarBaz foo;"),
+      final field = OptionField.fromJson(
+        {"source": "external", "external_datasource": "https://foo.bar/baz"},
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final HttpsFooBarBaz foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("HttpsFooBarBaz.fromName($valueExpression)"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
-      expect(
-        field.getExternalDatasourceUrl(),
-        Uri.parse("https://foo.bar/baz"),
-      );
+      expect(field.buildSupportingClass(), null);
+      expect(field.getExternalDatasourceUrl(), Uri.parse("https://foo.bar/baz"));
     });
   });
 
@@ -534,18 +383,19 @@ void main() {
       expect(field.shouldSkip, true);
     });
     test("Test self multioption", () async {
-      final field = OptionsField.fromJson({
-        "source": "self",
-        "options": [
-          {"name": "Foo", "value": "foo123"},
-          {"name": "Bar", "value": "  bar !?=)€(%&/& 123 åäö "},
-        ],
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<BarFooOption> foo;"),
+      final field = OptionsField.fromJson(
+        {
+          "source": "self",
+          "options": [
+            {"name": "Foo", "value": "foo123"},
+            {"name": "Bar", "value": "  bar !?=)€(%&/& 123 åäö "},
+          ],
+        },
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final List<BarFooOption> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(BarFooOption.fromName).toList()"),
@@ -553,129 +403,79 @@ void main() {
       final classes = field.buildSupportingClass();
       expect(classes?.length, 1);
       final enumm = classes!.cast<cb.Enum>().first;
-      expect(
-        enumm.values.map(
-          (e) => (e.name, e.arguments.first.code.toString()),
-        ),
-        [
-          ("foo", "'foo123'"),
-          ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
-          ("unknown", "'unknown'"),
-        ],
-      );
+      expect(enumm.values.map((e) => (e.name, e.arguments.first.code.toString())), [
+        ("foo", "'foo123'"),
+        ("bar", "'  bar !?=)€(%&/& 123 åäö '"),
+        ("unknown", "'unknown'"),
+      ]);
     });
     test("Test story multioption", () {
-      final field = OptionsField.fromJson({
-        "source": "internal_stories",
-      }, "foo", "bar");
+      final field = OptionsField.fromJson({"source": "internal_stories"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<StoryIdentifierUUID> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<StoryIdentifierUUID> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(StoryIdentifierUUID.new).toList()"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.buildSupportingClass(), null);
     });
     test("Test language multioption", () {
-      final field = OptionsField.fromJson({
-        "source": "internal_languages",
-      }, "foo", "bar");
+      final field = OptionsField.fromJson({"source": "internal_languages"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<String> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<String> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const [])"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.buildSupportingClass(), null);
     });
     test("Test default datasource multioption", () {
-      final field = OptionsField.fromJson({
-        "source": "internal",
-      }, "foo", "bar");
+      final field = OptionsField.fromJson({"source": "internal"}, "foo", "bar");
       expect(field.shouldSkip, true);
     });
     test("Test internal multioption", () {
-      final field = OptionsField.fromJson({
-        "source": "internal",
-        "datasource_slug": "foo",
-      }, "foo", "bar");
+      final field = OptionsField.fromJson({"source": "internal", "datasource_slug": "foo"}, "foo", "bar");
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<Foo> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<Foo> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(Foo.fromName).toList()"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
+      expect(field.buildSupportingClass(), null);
     });
     test("Test default external multioption", () {
-      final field = OptionsField.fromJson({
-        "source": "external",
-      }, "foo", "bar");
+      final field = OptionsField.fromJson({"source": "external"}, "foo", "bar");
       expect(field.shouldSkip, true);
     });
     test("Test external multioption", () async {
-      final field = OptionsField.fromJson({
-        "source": "external",
-        "external_datasource": "https://foo.bar/baz.json",
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<HttpsFooBarBazJson> foo;"),
+      final field = OptionsField.fromJson(
+        {"source": "external", "external_datasource": "https://foo.bar/baz.json"},
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final List<HttpsFooBarBazJson> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(HttpsFooBarBazJson.fromName).toList()"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
-      expect(
-        field.getExternalDatasourceUrl(),
-        Uri.parse("https://foo.bar/baz.json"),
-      );
+      expect(field.buildSupportingClass(), null);
+      expect(field.getExternalDatasourceUrl(), Uri.parse("https://foo.bar/baz.json"));
     });
     test("Test failed fetch external multioption", () async {
-      final field = OptionsField.fromJson({
-        "source": "external",
-        "external_datasource": "https://foo.bar/baz",
-      }, "foo", "bar");
-      expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<HttpsFooBarBaz> foo;"),
+      final field = OptionsField.fromJson(
+        {"source": "external", "external_datasource": "https://foo.bar/baz"},
+        "foo",
+        "bar",
       );
+      expect(field.shouldSkip, false);
+      expect(field.build("foo"), emitter.equalsCode("final List<HttpsFooBarBaz> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("List<String>.from($valueExpression ?? const []).map(HttpsFooBarBaz.fromName).toList()"),
       );
-      expect(
-        field.buildSupportingClass(),
-        null,
-      );
-      expect(
-        field.getExternalDatasourceUrl(),
-        Uri.parse("https://foo.bar/baz"),
-      );
+      expect(field.buildSupportingClass(), null);
+      expect(field.getExternalDatasourceUrl(), Uri.parse("https://foo.bar/baz"));
     });
   });
 
@@ -683,22 +483,17 @@ void main() {
   group("Test Asset field", () {
     test("Test default asset", () {
       final field = AssetField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Asset? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Asset? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "$valueExpression == null || $valueExpression [ 'filename' ] == null ? null : Asset.fromJson($valueExpression)"),
+          "$valueExpression == null || $valueExpression [ 'filename' ] == null ? null : Asset.fromJson($valueExpression)",
+        ),
       );
     });
     test("Test required asset", () {
       final field = AssetField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Asset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Asset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Asset.fromJson($valueExpression)"),
@@ -709,10 +504,7 @@ void main() {
         "required": true,
         "filetypes": ["images"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final ImageAsset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final ImageAsset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("ImageAsset.fromJson($valueExpression)"),
@@ -723,10 +515,7 @@ void main() {
         "required": true,
         "filetypes": ["videos"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final VideoAsset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final VideoAsset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("VideoAsset.fromJson($valueExpression)"),
@@ -737,10 +526,7 @@ void main() {
         "required": true,
         "filetypes": ["audios"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final AudioAsset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final AudioAsset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("AudioAsset.fromJson($valueExpression)"),
@@ -751,10 +537,7 @@ void main() {
         "required": true,
         "filetypes": ["texts"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final TextAsset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final TextAsset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("TextAsset.fromJson($valueExpression)"),
@@ -765,10 +548,7 @@ void main() {
         "required": true,
         "filetypes": ["images", "videos", "audios", "texts"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Asset foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Asset foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Asset.fromJson($valueExpression)"),
@@ -780,10 +560,7 @@ void main() {
   group("Test MultiAsset field", () {
     test("Test default multiasset", () {
       final field = MultiAssetField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<Asset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<Asset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -793,10 +570,7 @@ void main() {
     });
     test("Test required multiasset", () {
       final field = MultiAssetField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<Asset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<Asset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -809,10 +583,7 @@ void main() {
         "required": true,
         "filetypes": ["images"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<ImageAsset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<ImageAsset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -825,10 +596,7 @@ void main() {
         "required": true,
         "filetypes": ["videos"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<VideoAsset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<VideoAsset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -841,10 +609,7 @@ void main() {
         "required": true,
         "filetypes": ["audios"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<AudioAsset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<AudioAsset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -857,10 +622,7 @@ void main() {
         "required": true,
         "filetypes": ["texts"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<TextAsset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<TextAsset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -873,10 +635,7 @@ void main() {
         "required": true,
         "filetypes": ["images", "videos", "audios", "texts"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final List<Asset> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final List<Asset> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
@@ -890,65 +649,41 @@ void main() {
   group("Test Link field", () {
     test("Test default link", () {
       final field = LinkField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DefaultLink<Blok>? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final DefaultLink<Blok>? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "$valueExpression is! Map<dynamic, dynamic> ? null : DefaultLink<Blok>.fromJson($valueExpression)"),
+          "$valueExpression is! Map<dynamic, dynamic> ? null : DefaultLink<Blok>.fromJson($valueExpression)",
+        ),
       );
     });
     test("Test required link", () {
       final field = LinkField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DefaultLink<Blok> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final DefaultLink<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DefaultLink<Blok>.fromJson($valueExpression)"),
       );
     });
     test("Test asset link", () {
-      final field = LinkField.fromJson({
-        "required": true,
-        "asset_link_type": true,
-      });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DefaultWithAssetLink<Blok> foo;"),
-      );
+      final field = LinkField.fromJson({"required": true, "asset_link_type": true});
+      expect(field.build("foo"), emitter.equalsCode("final DefaultWithAssetLink<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DefaultWithAssetLink<Blok>.fromJson($valueExpression)"),
       );
     });
     test("Test email link", () {
-      final field = LinkField.fromJson({
-        "required": true,
-        "email_link_type": true,
-      });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DefaultWithEmailLink<Blok> foo;"),
-      );
+      final field = LinkField.fromJson({"required": true, "email_link_type": true});
+      expect(field.build("foo"), emitter.equalsCode("final DefaultWithEmailLink<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DefaultWithEmailLink<Blok>.fromJson($valueExpression)"),
       );
     });
     test("Test omni-link", () {
-      final field = LinkField.fromJson({
-        "required": true,
-        "asset_link_type": true,
-        "email_link_type": true,
-      });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Link<Blok> foo;"),
-      );
+      final field = LinkField.fromJson({"required": true, "asset_link_type": true, "email_link_type": true});
+      expect(field.build("foo"), emitter.equalsCode("final Link<Blok> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Link<Blok>.fromJson($valueExpression)"),
@@ -960,10 +695,7 @@ void main() {
         "restrict_content_types": true,
         "component_whitelist": ["foo"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final DefaultLink<Foo> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final DefaultLink<Foo> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("DefaultLink<Foo>.fromJson($valueExpression)"),
@@ -977,10 +709,7 @@ void main() {
         "restrict_content_types": true,
         "component_whitelist": ["foo"],
       });
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Link<Foo> foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Link<Foo> foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Link<Foo>.fromJson($valueExpression)"),
@@ -992,10 +721,7 @@ void main() {
   group("Test Table field", () {
     test("Test default table", () {
       final field = TableField.fromJson({});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Table foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Table foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Table.fromJson($valueExpression)"),
@@ -1003,10 +729,7 @@ void main() {
     });
     test("Test required table", () {
       final field = TableField.fromJson({"required": true});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final Table foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final Table foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("Table.fromJson($valueExpression)"),
@@ -1023,22 +746,17 @@ void main() {
     test("Test basic plugin", () {
       final field = PluginField.fromJson({"field_type": "bar"});
       expect(field.shouldSkip, false);
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final $Plugin? foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final $Plugin? foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode(
-            "$valueExpression is! Map<dynamic, dynamic> ? null : $Plugin.fromJson($valueExpression, 'bar', )"),
+          "$valueExpression is! Map<dynamic, dynamic> ? null : $Plugin.fromJson($valueExpression, 'bar', )",
+        ),
       );
     });
     test("Test required plugin", () {
       final field = PluginField.fromJson({"required": true, "field_type": "bar"});
-      expect(
-        field.build("foo"),
-        emitter.equalsCode("final $Plugin foo;"),
-      );
+      expect(field.build("foo"), emitter.equalsCode("final $Plugin foo;"));
       expect(
         field.buildInitializer(valueExpression.expression),
         emitter.equalsCode("$Plugin.fromJson($valueExpression, 'bar', )"),

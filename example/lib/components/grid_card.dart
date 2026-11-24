@@ -33,11 +33,7 @@ class GridCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: hexColor.isEmpty ? AppColors.white : StoryblokColor.fromString(hexColor),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: AppColors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 4)),
         ],
         borderRadius: BorderRadius.circular(16),
       ),
@@ -45,17 +41,12 @@ class GridCardWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.network(
-            blok.icon?.fileName ?? "",
-            width: size,
-          ),
-          Text(
-            blok.label ?? "",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor),
-          ),
+          SvgPicture.network(blok.icon?.fileName ?? "", width: size),
+          Text(blok.label ?? "", style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor)),
           const SizedBox(height: 16),
           Flexible(
-              child: Text(blok.text ?? "", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor))),
+            child: Text(blok.text ?? "", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor)),
+          ),
           const SizedBox(height: 16),
           if (blok.button != null)
             BlockButton(

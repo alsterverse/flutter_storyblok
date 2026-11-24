@@ -12,12 +12,8 @@ import 'utils/utils.dart';
 typedef DatasourceWithEntries = ({Datasource datasource, List<DatasourceEntry> entries});
 
 class StoryblokHttpClient {
-  StoryblokHttpClient(
-    this.spaceId,
-    this.authorization,
-    this.region,
-    int rateLimit,
-  ) : _rateLimit = _RateLimit(rateLimit);
+  StoryblokHttpClient(this.spaceId, this.authorization, this.region, int rateLimit)
+    : _rateLimit = _RateLimit(rateLimit);
 
   final String spaceId;
   final String authorization;

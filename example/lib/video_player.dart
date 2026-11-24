@@ -20,9 +20,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final videoUrl = Uri.parse(widget.backgroundVideo.fileName);
     _controller = VideoPlayerController.networkUrl(videoUrl)
       ..setLooping(true)
-      ..initialize().then((_) => setState(() {
-            _controller.play();
-          }));
+      ..initialize().then(
+        (_) => setState(() {
+          _controller.play();
+        }),
+      );
   }
 
   @override
@@ -34,10 +36,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     if (_controller.value.isInitialized) {
-      return AspectRatio(
-        aspectRatio: _controller.value.aspectRatio,
-        child: VideoPlayer(_controller),
-      );
+      return AspectRatio(aspectRatio: _controller.value.aspectRatio, child: VideoPlayer(_controller));
     } else {
       return const Center(child: CircularProgressIndicator());
     }

@@ -17,7 +17,7 @@ class FeaturedArticlesSectionWidget extends StatelessWidget {
       color: switch (blok.backgroundColor) {
         bloks.BackgroundColors.light => AppColors.background,
         bloks.BackgroundColors.white => AppColors.white,
-        bloks.BackgroundColors.unknown => AppColors.white
+        bloks.BackgroundColors.unknown => AppColors.white,
       },
       child: Column(
         children: [
@@ -74,24 +74,14 @@ class FeaturedArticlesSectionWidget extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      article.headline ?? "",
-                                      style: Theme.of(context).textTheme.headlineMedium,
-                                    ),
+                                    Text(article.headline ?? "", style: Theme.of(context).textTheme.headlineMedium),
                                     const SizedBox(height: 16),
-                                    Text(
-                                      article.teaser ?? "",
-                                    ),
+                                    Text(article.teaser ?? ""),
                                     const SizedBox(height: 32),
                                     TextButton(
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Read more",
-                                          ),
-                                          Icon(Icons.arrow_forward)
-                                        ],
+                                        children: [Text("Read more"), Icon(Icons.arrow_forward)],
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).push(MaterialPageRoute(builder: article.buildWidget));
@@ -99,7 +89,7 @@ class FeaturedArticlesSectionWidget extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -108,7 +98,7 @@ class FeaturedArticlesSectionWidget extends StatelessWidget {
                   },
                 ),
               )
-              .toList()
+              .toList(),
         ],
       ),
     );

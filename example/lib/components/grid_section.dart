@@ -13,22 +13,14 @@ class GridSectionWidget extends StatelessWidget {
       color: switch (blok.backgroundColor) {
         bloks.BackgroundColors.light => AppColors.background,
         bloks.BackgroundColors.white => AppColors.white,
-        bloks.BackgroundColors.unknown => AppColors.background
+        bloks.BackgroundColors.unknown => AppColors.background,
       },
       padding: blok.backgroundColor == bloks.BackgroundColors.white ? const EdgeInsets.symmetric(vertical: 32) : null,
       child: Column(
         children: [
-          Text(
-            blok.headline ?? "",
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
+          Text(blok.headline ?? "", style: Theme.of(context).textTheme.headlineLarge, textAlign: TextAlign.center),
           if (blok.lead != null || blok.lead!.isNotEmpty)
-            Text(
-              blok.lead!,
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
-            ),
+            Text(blok.lead!, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Wrap(
@@ -41,7 +33,7 @@ class GridSectionWidget extends StatelessWidget {
                 };
               }).toList(),
             ),
-          )
+          ),
         ],
       ),
     );

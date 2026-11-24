@@ -1,7 +1,1 @@
-enum Region {
-  eu,
-  us,
-  ca,
-  ap,
-  cn;
-}
+enum Region { eu, us, ca, ap, cn }

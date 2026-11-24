@@ -14,25 +14,28 @@ final class OptionsField extends OptionField {
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) {
-    final expression = referList(type: referType("$String")).invokeNamed(
-      "from",
-      valueExpression.ifNullThen(literalEmptyList()),
-    );
+    final expression = referList(
+      type: referType("$String"),
+    ).invokeNamed("from", valueExpression.ifNullThen(literalEmptyList()));
 
     return switch (source) {
-      OptionSource.self => expression //
-          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
-          .invokeNamed("toList"),
-      OptionSource.internal_stories => expression //
-          .invokeNamed("map", _type.property("new"))
-          .invokeNamed("toList"),
+      OptionSource.self =>
+        expression //
+            .invokeNamed("map", buildInstantiateEnum(_type.symbol))
+            .invokeNamed("toList"),
+      OptionSource.internal_stories =>
+        expression //
+            .invokeNamed("map", _type.property("new"))
+            .invokeNamed("toList"),
       OptionSource.internal_languages => expression,
-      OptionSource.internal => expression //
-          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
-          .invokeNamed("toList"),
-      OptionSource.external => expression //
-          .invokeNamed("map", buildInstantiateEnum(_type.symbol))
-          .invokeNamed("toList"),
+      OptionSource.internal =>
+        expression //
+            .invokeNamed("map", buildInstantiateEnum(_type.symbol))
+            .invokeNamed("toList"),
+      OptionSource.external =>
+        expression //
+            .invokeNamed("map", buildInstantiateEnum(_type.symbol))
+            .invokeNamed("toList"),
     };
   }
 }

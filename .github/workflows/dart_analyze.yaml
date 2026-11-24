@@ -33,4 +33,4 @@ jobs:
         run: dart analyze
 
       - name: Run tests
-        run: cd code_generator && dart test && cd ..
+        run: flutter test && cd code_generator && dart test && cd ..

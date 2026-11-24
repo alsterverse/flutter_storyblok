@@ -16,9 +16,9 @@ class StoryblokCodegen {
     required List<DatasourceWithEntries> datasourceWithEntries,
     required this.getExternalDatasourceEntries,
   }) : internalDatasources = datasourceWithEntries.map((e) {
-          final (:datasource, :entries) = e;
-          return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
-        }).toList();
+         final (:datasource, :entries) = e;
+         return buildEnum(datasource.slug, entries.map((e) => MapEntry(e.name, e.value)));
+       }).toList();
 
   final List<Component> components;
   final List<Enum> internalDatasources;
@@ -38,25 +38,25 @@ class StoryblokCodegen {
     // enum <name> {
     lib.body.addAll(internalDatasources);
 
-    lib.body.addAll(await Future.wait(
-      _externalDatasourceUrls.map((e) => buildEnumFromExternalSource(e, getExternalDatasourceEntries)),
-    ));
+    lib.body.addAll(
+      await Future.wait(
+        _externalDatasourceUrls.map((e) => buildEnumFromExternalSource(e, getExternalDatasourceEntries)),
+      ),
+    );
 
     // sealed class Blok {
     final (:sealedClass, :classes) = buildBloksSealedClass(
       name: "Blok",
       classes: components
-          .map((e) => (
-                key: e.key,
-                builder: e.builder,
-                initializer: (Expression expression) => expression.code,
-              ))
+          .map((e) => (key: e.key, builder: e.builder, initializer: (Expression expression) => expression.code))
           .toList(),
       throwUnrecognized: false,
     );
-    lib.body.add((sealedClass //
-          ..docs.add("/// This is the base class for all blocks defined in `Block Library`"))
-        .build());
+    lib.body.add(
+      (sealedClass //
+            ..docs.add("/// This is the base class for all blocks defined in `Block Library`"))
+          .build(),
+    );
     lib.body.addAll(classes);
 
     final library = lib.build();
@@ -71,9 +71,13 @@ class StoryblokCodegen {
 
       final con = ConstructorBuilder();
       con.name = "fromJson";
-      con.requiredParameters.add(Parameter((p) => p
-        ..type = "$JSONMap".reference()
-        ..name = "json"));
+      con.requiredParameters.add(
+        Parameter(
+          (p) => p
+            ..type = "$JSONMap".reference()
+            ..name = "json",
+        ),
+      );
 
       // fields
       for (final entry in schema.entries) {

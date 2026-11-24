@@ -28,26 +28,39 @@ sealed class Foo {
 
     test('Test throw sealed class', () {
       final (:sealedClass, :classes) = buildBloksSealedClass(
-          name: "foo",
-          classes: [
-            (
-              key: "bar",
-              builder: ClassBuilder()
-                ..name = "bar"
-                ..fields.add(Field((f) => f
-                  ..modifier = FieldModifier.final$
-                  ..name = "bar"
-                  ..type = "String".reference()))
-                ..constructors.add(Constructor((con) => con
-                  ..name = "fromJson"
-                  ..requiredParameters.add(Parameter((p) => p
-                    ..type = "$JSONMap".reference()
-                    ..name = "json")) //
-                  ..initializers.add("bar".expression.assign("json".expression.index(literalString("bar"))).code))),
-              initializer: (Expression expression) => expression.code,
-            )
-          ],
-          throwUnrecognized: false);
+        name: "foo",
+        classes: [
+          (
+            key: "bar",
+            builder: ClassBuilder()
+              ..name = "bar"
+              ..fields.add(
+                Field(
+                  (f) => f
+                    ..modifier = FieldModifier.final$
+                    ..name = "bar"
+                    ..type = "String".reference(),
+                ),
+              )
+              ..constructors.add(
+                Constructor(
+                  (con) => con
+                    ..name = "fromJson"
+                    ..requiredParameters.add(
+                      Parameter(
+                        (p) => p
+                          ..type = "$JSONMap".reference()
+                          ..name = "json",
+                      ),
+                    ) //
+                    ..initializers.add("bar".expression.assign("json".expression.index(literalString("bar"))).code),
+                ),
+              ),
+            initializer: (Expression expression) => expression.code,
+          ),
+        ],
+        throwUnrecognized: false,
+      );
       expect(
         sealedClass.build(),
         emitter.equalsCode(r"""

@@ -20,10 +20,7 @@ class _BannerReferenceWidgetState extends State<BannerReferenceWidget> {
 
   void showNextSlide() {
     if (pageController.hasClients) {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
+      pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
   }
 
@@ -71,8 +68,11 @@ class _BannerReferenceWidgetState extends State<BannerReferenceWidget> {
                       children: List.generate(bannerList.length, (index) {
                         return InkWell(
                           onTap: () {
-                            pageController.animateToPage(index,
-                                duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
                           },
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),

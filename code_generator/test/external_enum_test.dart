@@ -10,7 +10,7 @@ void main() {
     switch (url.toString()) {
       case "https://foo.bar/baz.json":
         return [
-          {"name": "Foo", "value": "foo123"}
+          {"name": "Foo", "value": "foo123"},
         ];
       default:
         throw "Failed";
@@ -19,12 +19,13 @@ void main() {
 
   group('Test code generator external datasource enums', () {
     test('Test generate external datasource enum class', () async {
-      final enumm =
-          await buildEnumFromExternalSource(Uri.parse("https://foo.bar/baz.json"), getExternalDatasourceEntries);
+      final enumm = await buildEnumFromExternalSource(
+        Uri.parse("https://foo.bar/baz.json"),
+        getExternalDatasourceEntries,
+      );
       expect(
         enumm,
-        emitter.equalsCode(
-          r"""
+        emitter.equalsCode(r"""
 // Datasource from https://foo.bar/baz.json
 enum HttpsFooBarBazJson {
   foo('foo123'),
@@ -41,8 +42,7 @@ enum HttpsFooBarBazJson {
 
   final String raw;
 }
-""",
-        ),
+"""),
       );
     });
 
@@ -50,8 +50,7 @@ enum HttpsFooBarBazJson {
       final enumm = await buildEnumFromExternalSource(Uri.parse("https://foo.bar/baz"), getExternalDatasourceEntries);
       expect(
         enumm,
-        emitter.equalsCode(
-          r"""
+        emitter.equalsCode(r"""
 // Datasource from https://foo.bar/baz
 // Error while fetching: Failed
 enum HttpsFooBarBaz {
@@ -67,8 +66,7 @@ enum HttpsFooBarBaz {
 
   final String raw;
 }
-""",
-        ),
+"""),
       );
     });
   });
