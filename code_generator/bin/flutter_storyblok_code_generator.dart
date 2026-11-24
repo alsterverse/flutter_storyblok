@@ -33,12 +33,7 @@ class GenerateCommand extends Command {
   static const _outPutFileName = "bloks.generated.dart";
 
   GenerateCommand() {
-    argParser.addOption(
-      _optionSpaceId,
-      abbr: "s",
-      help: "Your Storyblok Space ID",
-      mandatory: true,
-    );
+    argParser.addOption(_optionSpaceId, abbr: "s", help: "Your Storyblok Space ID", mandatory: true);
     argParser.addOption(
       _optionPAT,
       abbr: "p",

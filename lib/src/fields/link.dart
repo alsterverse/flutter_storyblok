@@ -62,10 +62,10 @@ final class LinkURL<StoryContent> extends DefaultLink<StoryContent> {
 /// Generic type StoryContent is used to resolve a type-safe story
 final class LinkStory<StoryContent> extends DefaultLink<StoryContent> {
   LinkStory.fromJson(JSONMap json)
-      : uuid = json["id"] ?? json["uuid"],
-        fullSlug = json["cached_url"] ?? json["href"],
-        anchor = json["anchor"],
-        target = json["target"];
+    : uuid = json["id"] ?? json["uuid"],
+      fullSlug = json["cached_url"] ?? json["href"],
+      anchor = json["anchor"],
+      target = json["target"];
 
   /// UUID of the story
   final String uuid;
@@ -90,9 +90,7 @@ final class LinkStory<StoryContent> extends DefaultLink<StoryContent> {
 
 /// Link to an asset
 final class LinkAsset<StoryContent> extends DefaultWithAssetLink<StoryContent> {
-  LinkAsset.fromJson(JSONMap json)
-      : url = Uri.parse(json["url"] ?? json["href"]),
-        target = json["target"];
+  LinkAsset.fromJson(JSONMap json) : url = Uri.parse(json["url"] ?? json["href"]), target = json["target"];
 
   /// URL to the asset
   final Uri url;

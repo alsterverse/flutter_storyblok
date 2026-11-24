@@ -5,8 +5,5 @@ class DatasourceEntry {
   final String name;
   final String value;
   // final dynamic dimensions;
-  DatasourceEntry.fromJson(JSONMap json)
-      : id = json["id"],
-        name = json["name"],
-        value = json["value"];
+  DatasourceEntry.fromJson(JSONMap json) : id = json["id"], name = json["name"], value = json["value"];
 }

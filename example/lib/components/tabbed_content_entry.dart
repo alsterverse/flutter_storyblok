@@ -16,10 +16,7 @@ class TabbedContentEntryWidget extends StatelessWidget {
       children: [
         if (image != null) image,
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(blok.description ?? ""),
-        ),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(blok.description ?? "")),
         const SizedBox(height: 32),
         if (blok.button != null)
           BlockButton(

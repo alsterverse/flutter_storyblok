@@ -10,11 +10,11 @@ final class LinkField extends BaseField {
   final bool restrictContentType;
   final List<String> restrictedTypes;
   LinkField.fromJson(super.data)
-      : isAssetAllowed = data["asset_link_type"] ?? false,
-        isEmailAllowed = data["email_link_type"] ?? false,
-        restrictContentType = data["restrict_content_types"] ?? false,
-        restrictedTypes = List.from(data["component_whitelist"] ?? []),
-        super.fromJson();
+    : isAssetAllowed = data["asset_link_type"] ?? false,
+      isEmailAllowed = data["email_link_type"] ?? false,
+      restrictContentType = data["restrict_content_types"] ?? false,
+      restrictedTypes = List.from(data["component_whitelist"] ?? []),
+      super.fromJson();
 
   @override
   late final TypeReference type = () {

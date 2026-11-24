@@ -26,20 +26,18 @@ base class Asset {
   final JSONMap? metadata;
 
   Asset.fromJson(JSONMap json)
-      : alt = json["alt"] ?? "",
-        name = json["name"] ?? "",
-        focus = json["focus"] ?? "",
-        title = json["title"] ?? "",
-        copyright = json["copyright"] ?? "",
-        fileName = json["filename"] ?? "",
-        metadata = mapIfNotNull(json["metadata"] as Map?, (e) => JSONMap.from(e));
+    : alt = json["alt"] ?? "",
+      name = json["name"] ?? "",
+      focus = json["focus"] ?? "",
+      title = json["title"] ?? "",
+      copyright = json["copyright"] ?? "",
+      fileName = json["filename"] ?? "",
+      metadata = mapIfNotNull(json["metadata"] as Map?, (e) => JSONMap.from(e));
 }
 
 /// Asset was configured in Storyblok as only pointing to an image file
 final class ImageAsset extends Asset {
-  ImageAsset.fromJson(super.json)
-      : imageUrl = Uri.parse(json["filename"]),
-        super.fromJson();
+  ImageAsset.fromJson(super.json) : imageUrl = Uri.parse(json["filename"]), super.fromJson();
 
   /// URL of an image file
   final Uri imageUrl;
@@ -47,9 +45,7 @@ final class ImageAsset extends Asset {
 
 /// Asset was configured in Storyblok as only pointing to a video file
 final class VideoAsset extends Asset {
-  VideoAsset.fromJson(super.json)
-      : videoUrl = Uri.parse(json["filename"]),
-        super.fromJson();
+  VideoAsset.fromJson(super.json) : videoUrl = Uri.parse(json["filename"]), super.fromJson();
 
   /// URL of a video file
   final Uri videoUrl;
@@ -57,9 +53,7 @@ final class VideoAsset extends Asset {
 
 /// Asset was configured in Storyblok as only pointing to an audio file
 final class AudioAsset extends Asset {
-  AudioAsset.fromJson(super.json)
-      : audioUrl = Uri.parse(json["filename"]),
-        super.fromJson();
+  AudioAsset.fromJson(super.json) : audioUrl = Uri.parse(json["filename"]), super.fromJson();
 
   /// URL of an audio file
   final Uri audioUrl;
@@ -67,9 +61,7 @@ final class AudioAsset extends Asset {
 
 /// Asset was configured in Storyblok as only pointing to a text-based file
 final class TextAsset extends Asset {
-  TextAsset.fromJson(super.json)
-      : fileUrl = Uri.parse(json["filename"]),
-        super.fromJson();
+  TextAsset.fromJson(super.json) : fileUrl = Uri.parse(json["filename"]), super.fromJson();
 
   /// URL of a text file
   final Uri fileUrl;

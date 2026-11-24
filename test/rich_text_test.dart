@@ -28,9 +28,9 @@ void main() {
         "marks": [
           {
             "type": "textStyle",
-            "attrs": {"color": "#FF0000"}
-          }
-        ]
+            "attrs": {"color": "#FF0000"},
+          },
+        ],
       });
       expect(text.foregroundColor!.colorString, "#FF0000");
     });
@@ -41,9 +41,9 @@ void main() {
         "marks": [
           {
             "type": "textStyle",
-            "attrs": {"color": "rgb(255, 0, 0)"}
-          }
-        ]
+            "attrs": {"color": "rgb(255, 0, 0)"},
+          },
+        ],
       });
       expect(text.foregroundColor!.colorString, "rgb(255, 0, 0)");
     });
@@ -58,8 +58,8 @@ void main() {
           "title": "hello",
           "source": "hello",
           "copyright": "hello",
-          "meta_data": {"alt": "hello"}
-        }
+          "meta_data": {"alt": "hello"},
+        },
       });
       expect(image.imageUrl, Uri.parse("https://placehold.it/100x100"));
       expect(image.alt, "hello");

@@ -3,12 +3,12 @@ import 'package:dart_style/dart_style.dart';
 
 class CodeEmitter {
   CodeEmitter({bool scoped = true})
-      : _dartFormatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion, pageWidth: 120),
-        _dartEmitter = DartEmitter(
-          allocator: scoped ? Allocator.simplePrefixing() : Allocator.none,
-          orderDirectives: true,
-          useNullSafetySyntax: true,
-        );
+    : _dartFormatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion, pageWidth: 120),
+      _dartEmitter = DartEmitter(
+        allocator: scoped ? Allocator.simplePrefixing() : Allocator.none,
+        orderDirectives: true,
+        useNullSafetySyntax: true,
+      );
 
   final DartFormatter _dartFormatter;
   final DartEmitter _dartEmitter;

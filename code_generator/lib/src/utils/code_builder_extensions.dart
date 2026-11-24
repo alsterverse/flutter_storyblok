@@ -31,33 +31,22 @@ TypeReference referType(
   bool? nullable,
   List<TypeReference>? genericTypes,
   Reference? bound,
-}) =>
-    TypeReference((t) {
-      t.symbol = symbol;
-      t.url = importUrl;
-      t.isNullable = nullable;
-      t.bound = bound;
-      if (genericTypes != null) {
-        t.types.addAll(genericTypes);
-      }
-    });
+}) => TypeReference((t) {
+  t.symbol = symbol;
+  t.url = importUrl;
+  t.isNullable = nullable;
+  t.bound = bound;
+  if (genericTypes != null) {
+    t.types.addAll(genericTypes);
+  }
+});
 
-TypeReference referList({
-  TypeReference? type,
-  bool? nullable,
-}) =>
-    referType(
-      "List",
-      nullable: nullable,
-      genericTypes: type == null ? null : [type],
-    );
+TypeReference referList({TypeReference? type, bool? nullable}) =>
+    referType("List", nullable: nullable, genericTypes: type == null ? null : [type]);
 
 Expression literalEmptyList() => literalConstList([]);
 
-TypeReference referJSONMap({
-  bool? nullable,
-}) =>
-    referType("$JSONMap", nullable: nullable);
+TypeReference referJSONMap({bool? nullable}) => referType("$JSONMap", nullable: nullable);
 
 Expression initializerFromRequired(bool isRequired, CodeExpression valueExpression, Expression nonNullExpression) {
   if (isRequired) return nonNullExpression;

@@ -21,47 +21,64 @@ Enum buildEnum(String className, Iterable<MapEntry<String, String>> caseNames) {
   return Enum(
     (e) => e
       ..name = className
-      ..fields.add(Field((f) => f
+      ..fields.add(
+        Field(
+          (f) => f
             ..modifier = FieldModifier.final$
             ..name = "raw"
-            ..type = refer("$String")
+            ..type = refer("$String"),
           //
-          ))
-      ..values.addAll(<MapEntry<String, String>>[
-        ...caseNames,
-        MapEntry(_unknownName, _unknownName),
-      ].map((kase) => EnumValue((v) => v
-            ..name = sanitizeName(kase.key, isClass: false)
-            ..arguments.add(literal(kase.value))
-          //
-          )))
-      ..constructors.add(Constructor((con) => con
+        ),
+      )
+      ..values.addAll(
+        <MapEntry<String, String>>[...caseNames, MapEntry(_unknownName, _unknownName)].map(
+          (kase) => EnumValue(
+            (v) => v
+              ..name = sanitizeName(kase.key, isClass: false)
+              ..arguments.add(literal(kase.value)),
+            //
+          ),
+        ),
+      )
+      ..constructors.add(
+        Constructor(
+          (con) => con
             ..constant = true
-            ..requiredParameters.add(Parameter((p) => p
+            ..requiredParameters.add(
+              Parameter(
+                (p) => p
                   ..toThis = true
-                  ..name = "raw"
+                  ..name = "raw",
                 //
-                ))
+              ),
+            ),
           //
-          ))
-      ..constructors.add(Constructor((m) => m
+        ),
+      )
+      ..constructors.add(
+        Constructor(
+          (m) => m
             ..factory = true
             ..name = _fromNameName
-            ..requiredParameters.add(Parameter((p) => p
+            ..requiredParameters.add(
+              Parameter(
+                (p) => p
                   ..type = referType("$String?")
-                  ..name = "name"
+                  ..name = "name",
                 //
-                ))
-            ..body = Block.of([
-              "return switch (name) {",
-              ...caseNames.map(
-                (e) => "${literal(e.value)} => $className.${sanitizeName(e.key, isClass: false)},",
               ),
-              "_ => $className.$_unknownName,",
-              "};",
-            ].map(Code.new))
+            )
+            ..body = Block.of(
+              [
+                "return switch (name) {",
+                ...caseNames.map((e) => "${literal(e.value)} => $className.${sanitizeName(e.key, isClass: false)},"),
+                "_ => $className.$_unknownName,",
+                "};",
+              ].map(Code.new),
+            ),
           //
-          )),
+        ),
+      ),
   );
 }
 

@@ -22,9 +22,7 @@ abstract base class BaseField {
   final bool isRequired;
   final int? position;
   BaseField(this.data, this.isRequired, this.position);
-  BaseField.fromJson(this.data)
-      : isRequired = data["required"] ?? false,
-        position = data["pos"];
+  BaseField.fromJson(this.data) : isRequired = data["required"] ?? false, position = data["pos"];
 
   static BaseField? fromData(
     JSONMap data, {
@@ -63,11 +61,12 @@ abstract base class BaseField {
   Uri? getExternalDatasourceUrl() => null;
 
   Field build(String fieldName) {
-    return Field((f) => f
-          ..type = type
-          ..modifier = FieldModifier.final$
-          ..name = fieldName
-        //
-        );
+    return Field(
+      (f) => f
+        ..type = type
+        ..modifier = FieldModifier.final$
+        ..name = fieldName,
+      //
+    );
   }
 }

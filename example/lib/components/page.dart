@@ -4,10 +4,7 @@ import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 
 class Page extends StatelessWidget {
-  const Page({
-    super.key,
-    required this.page,
-  });
+  const Page({super.key, required this.page});
 
   final bloks.DefaultPage page;
 
@@ -22,19 +19,13 @@ class Page extends StatelessWidget {
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(2),
-          child: Container(
-            color: AppColors.accent,
-            height: 2,
-          ),
+          child: Container(color: AppColors.accent, height: 2),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            for (var item in page.body) ...[
-              item.buildWidget(context),
-              const SizedBox(height: 32),
-            ]
+            for (var item in page.body) ...[item.buildWidget(context), const SizedBox(height: 32)],
           ],
         ),
       ),

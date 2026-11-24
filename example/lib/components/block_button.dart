@@ -7,11 +7,7 @@ class BlockButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bloks.Button blokButton;
 
-  BlockButton({
-    super.key,
-    required this.blokButton,
-    this.onPressed,
-  }) : text = blokButton.label ?? "";
+  BlockButton({super.key, required this.blokButton, this.onPressed}) : text = blokButton.label ?? "";
 
   @override
   Widget build(BuildContext context) {
@@ -78,25 +74,19 @@ class BlockButton extends StatelessWidget {
       bloks.ButtonSizeOption.small => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
       bloks.ButtonSizeOption.medium => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
       bloks.ButtonSizeOption.large => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
-      bloks.ButtonSizeOption.unknown => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2)
+      bloks.ButtonSizeOption.unknown => EdgeInsets.symmetric(vertical: fontSize, horizontal: fontSize * 2),
     };
 
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius,
-          side: border,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: borderRadius, side: border),
         padding: padding,
         backgroundColor: backgroundColor,
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: textColor,
-              fontSize: fontSize,
-            ),
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor, fontSize: fontSize),
       ),
     );
   }

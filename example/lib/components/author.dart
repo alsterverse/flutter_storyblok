@@ -19,11 +19,7 @@ class AuthorWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (profilePicture != null)
-                  SizedBox.square(
-                    dimension: 64,
-                    child: ClipOval(child: profilePicture),
-                  ),
+                if (profilePicture != null) SizedBox.square(dimension: 64, child: ClipOval(child: profilePicture)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(

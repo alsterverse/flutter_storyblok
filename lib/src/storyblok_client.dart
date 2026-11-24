@@ -18,13 +18,13 @@ final class StoryblokClient<StoryContent> {
     ContentVersion? version,
     bool useCacheInvalidation = true,
     required StoryContent Function(JSONMap) storyContentBuilder,
-  })  : _baseParameters = {
-          "token": accessToken,
-        },
-        _version = version,
-        _useCacheInvalidation = useCacheInvalidation,
-        _storyContentBuilder = storyContentBuilder,
-        _region = region;
+  }) : _baseParameters = {
+         "token": accessToken,
+       },
+       _version = version,
+       _useCacheInvalidation = useCacheInvalidation,
+       _storyContentBuilder = storyContentBuilder,
+       _region = region;
 
   final Region _region;
   final ContentVersion? _version;
@@ -69,20 +69,20 @@ final class StoryblokClient<StoryContent> {
     };
     final json = await switch (id) {
       StoryIdentifierID(:final id) => _getRequest(
-          path: "$_pathStories/$id",
-          queryParameters: queryParams,
-        ),
+        path: "$_pathStories/$id",
+        queryParameters: queryParams,
+      ),
       StoryIdentifierUUID(:final uuid) => _getRequest(
-          path: "$_pathStories/$uuid",
-          queryParameters: {
-            ...queryParams,
-            "find_by": "uuid",
-          },
-        ),
+        path: "$_pathStories/$uuid",
+        queryParameters: {
+          ...queryParams,
+          "find_by": "uuid",
+        },
+      ),
       StoryIdentifierFullSlug(:final slug) => _getRequest(
-          path: "$_pathStories/$slug",
-          queryParameters: queryParams,
-        ),
+        path: "$_pathStories/$slug",
+        queryParameters: queryParams,
+      ),
     };
     if (resolveLinks != null) {
       _handleResolvedLinks(resolveLinks, json);
@@ -162,9 +162,10 @@ final class StoryblokClient<StoryContent> {
     if (resolveRelations != null && resolveRelations.isNotEmpty) {
       _handleResolvedRelations(json);
     }
-    final stories = List<JSONMap>.from(json["stories"]) //
-        .map((e) => Story<StoryContent>.fromJson(e, _storyContentBuilder))
-        .toList();
+    final stories =
+        List<JSONMap>.from(json["stories"]) //
+            .map((e) => Story<StoryContent>.fromJson(e, _storyContentBuilder))
+            .toList();
     return stories;
   }
 
@@ -284,9 +285,12 @@ final class StoryblokClient<StoryContent> {
         if (queryParameters != null) ...queryParameters,
       },
     );
-    final response = await http.get(uri, headers: {
-      "Accept": "application/json",
-    });
+    final response = await http.get(
+      uri,
+      headers: {
+        "Accept": "application/json",
+      },
+    );
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as JSONMap;
       final cv = tryCast<int>(json["cv"]);

@@ -24,31 +24,33 @@ void main() {
   runApp(const MyApp());
 }
 
-final router = GoRouter(routes: [
-  GoRoute(
-    path: "/",
-    builder: (context, state) {
-      final slug = state.uri.queryParameters["slug"];
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: "/",
+      builder: (context, state) {
+        final slug = state.uri.queryParameters["slug"];
 
-      if (slug != null) {
+        if (slug != null) {
+          return FutureStoryWidget(
+            storyFuture: storyblokClient.getStory(
+              id: sb.StoryIdentifierFullSlug(slug),
+              resolveLinks: sb.ResolveLinks.story,
+            ),
+          );
+        }
+
         return FutureStoryWidget(
           storyFuture: storyblokClient.getStory(
-            id: sb.StoryIdentifierFullSlug(slug),
+            id: const sb.StoryIdentifierID(rootPageId),
             resolveLinks: sb.ResolveLinks.story,
           ),
+          delayed: true,
         );
-      }
-
-      return FutureStoryWidget(
-        storyFuture: storyblokClient.getStory(
-          id: const sb.StoryIdentifierID(rootPageId),
-          resolveLinks: sb.ResolveLinks.story,
-        ),
-        delayed: true,
-      );
-    },
-  ),
-]);
+      },
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -66,14 +68,14 @@ class MyApp extends StatelessWidget {
           backgroundColor: AppColors.black,
           foregroundColor: AppColors.white,
           elevation: 0,
-          titleTextStyle:
-              TextStyle(fontSize: 20.0, color: AppColors.white, fontWeight: FontWeight.w700, letterSpacing: -2),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.black,
+          titleTextStyle: TextStyle(
+            fontSize: 20.0,
+            color: AppColors.white,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -2,
           ),
         ),
+        textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: AppColors.black)),
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 16.0, color: AppColors.black, fontWeight: FontWeight.w400),
           bodyMedium: TextStyle(fontSize: 14.0, color: AppColors.black, fontWeight: FontWeight.w400),
@@ -90,11 +92,7 @@ class MyApp extends StatelessWidget {
 class FutureStoryWidget extends StatelessWidget {
   final Future<sb.Story<bloks.Blok>> storyFuture;
   final bool delayed;
-  const FutureStoryWidget({
-    super.key,
-    required this.storyFuture,
-    this.delayed = false,
-  });
+  const FutureStoryWidget({super.key, required this.storyFuture, this.delayed = false});
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +110,7 @@ class FutureStoryWidget extends StatelessWidget {
           print(snapshot.stackTrace);
           return Scaffold(body: Center(child: Text(snapshot.error.toString())));
         }
-        return const Scaffold(
-          body: SplashScreen(),
-        );
+        return const Scaffold(body: SplashScreen());
       },
     );
   }
