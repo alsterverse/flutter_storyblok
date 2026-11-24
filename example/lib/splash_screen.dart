@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:example/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:wave/wave.dart';
-import 'package:wave/config.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

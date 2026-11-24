@@ -60,10 +60,10 @@ final class StoryblokClient<StoryContent> {
       if (resolveLinks != null) "resolve_links": resolveLinks.name,
       if (resolveLinks2Levels) "resolve_links_level": "2",
       if (resolveRelations != null && resolveRelations.isNotEmpty) "resolve_relations": resolveRelations.join(","),
-      if (fromRelease != null) "from_release": fromRelease,
+      "from_release": ?fromRelease,
       if (_cacheVersion != null) "cv": _cacheVersion.toString(),
-      if (language != null) "language": language,
-      if (fallbackLanguage != null) "fallback_lang": fallbackLanguage,
+      "language": ?language,
+      "fallback_lang": ?fallbackLanguage,
       if (resolveAssets != null)
         "resolve_assets": resolveAssets.toString(), // TODO: Figure out how resolve_assets works, docs doesnt say...
     };
@@ -128,9 +128,9 @@ final class StoryblokClient<StoryContent> {
       queryParameters: {
         if (_cacheVersion != null) "cv": _cacheVersion.toString(),
         if (_version != null) "version": _version.name,
-        if (startsWith != null) "starts_with": startsWith,
-        if (searchTerm != null) "search_term": searchTerm,
-        if (sortBy != null) "sort_by": sortBy,
+        "starts_with": ?startsWith,
+        "search_term": ?searchTerm,
+        "sort_by": ?sortBy,
         if (pagination != null) ...pagination.toParameters(),
         if (byFullSlugs != null) "by_slugs": byFullSlugs.join(","),
         if (excludingFullSlugs != null) "excluding_slugs": excludingFullSlugs.join(","),
@@ -139,7 +139,7 @@ final class StoryblokClient<StoryContent> {
         if (firstPublishedAfter != null) "first_published_at_gt": firstPublishedAfter.format(),
         if (firstPublishedBefore != null) "first_published_at_lt": firstPublishedBefore.format(),
         if (inWorkflowStages != null) "in_workflow_stages": inWorkflowStages.join(","),
-        if (contentType != null) "content_type": contentType,
+        "content_type": ?contentType,
         if (level != null) "level": level.toString(),
         if (resolveRelations != null && resolveRelations.isNotEmpty) "resolve_relations": resolveRelations.join(","),
         if (excludingIDs != null) "excluding_ids": excludingIDs.join(","),
@@ -148,9 +148,9 @@ final class StoryblokClient<StoryContent> {
         if (isStartpage != null) "is_startpage": isStartpage ? "1" : "0",
         if (resolveLinks != null) "resolve_links": resolveLinks.name,
         if (resolveLinks2Levels) "resolve_links_level": "2",
-        if (fromRelease != null) "from_release": fromRelease,
-        if (fallbackLanguage != null) "fallback_lang": fallbackLanguage,
-        if (language != null) "language": language,
+        "from_release": ?fromRelease,
+        "fallback_lang": ?fallbackLanguage,
+        "language": ?language,
         // TODO: filter_query
         if (excludingFields != null) "excluding_fields": excludingFields.join(","),
         if (resolveAssets != null) "resolve_assets": resolveAssets.toString(),
@@ -212,6 +212,9 @@ final class StoryblokClient<StoryContent> {
     return List<JSONMap>.from(json["datasources"]).map(Datasource.fromJson).toList();
   }
 
+  /// Retrieve the entries of [datasource], optionally for a [dimension] and limited by [pagination].
+  ///
+  /// Throws if the response status is not 200.
   Future<List<DatasourceEntry>> getDatasourceEntries({
     required String datasource,
     String? dimension,
@@ -221,7 +224,7 @@ final class StoryblokClient<StoryContent> {
       path: _pathDatasourceEntries,
       queryParameters: {
         "datasource": datasource,
-        if (dimension != null) "dimension": dimension,
+        "dimension": ?dimension,
         if (pagination != null) ...pagination.toParameters(),
       },
     );
@@ -231,6 +234,9 @@ final class StoryblokClient<StoryContent> {
   //
   // MARK: - Links
 
+  /// Retrieve content links, optionally filtered by [startsWith] and [parentID].
+  ///
+  /// [includeDates] adds publishing dates and [pagination] selects the page. Throws if the response status is not 200.
   Future<List<ContentLink>> getLinks({
     String? startsWith,
     String? parentID,
@@ -240,10 +246,10 @@ final class StoryblokClient<StoryContent> {
     final json = await _getRequest(
       path: _pathLinks,
       queryParameters: {
-        if (startsWith != null) "starts_with": startsWith,
+        "starts_with": ?startsWith,
         if (_version != null) "version": _version.name,
         if (_cacheVersion != null) "cv": _cacheVersion.toString(),
-        if (parentID != null) "with_parent": parentID,
+        "with_parent": ?parentID,
         if (includeDates != null) "include_dates": includeDates ? "1" : "0",
         if (pagination != null) ...pagination.toParameters(),
         "paginated": "1",
@@ -255,6 +261,9 @@ final class StoryblokClient<StoryContent> {
   //
   // MARK: - Tags
 
+  /// Retrieve tags, optionally only those used by stories whose slug begins with [startsWith].
+  ///
+  /// Throws if the response status is not 200.
   Future<List<Tag>> getTags({
     String? startsWith,
   }) async {
@@ -262,7 +271,7 @@ final class StoryblokClient<StoryContent> {
       path: _pathTags,
       queryParameters: {
         if (_version != null) "version": _version.name,
-        if (startsWith != null) "starts_with": startsWith,
+        "starts_with": ?startsWith,
       },
     );
     return List<JSONMap>.from(json["tags"]).map(Tag.fromJson).toList();
@@ -271,6 +280,9 @@ final class StoryblokClient<StoryContent> {
   //
   // MARK: - HTTP
 
+  /// Sends a GET request to [path] with [queryParameters] and returns the decoded JSON body.
+  ///
+  /// Updates the cache version when cache invalidation is enabled. Throws if the response status is not 200.
   Future<JSONMap> _getRequest({
     required String path,
     Map<String, String>? queryParameters,
@@ -282,7 +294,7 @@ final class StoryblokClient<StoryContent> {
       path: path,
       queryParameters: {
         ..._baseParameters,
-        if (queryParameters != null) ...queryParameters,
+        ...?queryParameters,
       },
     );
     final response = await http.get(

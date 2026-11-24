@@ -14,7 +14,7 @@ dependencies:
     path: ../
   go_router: ^17.2.2
   video_player: ^2.11.1
-  wave: ^0.2.2
+  wave: ^0.2.5
   flutter_svg: ^2.2.4
   cached_network_image: ^3.4.1
   flutter_web_plugins:
