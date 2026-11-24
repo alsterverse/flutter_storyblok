@@ -52,7 +52,7 @@ class TextSectionWidget extends StatelessWidget {
               BlockButton(
                 blokButton: blok.button!,
                 onPressed: () => mapIfNotNull(blok.button!.link, (link) => link.open(context)),
-              )
+              ),
           ],
         ),
       ),

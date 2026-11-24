@@ -7,13 +7,11 @@ final class BooleanField extends BaseField {
   BooleanField.fromJson(super.data) : super.fromJson();
 
   @override
-  late final TypeReference type = referType(
-    "$bool",
-    nullable: false,
-  );
+  late final TypeReference type = referType("$bool", nullable: false);
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) => isRequired //
+  Expression buildInitializer(CodeExpression valueExpression) =>
+      isRequired //
       ? valueExpression
       : valueExpression.ifNullThen(literalFalse);
 }

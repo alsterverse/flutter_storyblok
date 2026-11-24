@@ -36,9 +36,7 @@ class _TabbedContentSectionWidgetState extends State<TabbedContentSectionWidget>
           children: blok.entries.map((entry) {
             return ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpanded) {
-                return ListTile(
-                  title: Text(entry.headline ?? "N/A"),
-                );
+                return ListTile(title: Text(entry.headline ?? "N/A"));
               },
               canTapOnHeader: true,
               body: TabbedContentEntryWidget(entry),

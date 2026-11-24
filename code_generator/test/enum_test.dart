@@ -7,12 +7,8 @@ void main() {
   group('Test code generator enums', () {
     test('Test generate enum class', () {
       expect(
-        buildEnum("Foo", [
-          MapEntry("bar", "123"),
-          MapEntry("baz", "  123 hello  "),
-        ]),
-        emitter.equalsCode(
-          r"""
+        buildEnum("Foo", [MapEntry("bar", "123"), MapEntry("baz", "  123 hello  ")]),
+        emitter.equalsCode(r"""
 enum Foo {
   bar('123'),
   baz('  123 hello  '),
@@ -30,19 +26,16 @@ enum Foo {
 
   final String raw;
 }
-""",
-        ),
+"""),
       );
     });
 
     test('Test generate enum initializer code', () {
       expect(
         buildInstantiateEnum("Foo", "json['data']"),
-        emitter.equalsCode(
-          r"""
+        emitter.equalsCode(r"""
 Foo.fromName(json['data'])
-""",
-        ),
+"""),
       );
     });
   });

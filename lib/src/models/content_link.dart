@@ -56,16 +56,16 @@ final class ContentLink {
   });
 
   factory ContentLink.fromJson(JSONMap json) => ContentLink(
-        id: json["id"],
-        uuid: json["uuid"],
-        slug: json["slug"],
-        path: json["path"],
-        realPath: json["real_path"],
-        name: json["name"],
-        parentID: json["parent_id"],
-        published: json["published"],
-        isFolder: json["is_folder"],
-        isStartpage: json["is_startpage"],
-        position: json["position"],
-      );
+    id: json["id"],
+    uuid: json["uuid"],
+    slug: json["slug"],
+    path: json["path"],
+    realPath: json["real_path"],
+    name: json["name"],
+    parentID: json["parent_id"],
+    published: json["published"],
+    isFolder: json["is_folder"],
+    isStartpage: json["is_startpage"],
+    position: json["position"],
+  );
 }

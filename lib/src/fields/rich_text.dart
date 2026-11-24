@@ -4,7 +4,7 @@ import 'package:flutter_storyblok/src/utils.dart';
 /// Storyblok RichText serializer
 final class RichText {
   RichText.fromJson(Map<String, dynamic> json)
-      : content = List<JSONMap>.from(json['content']).map(RichTextContainer.fromJson).toList();
+    : content = List<JSONMap>.from(json['content']).map(RichTextContainer.fromJson).toList();
 
   final List<RichTextContainer> content;
 }
@@ -55,8 +55,8 @@ final class RichTextContainerParagraph implements RichTextContainer, RichTextLea
     required this.content,
   });
   factory RichTextContainerParagraph.fromJson(JSONMap json) => RichTextContainerParagraph(
-        content: List<JSONMap>.from(json["content"] ?? []).map(RichTextLeaf.fromJson).toList(),
-      );
+    content: List<JSONMap>.from(json["content"] ?? []).map(RichTextLeaf.fromJson).toList(),
+  );
 
   /// Content of paragraph
   final List<RichTextLeaf> content;
@@ -69,9 +69,9 @@ final class RichTextContainerHeading implements RichTextContainer {
     required this.content,
   });
   factory RichTextContainerHeading.fromJson(JSONMap json) => RichTextContainerHeading(
-        level: json["attrs"]["level"],
-        content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
-      );
+    level: json["attrs"]["level"],
+    content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
+  );
 
   /// Level of heading, H1-6
   final int level;
@@ -84,9 +84,9 @@ final class RichTextContainerHeading implements RichTextContainer {
 final class RichTextContainerCode implements RichTextContainer {
   RichTextContainerCode({required this.codeLanguage, required this.content});
   factory RichTextContainerCode.fromJson(JSONMap json) => RichTextContainerCode(
-        codeLanguage: json["attrs"]["class"],
-        content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
-      );
+    codeLanguage: json["attrs"]["class"],
+    content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
+  );
 
   /// Programming language of the code
   final String codeLanguage;
@@ -102,8 +102,8 @@ final class RichTextContainerLine implements RichTextContainer {}
 final class RichTextContainerQuote implements RichTextContainer {
   RichTextContainerQuote({required this.content});
   factory RichTextContainerQuote.fromJson(JSONMap json) => RichTextContainerQuote(
-        content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
-      );
+    content: List<JSONMap>.from(json["content"]).map(RichTextLeaf.fromJson).toList(),
+  );
 
   /// Content of quote
   final List<RichTextLeaf> content;
@@ -113,12 +113,12 @@ final class RichTextContainerQuote implements RichTextContainer {
 final class RichTextContainerList implements RichTextContainer {
   RichTextContainerList({required this.rows, required this.isOrdered});
   factory RichTextContainerList.fromJson(JSONMap json, {required bool isOrdered}) => RichTextContainerList(
-        isOrdered: isOrdered,
-        rows: List<JSONMap>.from(json["content"])
-            // Each object is of type "list_item" which only ever contains a single Paragraph object named "content".
-            .map((e) => RichTextContainerParagraph.fromJson(JSONMap.from(e["content"][0])))
-            .toList(),
-      );
+    isOrdered: isOrdered,
+    rows: List<JSONMap>.from(json["content"])
+        // Each object is of type "list_item" which only ever contains a single Paragraph object named "content".
+        .map((e) => RichTextContainerParagraph.fromJson(JSONMap.from(e["content"][0])))
+        .toList(),
+  );
 
   /// If true this list is an ordered list, if false it's an unordered list.
   final bool isOrdered;
@@ -131,8 +131,8 @@ final class RichTextContainerList implements RichTextContainer {
 final class RichTextContainerBlok implements RichTextContainer {
   RichTextContainerBlok({required this.bloksData});
   factory RichTextContainerBlok.fromJson(JSONMap json) => RichTextContainerBlok(
-        bloksData: List.from(json["attrs"]["body"]),
-      );
+    bloksData: List.from(json["attrs"]["body"]),
+  );
 
   /// Raw data for bloks
   final List<JSONMap> bloksData;
@@ -148,13 +148,14 @@ sealed class RichTextLeaf {
   factory RichTextLeaf.fromJson(JSONMap json) {
     final type = json["type"];
     return switch (type) {
-      "text" => RichTextLeafText.fromJson(json),
-      "emoji" => RichTextLeafEmoji.fromJson(json),
-      "image" => RichTextLeafImage.fromJson(json),
-      "hard_break" => RichTextLeafHardBreak(),
-      "paragraph" => RichTextContainerParagraph.fromJson(json),
-      _ => UnrecognizedRichTextLeaf(type, json),
-    } as RichTextLeaf;
+          "text" => RichTextLeafText.fromJson(json),
+          "emoji" => RichTextLeafEmoji.fromJson(json),
+          "image" => RichTextLeafImage.fromJson(json),
+          "hard_break" => RichTextLeafHardBreak(),
+          "paragraph" => RichTextContainerParagraph.fromJson(json),
+          _ => UnrecognizedRichTextLeaf(type, json),
+        }
+        as RichTextLeaf;
   }
 }
 
@@ -173,9 +174,9 @@ final class UnrecognizedRichTextLeaf implements RichTextLeaf {
 final class RichTextLeafText extends RichTextLeafMarkable implements RichTextLeaf {
   RichTextLeafText({required this.text, required super.marks});
   factory RichTextLeafText.fromJson(JSONMap json) => RichTextLeafText(
-        text: json["text"],
-        marks: RichTextLeafMarkable.marksFromJson(json),
-      );
+    text: json["text"],
+    marks: RichTextLeafMarkable.marksFromJson(json),
+  );
 
   /// Text to be displayed
   final String text;
@@ -189,11 +190,11 @@ final class RichTextLeafEmoji extends RichTextLeafMarkable implements RichTextLe
     required super.marks,
   });
   factory RichTextLeafEmoji.fromJson(JSONMap json) => RichTextLeafEmoji(
-        name: json["attrs"]["name"],
-        text: json["attrs"]["emoji"],
-        fallback: mapIfNotNull(json["attrs"]["fallbackImage"] as String?, Uri.parse),
-        marks: RichTextLeafMarkable.marksFromJson(json),
-      );
+    name: json["attrs"]["name"],
+    text: json["attrs"]["emoji"],
+    fallback: mapIfNotNull(json["attrs"]["fallbackImage"] as String?, Uri.parse),
+    marks: RichTextLeafMarkable.marksFromJson(json),
+  );
 
   /// Name of the emoji
   final String name;
@@ -296,24 +297,24 @@ final class RichTextLeafMarkCode implements RichTextLeafMark {}
 final class RichTextLeafMarkAnchor implements RichTextLeafMark {
   RichTextLeafMarkAnchor({required this.id});
   factory RichTextLeafMarkAnchor.fromJson(JSONMap json) => RichTextLeafMarkAnchor(
-        id: json["attrs"]["id"],
-      );
+    id: json["attrs"]["id"],
+  );
   final String id;
 }
 
 final class RichTextLeafMarkLink implements RichTextLeafMark {
   RichTextLeafMarkLink({required this.link});
   factory RichTextLeafMarkLink.fromJson(JSONMap json) => RichTextLeafMarkLink(
-        link: Link.fromJson(json["attrs"]),
-      );
+    link: Link.fromJson(json["attrs"]),
+  );
   final Link link;
 }
 
 final class RichTextLeafMarkTextStyle implements RichTextLeafMark {
   RichTextLeafMarkTextStyle({required this.colorString});
   factory RichTextLeafMarkTextStyle.fromJson(JSONMap json) => RichTextLeafMarkTextStyle(
-        colorString: json["attrs"]["color"],
-      );
+    colorString: json["attrs"]["color"],
+  );
 
   /// CSS style color hex e.g. "#FAFAFA" or "rgb(255, 255, 255)"
   final String colorString;
@@ -322,8 +323,8 @@ final class RichTextLeafMarkTextStyle implements RichTextLeafMark {
 final class RichTextLeafMarkHighlight implements RichTextLeafMark {
   RichTextLeafMarkHighlight({required this.colorString});
   factory RichTextLeafMarkHighlight.fromJson(JSONMap json) => RichTextLeafMarkHighlight(
-        colorString: json["attrs"]["color"],
-      );
+    colorString: json["attrs"]["color"],
+  );
 
   /// CSS style color hex e.g. "#FAFAFA" or "rgb(255, 255, 255)"
   final String colorString;
@@ -335,17 +336,17 @@ base class RichTextLeafMarkable {
       List<JSONMap>.from(json["marks"] ?? []).map(RichTextLeafMark.fromJson).toList();
 
   RichTextLeafMarkable({required List<RichTextLeafMark> marks})
-      : isCode = marks.containsType<RichTextLeafMarkCode>(),
-        isBold = marks.containsType<RichTextLeafMarkBold>(),
-        isItalic = marks.containsType<RichTextLeafMarkItalic>(),
-        isStriked = marks.containsType<RichTextLeafMarkStrike>(),
-        isUnderlined = marks.containsType<RichTextLeafMarkUnderline>(),
-        isSuperscript = marks.containsType<RichTextLeafMarkSuperscript>(),
-        isSubscript = marks.containsType<RichTextLeafMarkSubscript>(),
-        anchor = marks.firstAsType(),
-        link = marks.firstAsType(),
-        backgroundColor = marks.firstAsType(),
-        foregroundColor = marks.firstAsType();
+    : isCode = marks.containsType<RichTextLeafMarkCode>(),
+      isBold = marks.containsType<RichTextLeafMarkBold>(),
+      isItalic = marks.containsType<RichTextLeafMarkItalic>(),
+      isStriked = marks.containsType<RichTextLeafMarkStrike>(),
+      isUnderlined = marks.containsType<RichTextLeafMarkUnderline>(),
+      isSuperscript = marks.containsType<RichTextLeafMarkSuperscript>(),
+      isSubscript = marks.containsType<RichTextLeafMarkSubscript>(),
+      anchor = marks.firstAsType(),
+      link = marks.firstAsType(),
+      backgroundColor = marks.firstAsType(),
+      foregroundColor = marks.firstAsType();
   final bool isCode;
   final bool isBold;
   final bool isItalic;

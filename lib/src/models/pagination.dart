@@ -9,7 +9,7 @@ final class Pagination {
   final int perPage;
 
   Map<String, String> toParameters() => {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
-      };
+    "page": page.toString(),
+    "per_page": perPage.toString(),
+  };
 }

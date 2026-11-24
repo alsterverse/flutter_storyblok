@@ -21,10 +21,10 @@ final class StoryblokRichText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     TextStyle Function(RichTextLeafMarkable)? textStyleOverrides,
   }) : _contentData = _StoryblokRichTextContentData(
-          onTapLink: onTapLink,
-          buildBlok: blockBuilder,
-          textStyleOverrides: textStyleOverrides,
-        );
+         onTapLink: onTapLink,
+         buildBlok: blockBuilder,
+         textStyleOverrides: textStyleOverrides,
+       );
 
   final _StoryblokRichTextContentData _contentData;
   final List<RichTextContainer> content;
@@ -63,58 +63,60 @@ extension _RichTextContainerWidget on RichTextContainer {
     return switch (this) {
       final RichTextContainerParagraph paragraph => paragraph.content.buildRichText(context, contentData),
       final RichTextContainerHeading heading => heading.content.buildRichText(
-          context,
-          contentData,
-          textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontSize: 24 / max(1, (heading.level / 4)),
-                fontWeight: FontWeight.bold,
-                letterSpacing: -1,
-              ),
+        context,
+        contentData,
+        textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontSize: 24 / max(1, (heading.level / 4)),
+          fontWeight: FontWeight.bold,
+          letterSpacing: -1,
         ),
+      ),
       final RichTextContainerCode code => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey),
-            color: const Color(0xFFEEEEEE),
-          ),
-          child: code.content.buildRichText(context, contentData),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey),
+          color: const Color(0xFFEEEEEE),
         ),
+        child: code.content.buildRichText(context, contentData),
+      ),
       final RichTextContainerQuote quote => IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(width: 4, color: Colors.grey),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: quote.content.buildRichText(context, contentData),
-                ),
-              )
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(width: 4, color: Colors.grey),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: quote.content.buildRichText(context, contentData),
+              ),
+            ),
+          ],
         ),
+      ),
       final RichTextContainerLine _ => Container(height: 1, color: Colors.black),
       final RichTextContainerList list => Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: list.rows
-              .mapIndexed((i, e) => Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(list.isOrdered ? "${i + 1}. " : "- "),
-                      Expanded(child: e.content.buildRichText(context, contentData)),
-                    ],
-                  ))
-              .toList(),
-        ),
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: list.rows
+            .mapIndexed(
+              (i, e) => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(list.isOrdered ? "${i + 1}. " : "- "),
+                  Expanded(child: e.content.buildRichText(context, contentData)),
+                ],
+              ),
+            )
+            .toList(),
+      ),
       final RichTextContainerBlok blok => Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: blok.bloksData.map((e) => contentData.buildBlok(context, e)).toList(),
-        ),
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: blok.bloksData.map((e) => contentData.buildBlok(context, e)).toList(),
+      ),
       _ => sb.RichText(text: const TextSpan()),
     };
   }
@@ -131,19 +133,21 @@ extension _RichTextLeafBuildWidget on List<RichTextLeaf> {
     return sb.RichText(
       text: TextSpan(
         style: Theme.of(context).textTheme.bodyMedium?.merge(textStyle),
-        children: map((e) => switch (e) {
-              final RichTextLeafText text => text.buildTextSpan(text.text, contentData),
-              final RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
-              final RichTextLeafImage image => WidgetSpan(
-                  style: image.buildTextStyle(),
-                  child: Image(image: NetworkImage(image.imageUrl.toString())),
-                ),
-              final RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
-              final RichTextContainerParagraph paragraph => WidgetSpan(
-                  child: paragraph.buildContainerWidget(context, contentData),
-                ),
-              UnrecognizedRichTextLeaf() => const WidgetSpan(child: SizedBox.shrink()),
-            }).toList(),
+        children: map(
+          (e) => switch (e) {
+            final RichTextLeafText text => text.buildTextSpan(text.text, contentData),
+            final RichTextLeafEmoji emoji => emoji.buildTextSpan(emoji.text ?? "⌧", contentData),
+            final RichTextLeafImage image => WidgetSpan(
+              style: image.buildTextStyle(),
+              child: Image(image: NetworkImage(image.imageUrl.toString())),
+            ),
+            final RichTextLeafHardBreak _ => const TextSpan(text: "\n"),
+            final RichTextContainerParagraph paragraph => WidgetSpan(
+              child: paragraph.buildContainerWidget(context, contentData),
+            ),
+            UnrecognizedRichTextLeaf() => const WidgetSpan(child: SizedBox.shrink()),
+          },
+        ).toList(),
       ),
     );
   }

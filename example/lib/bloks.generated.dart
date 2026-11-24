@@ -185,7 +185,7 @@ sealed class GridSectionCardsRestrictedTypes {
     return switch (type) {
       'grid-card' => GridSectionCardsRestrictedTypesGridCard.fromJson(json),
       'price-card' => GridSectionCardsRestrictedTypesPriceCard.fromJson(json),
-      _ => throw 'Unrecognized type \'$type\' For class \'GridSectionCardsRestrictedTypes\''
+      _ => throw 'Unrecognized type \'$type\' For class \'GridSectionCardsRestrictedTypes\'',
     };
   }
 }
@@ -482,9 +482,9 @@ sealed class Blok {
       'text-section' => TextSection.fromJson(json),
       'two-col-image-text-section' => TwoColImageTextSection.fromJson(json),
       _ => () {
-          print('Unrecognized type \'$type\' For class \'Blok\'');
-          return const UnrecognizedBlok();
-        }()
+        print('Unrecognized type \'$type\' For class \'Blok\'');
+        return const UnrecognizedBlok();
+      }(),
     };
   }
 }
@@ -501,13 +501,13 @@ final class ArticleOverviewPage extends Blok {
 
 final class ArticlePage extends Blok {
   ArticlePage.fromJson(Map<String, dynamic> json)
-      : image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
-        headline = json['headline'],
-        subheadline = json['subheadline'],
-        teaser = json['teaser'],
-        text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
-        author = json['author'] == null ? null : _i2.StoryIdentifierUUID(json['author']),
-        categories = List<String>.from(json['categories'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
+    : image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
+      headline = json['headline'],
+      subheadline = json['subheadline'],
+      teaser = json['teaser'],
+      text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
+      author = json['author'] == null ? null : _i2.StoryIdentifierUUID(json['author']),
+      categories = List<String>.from(json['categories'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
 
   final _i1.ImageAsset? image;
 
@@ -526,8 +526,8 @@ final class ArticlePage extends Blok {
 
 final class Author extends Blok {
   Author.fromJson(Map<String, dynamic> json)
-      : profilePicture = json['profile_picture'] == null ? null : _i1.ImageAsset.fromJson(json['profile_picture']),
-        description = json['description'];
+    : profilePicture = json['profile_picture'] == null ? null : _i1.ImageAsset.fromJson(json['profile_picture']),
+      description = json['description'];
 
   final _i1.ImageAsset? profilePicture;
 
@@ -536,40 +536,31 @@ final class Author extends Blok {
 
 final class Badge extends Blok {
   Badge.fromJson(Map<String, dynamic> json)
-      : badge = json['badge'] == null ? null : _i1.ImageAsset.fromJson(json['badge']);
+    : badge = json['badge'] == null ? null : _i1.ImageAsset.fromJson(json['badge']);
 
   final _i1.ImageAsset? badge;
 }
 
 final class Banner extends Blok {
   Banner.fromJson(Map<String, dynamic> json)
-      : backgroundImage = json['background_image'] == null ? null : _i1.ImageAsset.fromJson(json['background_image']),
-        backgroundVideo = json['background_video'] == null ? null : _i1.VideoAsset.fromJson(json['background_video']),
-        enableBackgroundColor = json['enable_background_color'] ?? false,
-        backgroundColor = json['background_color'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['background_color'],
-                'native-color-picker',
-              ),
-        overlay = Overlays.fromName(json['overlay']),
-        backgroundBrightness = json['background_brightness'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['background_brightness'],
-                'storyblok-slider',
-              ),
-        backgroundBlur = json['background_blur'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['background_blur'],
-                'storyblok-slider',
-              ),
-        textColor = Colors.fromName(json['text_color']),
-        headline = json['headline'],
-        subheadline = json['subheadline'],
-        buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
-        fullWidth = json['full_width'] ?? false;
+    : backgroundImage = json['background_image'] == null ? null : _i1.ImageAsset.fromJson(json['background_image']),
+      backgroundVideo = json['background_video'] == null ? null : _i1.VideoAsset.fromJson(json['background_video']),
+      enableBackgroundColor = json['enable_background_color'] ?? false,
+      backgroundColor = json['background_color'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['background_color'], 'native-color-picker'),
+      overlay = Overlays.fromName(json['overlay']),
+      backgroundBrightness = json['background_brightness'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['background_brightness'], 'storyblok-slider'),
+      backgroundBlur = json['background_blur'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['background_blur'], 'storyblok-slider'),
+      textColor = Colors.fromName(json['text_color']),
+      headline = json['headline'],
+      subheadline = json['subheadline'],
+      buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
+      fullWidth = json['full_width'] ?? false;
 
   final _i1.ImageAsset? backgroundImage;
 
@@ -598,20 +589,20 @@ final class Banner extends Blok {
 
 final class BannerReference extends Blok {
   BannerReference.fromJson(Map<String, dynamic> json)
-      : banners = List<String>.from(json['banners'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
+    : banners = List<String>.from(json['banners'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
 
   final List<_i2.StoryIdentifierUUID> banners;
 }
 
 final class Button extends Blok {
   Button.fromJson(Map<String, dynamic> json)
-      : style = ButtonStyleOption.fromName(json['style']),
-        backgroundColor = Colors.fromName(json['background_color']),
-        textColor = ButtonTextColorOption.fromName(json['text_color']),
-        size = ButtonSizeOption.fromName(json['size']),
-        link = json['link'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['link']),
-        label = json['label'],
-        borderRadius = ButtonBorderRadiusOption.fromName(json['border_radius']);
+    : style = ButtonStyleOption.fromName(json['style']),
+      backgroundColor = Colors.fromName(json['background_color']),
+      textColor = ButtonTextColorOption.fromName(json['text_color']),
+      size = ButtonSizeOption.fromName(json['size']),
+      link = json['link'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['link']),
+      label = json['label'],
+      borderRadius = ButtonBorderRadiusOption.fromName(json['border_radius']);
 
   final ButtonStyleOption style;
 
@@ -629,9 +620,7 @@ final class Button extends Blok {
 }
 
 final class Category extends Blok {
-  Category.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        description = json['description'];
+  Category.fromJson(Map<String, dynamic> json) : headline = json['headline'], description = json['description'];
 
   final String? headline;
 
@@ -640,24 +629,21 @@ final class Category extends Blok {
 
 final class ComplexHeroSection extends Blok {
   ComplexHeroSection.fromJson(Map<String, dynamic> json)
-      : backgroundColor = BackgroundColors.fromName(json['background_color']),
-        reverseLayout = json['reverse_layout'] ?? false,
-        headline = json['headline'],
-        lead = json['lead'],
-        buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
-        labels = List<Map<String, dynamic>>.from(json['labels'] ?? const []).map(Label.fromJson).toList(),
-        badges = List<Map<String, dynamic>>.from(json['badges'] ?? const []).map(Badge.fromJson).toList(),
-        enableComposedImage = json['enable_composed_image'] ?? false,
-        image1 = json['image_1'] == null ? null : _i1.ImageAsset.fromJson(json['image_1']),
-        image2 = json['image_2'] == null ? null : _i1.ImageAsset.fromJson(json['image_2']),
-        image3 = json['image_3'] == null ? null : _i1.ImageAsset.fromJson(json['image_3']),
-        image4 = json['image_4'] == null ? null : _i1.ImageAsset.fromJson(json['image_4']),
-        rotate = json['rotate'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['rotate'],
-                'storyblok-slider',
-              );
+    : backgroundColor = BackgroundColors.fromName(json['background_color']),
+      reverseLayout = json['reverse_layout'] ?? false,
+      headline = json['headline'],
+      lead = json['lead'],
+      buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
+      labels = List<Map<String, dynamic>>.from(json['labels'] ?? const []).map(Label.fromJson).toList(),
+      badges = List<Map<String, dynamic>>.from(json['badges'] ?? const []).map(Badge.fromJson).toList(),
+      enableComposedImage = json['enable_composed_image'] ?? false,
+      image1 = json['image_1'] == null ? null : _i1.ImageAsset.fromJson(json['image_1']),
+      image2 = json['image_2'] == null ? null : _i1.ImageAsset.fromJson(json['image_2']),
+      image3 = json['image_3'] == null ? null : _i1.ImageAsset.fromJson(json['image_3']),
+      image4 = json['image_4'] == null ? null : _i1.ImageAsset.fromJson(json['image_4']),
+      rotate = json['rotate'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['rotate'], 'storyblok-slider');
 
   final BackgroundColors backgroundColor;
 
@@ -688,18 +674,18 @@ final class ComplexHeroSection extends Blok {
 
 final class DefaultPage extends Blok {
   DefaultPage.fromJson(Map<String, dynamic> json)
-      : body = List<Map<String, dynamic>>.from(json['body'] ?? const []).map(Blok.fromJson).toList();
+    : body = List<Map<String, dynamic>>.from(json['body'] ?? const []).map(Blok.fromJson).toList();
 
   final List<Blok> body;
 }
 
 final class FeaturedArticlesSection extends Blok {
   FeaturedArticlesSection.fromJson(Map<String, dynamic> json)
-      : cols = FeaturedArticlesSectionColsOption.fromName(json['cols']),
-        backgroundColor = BackgroundColors.fromName(json['background_color']),
-        headline = json['headline'],
-        lead = json['lead'],
-        articles = List<String>.from(json['articles'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
+    : cols = FeaturedArticlesSectionColsOption.fromName(json['cols']),
+      backgroundColor = BackgroundColors.fromName(json['background_color']),
+      headline = json['headline'],
+      lead = json['lead'],
+      articles = List<String>.from(json['articles'] ?? const []).map(_i2.StoryIdentifierUUID.new).toList();
 
   final FeaturedArticlesSectionColsOption cols;
 
@@ -714,12 +700,12 @@ final class FeaturedArticlesSection extends Blok {
 
 final class FormSection extends Blok {
   FormSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        lead = json['lead'],
-        form = FormSectionFormOption.fromName(json['form']),
-        textColor = FormSectionTextColorOption.fromName(json['text_color']),
-        backgroundColor = Colors.fromName(json['background_color']),
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
+    : headline = json['headline'],
+      lead = json['lead'],
+      form = FormSectionFormOption.fromName(json['form']),
+      textColor = FormSectionTextColorOption.fromName(json['text_color']),
+      backgroundColor = Colors.fromName(json['background_color']),
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
 
   final String? headline;
 
@@ -736,18 +722,15 @@ final class FormSection extends Blok {
 
 final class GridCard extends Blok {
   GridCard.fromJson(Map<String, dynamic> json)
-      : label = json['label'],
-        text = json['text'],
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
-        icon = json['icon'] == null ? null : _i1.ImageAsset.fromJson(json['icon']),
-        iconWidth = GridCardIconWidthOption.fromName(json['icon_width']),
-        backgroundColor = json['background_color'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['background_color'],
-                'storyblok-palette',
-              ),
-        textColor = GridCardTextColorOption.fromName(json['text_color']);
+    : label = json['label'],
+      text = json['text'],
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
+      icon = json['icon'] == null ? null : _i1.ImageAsset.fromJson(json['icon']),
+      iconWidth = GridCardIconWidthOption.fromName(json['icon_width']),
+      backgroundColor = json['background_color'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['background_color'], 'storyblok-palette'),
+      textColor = GridCardTextColorOption.fromName(json['text_color']);
 
   final String? label;
 
@@ -766,13 +749,13 @@ final class GridCard extends Blok {
 
 final class GridSection extends Blok {
   GridSection.fromJson(Map<String, dynamic> json)
-      : cards = List<Map<String, dynamic>>.from(json['cards'] ?? const [])
-            .map(GridSectionCardsRestrictedTypes.fromJson)
-            .toList(),
-        cols = GridSectionColsOption.fromName(json['cols']),
-        headline = json['headline'],
-        lead = json['lead'],
-        backgroundColor = BackgroundColors.fromName(json['background_color']);
+    : cards = List<Map<String, dynamic>>.from(
+        json['cards'] ?? const [],
+      ).map(GridSectionCardsRestrictedTypes.fromJson).toList(),
+      cols = GridSectionColsOption.fromName(json['cols']),
+      headline = json['headline'],
+      lead = json['lead'],
+      backgroundColor = BackgroundColors.fromName(json['background_color']);
 
   final List<GridSectionCardsRestrictedTypes> cards;
 
@@ -787,16 +770,16 @@ final class GridSection extends Blok {
 
 final class HeroSection extends Blok {
   HeroSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        overlay = Overlays.fromName(json['overlay']),
-        textColor = HeroSectionTextColorOption.fromName(json['text_color']),
-        subheadline = json['subheadline'],
-        buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
-        horizontalAlignment = HeroSectionHorizontalAlignmentOption.fromName(json['horizontal_alignment']),
-        verticalAlignment = HeroSectionVerticalAlignmentOption.fromName(json['vertical_alignment']),
-        fullHeight = json['full_height'] ?? false,
-        backgroundImage = json['background_image'] == null ? null : _i1.ImageAsset.fromJson(json['background_image']),
-        backgroundVideo = json['background_video'] == null ? null : _i1.VideoAsset.fromJson(json['background_video']);
+    : headline = json['headline'],
+      overlay = Overlays.fromName(json['overlay']),
+      textColor = HeroSectionTextColorOption.fromName(json['text_color']),
+      subheadline = json['subheadline'],
+      buttons = List<Map<String, dynamic>>.from(json['buttons'] ?? const []).map(Button.fromJson).toList(),
+      horizontalAlignment = HeroSectionHorizontalAlignmentOption.fromName(json['horizontal_alignment']),
+      verticalAlignment = HeroSectionVerticalAlignmentOption.fromName(json['vertical_alignment']),
+      fullHeight = json['full_height'] ?? false,
+      backgroundImage = json['background_image'] == null ? null : _i1.ImageAsset.fromJson(json['background_image']),
+      backgroundVideo = json['background_video'] == null ? null : _i1.VideoAsset.fromJson(json['background_video']);
 
   final String? headline;
 
@@ -821,13 +804,13 @@ final class HeroSection extends Blok {
 
 final class ImageTextSection extends Blok {
   ImageTextSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        imageLayout = ImageTextSectionImageLayoutOption.fromName(json['image_layout']),
-        text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
-        image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
-        reverseLayout = json['reverse_layout'] ?? false,
-        backgroundColor = BackgroundColors.fromName(json['background_color']);
+    : headline = json['headline'],
+      imageLayout = ImageTextSectionImageLayoutOption.fromName(json['image_layout']),
+      text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
+      image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
+      reverseLayout = json['reverse_layout'] ?? false,
+      backgroundColor = BackgroundColors.fromName(json['background_color']);
 
   final String? headline;
 
@@ -845,9 +828,7 @@ final class ImageTextSection extends Blok {
 }
 
 final class Label extends Blok {
-  Label.fromJson(Map<String, dynamic> json)
-      : label = json['label'],
-        description = json['description'];
+  Label.fromJson(Map<String, dynamic> json) : label = json['label'], description = json['description'];
 
   final String? label;
 
@@ -856,8 +837,8 @@ final class Label extends Blok {
 
 final class NavItem extends Blok {
   NavItem.fromJson(Map<String, dynamic> json)
-      : link = json['link'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['link']),
-        label = json['label'];
+    : link = json['link'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['link']),
+      label = json['label'];
 
   final _i1.DefaultLink<Blok>? link;
 
@@ -866,11 +847,13 @@ final class NavItem extends Blok {
 
 final class PersonalizedSection extends Blok {
   PersonalizedSection.fromJson(Map<String, dynamic> json)
-      : preview = PersonalizedSectionPreviewOption.fromName(json['preview']),
-        returningVisitorBlocks =
-            List<Map<String, dynamic>>.from(json['returning_visitor_blocks'] ?? const []).map(Blok.fromJson).toList(),
-        newVisitorBlocks =
-            List<Map<String, dynamic>>.from(json['new_visitor_blocks'] ?? const []).map(Blok.fromJson).toList();
+    : preview = PersonalizedSectionPreviewOption.fromName(json['preview']),
+      returningVisitorBlocks = List<Map<String, dynamic>>.from(
+        json['returning_visitor_blocks'] ?? const [],
+      ).map(Blok.fromJson).toList(),
+      newVisitorBlocks = List<Map<String, dynamic>>.from(
+        json['new_visitor_blocks'] ?? const [],
+      ).map(Blok.fromJson).toList();
 
   final PersonalizedSectionPreviewOption preview;
 
@@ -881,13 +864,13 @@ final class PersonalizedSection extends Blok {
 
 final class PriceCard extends Blok {
   PriceCard.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        subheadline = json['subheadline'],
-        price = double.tryParse(json['price']),
-        textBelowPrice = json['text_below_price'] == null ? null : _i1.RichText.fromJson(json['text_below_price']),
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
-        textBelowButton = json['text_below_button'] == null ? null : _i1.RichText.fromJson(json['text_below_button']),
-        mostPopular = json['most_popular'] ?? false;
+    : headline = json['headline'],
+      subheadline = json['subheadline'],
+      price = double.tryParse(json['price']),
+      textBelowPrice = json['text_below_price'] == null ? null : _i1.RichText.fromJson(json['text_below_price']),
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
+      textBelowButton = json['text_below_button'] == null ? null : _i1.RichText.fromJson(json['text_below_button']),
+      mostPopular = json['most_popular'] ?? false;
 
   final String? headline;
 
@@ -912,26 +895,17 @@ final class RichtextYoutube extends Blok {
 
 final class RocketCustomizationPage extends Blok {
   RocketCustomizationPage.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        description = json['description'],
-        baseMaterial = json['baseMaterial'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['baseMaterial'],
-                'sb-tres-material-plugin',
-              ),
-        accentMaterial = json['accentMaterial'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['accentMaterial'],
-                'sb-tres-material-plugin',
-              ),
-        detailMaterial = json['detailMaterial'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['detailMaterial'],
-                'sb-tres-material-plugin',
-              );
+    : headline = json['headline'],
+      description = json['description'],
+      baseMaterial = json['baseMaterial'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['baseMaterial'], 'sb-tres-material-plugin'),
+      accentMaterial = json['accentMaterial'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['accentMaterial'], 'sb-tres-material-plugin'),
+      detailMaterial = json['detailMaterial'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['detailMaterial'], 'sb-tres-material-plugin');
 
   final String? headline;
 
@@ -946,17 +920,17 @@ final class RocketCustomizationPage extends Blok {
 
 final class RocketJourneyPage extends Blok {
   RocketJourneyPage.fromJson(Map<String, dynamic> json)
-      : sections = List<Map<String, dynamic>>.from(json['sections'] ?? const [])
-            .map(RocketJourneyScrollSection.fromJson)
-            .toList();
+    : sections = List<Map<String, dynamic>>.from(
+        json['sections'] ?? const [],
+      ).map(RocketJourneyScrollSection.fromJson).toList();
 
   final List<RocketJourneyScrollSection> sections;
 }
 
 final class RocketJourneyScrollSection extends Blok {
   RocketJourneyScrollSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']);
+    : headline = json['headline'],
+      text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']);
 
   final String? headline;
 
@@ -965,18 +939,13 @@ final class RocketJourneyScrollSection extends Blok {
 
 final class SingleProductSection extends Blok {
   SingleProductSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        overrideProductDescription = json['override_product_description'] ?? false,
-        text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
-        product = json['product'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['product'],
-                'sb-shopify',
-              ),
-        reverseLayout = json['reverse_layout'] ?? false,
-        backgroundColor = BackgroundColors.fromName(json['background_color']);
+    : headline = json['headline'],
+      overrideProductDescription = json['override_product_description'] ?? false,
+      text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull,
+      product = json['product'] is! Map<dynamic, dynamic> ? null : _i1.Plugin.fromJson(json['product'], 'sb-shopify'),
+      reverseLayout = json['reverse_layout'] ?? false,
+      backgroundColor = BackgroundColors.fromName(json['background_color']);
 
   final String? headline;
 
@@ -995,74 +964,54 @@ final class SingleProductSection extends Blok {
 
 final class SiteConfig extends Blok {
   SiteConfig.fromJson(Map<String, dynamic> json)
-      : headerDisableTransparency = json['header_disable_transparency'] ?? false,
-        headerLight = json['header_light'] ?? false,
-        disableRoundedCorners = json['disable_rounded_corners'] ?? false,
-        footerTextColor = SiteConfigFooterTextColorOption.fromName(json['footer_text_color']),
-        footerBackgroundColor = Colors.fromName(json['footer_background_color']),
-        useCustomColors = json['use_custom_colors'] ?? false,
-        primary = json['primary'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['primary'],
-                'native-color-picker',
-              ),
-        secondary = json['secondary'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['secondary'],
-                'native-color-picker',
-              ),
-        light = json['light'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['light'],
-                'native-color-picker',
-              ),
-        medium = json['medium'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['medium'],
-                'native-color-picker',
-              ),
-        dark = json['dark'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['dark'],
-                'native-color-picker',
-              ),
-        coloredHeadlines = json['colored_headlines'] ?? false,
-        useCustomFonts = json['use_custom_fonts'] ?? false,
-        customFontDisplay = Fonts.fromName(json['custom_font_display']),
-        customFontBody = Fonts.fromName(json['custom_font_body']),
-        enableBreadcrumbs = json['enable_breadcrumbs'] ?? false,
-        breadcrumbsExcludedStories = List<String>.from(json['breadcrumbs_excluded_stories'] ?? const [])
-            .map(_i2.StoryIdentifierUUID.new)
-            .toList(),
-        footerLogo = json['footer_logo'] == null ? null : _i1.ImageAsset.fromJson(json['footer_logo']),
-        footerAbout = json['footer_about'] == null ? null : _i1.RichText.fromJson(json['footer_about']),
-        footerNav1Headline = json['footer_nav_1_headline'],
-        footerNav1 = List<Map<String, dynamic>>.from(json['footer_nav_1'] ?? const []).map(NavItem.fromJson).toList(),
-        footerNav2Headline = json['footer_nav_2_headline'],
-        footerNav2 = List<Map<String, dynamic>>.from(json['footer_nav_2'] ?? const []).map(NavItem.fromJson).toList(),
-        footerNav3Headline = json['footer_nav_3_headline'],
-        footerNav3 = List<Map<String, dynamic>>.from(json['footer_nav_3'] ?? const []).map(NavItem.fromJson).toList(),
-        headerLogo = json['header_logo'] == null ? null : _i1.ImageAsset.fromJson(json['header_logo']),
-        headerAutoNav = json['header_auto_nav'] ?? false,
-        headerAutoNavFolder = json['header_auto_nav_folder'] is! Map<dynamic, dynamic>
-            ? null
-            : _i1.Plugin.fromJson(
-                json['header_auto_nav_folder'],
-                'folder-selection-manuel-test',
-              ),
-        headerNav = List<Map<String, dynamic>>.from(json['header_nav'] ?? const []).map(NavItem.fromJson).toList(),
-        headerButtons =
-            List<Map<String, dynamic>>.from(json['header_buttons'] ?? const []).map(Button.fromJson).toList(),
-        twitter = json['twitter'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['twitter']),
-        instagram =
-            json['instagram'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['instagram']),
-        youtube = json['youtube'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['youtube']),
-        facebook = json['facebook'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['facebook']);
+    : headerDisableTransparency = json['header_disable_transparency'] ?? false,
+      headerLight = json['header_light'] ?? false,
+      disableRoundedCorners = json['disable_rounded_corners'] ?? false,
+      footerTextColor = SiteConfigFooterTextColorOption.fromName(json['footer_text_color']),
+      footerBackgroundColor = Colors.fromName(json['footer_background_color']),
+      useCustomColors = json['use_custom_colors'] ?? false,
+      primary = json['primary'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['primary'], 'native-color-picker'),
+      secondary = json['secondary'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['secondary'], 'native-color-picker'),
+      light = json['light'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['light'], 'native-color-picker'),
+      medium = json['medium'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['medium'], 'native-color-picker'),
+      dark = json['dark'] is! Map<dynamic, dynamic> ? null : _i1.Plugin.fromJson(json['dark'], 'native-color-picker'),
+      coloredHeadlines = json['colored_headlines'] ?? false,
+      useCustomFonts = json['use_custom_fonts'] ?? false,
+      customFontDisplay = Fonts.fromName(json['custom_font_display']),
+      customFontBody = Fonts.fromName(json['custom_font_body']),
+      enableBreadcrumbs = json['enable_breadcrumbs'] ?? false,
+      breadcrumbsExcludedStories = List<String>.from(
+        json['breadcrumbs_excluded_stories'] ?? const [],
+      ).map(_i2.StoryIdentifierUUID.new).toList(),
+      footerLogo = json['footer_logo'] == null ? null : _i1.ImageAsset.fromJson(json['footer_logo']),
+      footerAbout = json['footer_about'] == null ? null : _i1.RichText.fromJson(json['footer_about']),
+      footerNav1Headline = json['footer_nav_1_headline'],
+      footerNav1 = List<Map<String, dynamic>>.from(json['footer_nav_1'] ?? const []).map(NavItem.fromJson).toList(),
+      footerNav2Headline = json['footer_nav_2_headline'],
+      footerNav2 = List<Map<String, dynamic>>.from(json['footer_nav_2'] ?? const []).map(NavItem.fromJson).toList(),
+      footerNav3Headline = json['footer_nav_3_headline'],
+      footerNav3 = List<Map<String, dynamic>>.from(json['footer_nav_3'] ?? const []).map(NavItem.fromJson).toList(),
+      headerLogo = json['header_logo'] == null ? null : _i1.ImageAsset.fromJson(json['header_logo']),
+      headerAutoNav = json['header_auto_nav'] ?? false,
+      headerAutoNavFolder = json['header_auto_nav_folder'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.Plugin.fromJson(json['header_auto_nav_folder'], 'folder-selection-manuel-test'),
+      headerNav = List<Map<String, dynamic>>.from(json['header_nav'] ?? const []).map(NavItem.fromJson).toList(),
+      headerButtons = List<Map<String, dynamic>>.from(json['header_buttons'] ?? const []).map(Button.fromJson).toList(),
+      twitter = json['twitter'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['twitter']),
+      instagram = json['instagram'] is! Map<dynamic, dynamic>
+          ? null
+          : _i1.DefaultLink<Blok>.fromJson(json['instagram']),
+      youtube = json['youtube'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['youtube']),
+      facebook = json['facebook'] is! Map<dynamic, dynamic> ? null : _i1.DefaultLink<Blok>.fromJson(json['facebook']);
 
   final bool headerDisableTransparency;
 
@@ -1135,10 +1084,10 @@ final class SiteConfig extends Blok {
 
 final class TabbedContentEntry extends Blok {
   TabbedContentEntry.fromJson(Map<String, dynamic> json)
-      : image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
-        headline = json['headline'],
-        description = json['description'],
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
+    : image = json['image'] == null ? null : _i1.ImageAsset.fromJson(json['image']),
+      headline = json['headline'],
+      description = json['description'],
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
 
   final _i1.ImageAsset? image;
 
@@ -1151,11 +1100,10 @@ final class TabbedContentEntry extends Blok {
 
 final class TabbedContentSection extends Blok {
   TabbedContentSection.fromJson(Map<String, dynamic> json)
-      : headline = json['headline'],
-        alwaysAccordion = json['always_accordion'] ?? false,
-        lead = json['lead'],
-        entries =
-            List<Map<String, dynamic>>.from(json['entries'] ?? const []).map(TabbedContentEntry.fromJson).toList();
+    : headline = json['headline'],
+      alwaysAccordion = json['always_accordion'] ?? false,
+      lead = json['lead'],
+      entries = List<Map<String, dynamic>>.from(json['entries'] ?? const []).map(TabbedContentEntry.fromJson).toList();
 
   final String? headline;
 
@@ -1168,14 +1116,14 @@ final class TabbedContentSection extends Blok {
 
 final class TextSection extends Blok {
   TextSection.fromJson(Map<String, dynamic> json)
-      : alignment = TextSectionAlignmentOption.fromName(json['alignment']),
-        singleColorBackground = json['single_color_background'] ?? false,
-        backgroundColor = BackgroundColors.fromName(json['background_color']),
-        overlapPrecedingHero = json['overlap_preceding_hero'] ?? false,
-        headline = json['headline'],
-        lead = json['lead'],
-        text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
-        button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
+    : alignment = TextSectionAlignmentOption.fromName(json['alignment']),
+      singleColorBackground = json['single_color_background'] ?? false,
+      backgroundColor = BackgroundColors.fromName(json['background_color']),
+      overlapPrecedingHero = json['overlap_preceding_hero'] ?? false,
+      headline = json['headline'],
+      lead = json['lead'],
+      text = json['text'] == null ? null : _i1.RichText.fromJson(json['text']),
+      button = List<Map<String, dynamic>>.from(json['button'] ?? const []).map(Button.fromJson).toList().firstOrNull;
 
   final TextSectionAlignmentOption alignment;
 
@@ -1196,11 +1144,11 @@ final class TextSection extends Blok {
 
 final class TwoColImageTextSection extends Blok {
   TwoColImageTextSection.fromJson(Map<String, dynamic> json)
-      : image1 = json['image_1'] == null ? null : _i1.ImageAsset.fromJson(json['image_1']),
-        image2 = json['image_2'] == null ? null : _i1.ImageAsset.fromJson(json['image_2']),
-        headline = json['headline'],
-        backgroundColor = BackgroundColors.fromName(json['background_color']),
-        subheadline = json['subheadline'];
+    : image1 = json['image_1'] == null ? null : _i1.ImageAsset.fromJson(json['image_1']),
+      image2 = json['image_2'] == null ? null : _i1.ImageAsset.fromJson(json['image_2']),
+      headline = json['headline'],
+      backgroundColor = BackgroundColors.fromName(json['background_color']),
+      subheadline = json['subheadline'];
 
   final _i1.ImageAsset? image1;
 

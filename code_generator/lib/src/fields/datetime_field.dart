@@ -7,10 +7,7 @@ final class DateTimeField extends BaseField {
   DateTimeField.fromJson(super.data) : super.fromJson();
 
   @override
-  TypeReference get type => referType(
-        "$DateTime",
-        nullable: !isRequired,
-      );
+  TypeReference get type => referType("$DateTime", nullable: !isRequired);
 
   @override
   Expression buildInitializer(CodeExpression valueExpression) =>

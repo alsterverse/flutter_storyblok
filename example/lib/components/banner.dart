@@ -22,22 +22,24 @@ class BannerWidget extends StatelessWidget {
       bloks.Colors.unknown => AppColors.primary,
     };
 
-    final backgroundImage = blok.backgroundImage?.buildNetworkImage((imageProvider) => Image(
-          image: imageProvider,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          errorBuilder: (context, error, stackTrace) => Container(
-            color: switch (blok.textColor) {
-              bloks.Colors.primary => AppColors.white,
-              bloks.Colors.secondary => AppColors.white,
-              bloks.Colors.white => AppColors.primary,
-              bloks.Colors.light => AppColors.primary,
-              bloks.Colors.medium => AppColors.white,
-              bloks.Colors.dark => AppColors.white,
-              bloks.Colors.unknown => AppColors.primary,
-            },
-          ),
-        ));
+    final backgroundImage = blok.backgroundImage?.buildNetworkImage(
+      (imageProvider) => Image(
+        image: imageProvider,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: switch (blok.textColor) {
+            bloks.Colors.primary => AppColors.white,
+            bloks.Colors.secondary => AppColors.white,
+            bloks.Colors.white => AppColors.primary,
+            bloks.Colors.light => AppColors.primary,
+            bloks.Colors.medium => AppColors.white,
+            bloks.Colors.dark => AppColors.white,
+            bloks.Colors.unknown => AppColors.primary,
+          },
+        ),
+      ),
+    );
 
     return SizedBox(
       height: 500,
@@ -50,24 +52,31 @@ class BannerWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(blok.headline ?? "",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: textColor)),
+                Text(
+                  blok.headline ?? "",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: textColor),
+                ),
                 const SizedBox(height: 16),
                 if (blok.subheadline != null && blok.subheadline!.isNotEmpty) ...[
-                  Text(blok.subheadline ?? "",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor)),
+                  Text(
+                    blok.subheadline ?? "",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: textColor),
+                  ),
                   const SizedBox(height: 32),
                 ],
                 Wrap(
-                    spacing: 16,
-                    children: blok.buttons
-                        .map((button) => BlockButton(
-                              blokButton: button,
-                              onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
-                            ))
-                        .toList())
+                  spacing: 16,
+                  children: blok.buttons
+                      .map(
+                        (button) => BlockButton(
+                          blokButton: button,
+                          onPressed: () => mapIfNotNull(button.link, (link) => link.open(context)),
+                        ),
+                      )
+                      .toList(),
+                ),
               ],
             ),
           ),

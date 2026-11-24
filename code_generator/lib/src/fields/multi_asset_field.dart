@@ -12,8 +12,9 @@ final class MultiAssetField extends AssetField {
   TypeReference get type => referList(type: _type);
 
   @override
-  Expression buildInitializer(CodeExpression valueExpression) => referList(type: referJSONMap()) //
-      .invokeNamed("from", valueExpression.ifNullThen(literalEmptyList()))
-      .invokeNamed("map", _type.property("fromJson"))
-      .invokeNamed("toList");
+  Expression buildInitializer(CodeExpression valueExpression) =>
+      referList(type: referJSONMap()) //
+          .invokeNamed("from", valueExpression.ifNullThen(literalEmptyList()))
+          .invokeNamed("map", _type.property("fromJson"))
+          .invokeNamed("toList");
 }
