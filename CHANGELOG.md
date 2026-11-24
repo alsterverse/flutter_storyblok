@@ -1,3 +1,23 @@
+# 1.5.0
+
+Visual changes to `StoryblokRichText`:
+
+- The base text style now comes from the nearest `DefaultTextStyle` instead of
+  `Theme.of(context).textTheme.bodyMedium`. Directly inside a `Scaffold` body
+  the style is unchanged, but in e.g. an `AppBar` or `ListTile` title it follows
+  the surrounding text. Without a `Material` ancestor it gets Flutter's fallback
+  style.
+- Links and horizontal rules follow the ambient text color instead of always
+  being black. Code uses black text on its light background.
+- The widget is only as tall as its content instead of filling the available
+  height, which can move it inside a parent that centers its child.
+
+Fixes:
+
+- Fixed memory leak of link tap recognizers in `StoryblokRichText`.
+- Fixed static analysis issues and removed the dependency on Flutter's Material
+  library.
+
 # 1.4.0
 
 Updated Dart SDK and dependency versions.
