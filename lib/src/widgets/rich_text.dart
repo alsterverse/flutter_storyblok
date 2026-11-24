@@ -17,7 +17,7 @@ typedef BlockBuilder = Widget Function(BuildContext context, JSONMap data);
 /// Storyblok RichText to Flutter RichText bridge
 ///
 /// Text inherits the ambient [DefaultTextStyle], which a Material ancestor such as a `Scaffold` provides.
-final class StoryblokRichText extends StatelessWidget {
+final class StoryblokRichText extends StatefulWidget {
   StoryblokRichText({
     super.key,
     required this.content,
@@ -25,25 +25,54 @@ final class StoryblokRichText extends StatelessWidget {
     required BlockBuilder blockBuilder,
     this.textAlign = TextAlign.start,
     TextStyle Function(RichTextLeafMarkable)? textStyleOverrides,
-  }) : _contentData = _StoryblokRichTextContentData(
-         onTapLink: onTapLink,
-         buildBlok: blockBuilder,
-         textStyleOverrides: textStyleOverrides,
-       );
+  }) : _onTapLink = onTapLink,
+       _blockBuilder = blockBuilder,
+       _textStyleOverrides = textStyleOverrides;
 
-  final _StoryblokRichTextContentData _contentData;
+  final void Function(Link)? _onTapLink;
+  final BlockBuilder _blockBuilder;
+  final TextStyle Function(RichTextLeafMarkable)? _textStyleOverrides;
   final List<RichTextContainer> content;
   final TextAlign textAlign;
 
   @override
+  State<StoryblokRichText> createState() => _StoryblokRichTextState();
+}
+
+final class _StoryblokRichTextState extends State<StoryblokRichText> {
+  final _recognizers = Map<RichTextLeafMarkable, TapGestureRecognizer>.identity();
+
+  @override
+  void dispose() {
+    for (final recognizer in _recognizers.values) {
+      recognizer.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    final contentData = _StoryblokRichTextContentData(
+      onTapLink: widget._onTapLink,
+      buildBlok: widget._blockBuilder,
+      textStyleOverrides: widget._textStyleOverrides,
+      recognizers: _recognizers,
+    );
+    final column = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: content
-          .map((e) => e.buildContainerWidget(context, _contentData)) //
+      children: widget.content
+          .map((e) => e.buildContainerWidget(context, contentData)) //
           .separatedBy(() => const SizedBox(height: 16))
           .toList(),
     );
+    // Recognizers are kept across rebuilds so a tap in progress survives; only those of leaves gone from this build
+    // are disposed.
+    _recognizers.removeWhere((leaf, recognizer) {
+      if (contentData.linkedLeaves.contains(leaf)) return false;
+      recognizer.dispose();
+      return true;
+    });
+    return column;
   }
 }
 
@@ -55,10 +84,19 @@ final class _StoryblokRichTextContentData {
     required this.onTapLink,
     required this.buildBlok,
     this.textStyleOverrides,
+    required this.recognizers,
   });
   final void Function(Link)? onTapLink;
   final BlockBuilder buildBlok;
   final TextStyle Function(RichTextLeafMarkable)? textStyleOverrides;
+
+  final Map<RichTextLeafMarkable, TapGestureRecognizer> recognizers;
+  final linkedLeaves = Set<RichTextLeafMarkable>.identity();
+
+  TapGestureRecognizer tapRecognizer(RichTextLeafMarkable leaf, VoidCallback onTap) {
+    linkedLeaves.add(leaf);
+    return (recognizers[leaf] ??= TapGestureRecognizer())..onTap = onTap;
+  }
 }
 
 // MARK: - Containers
@@ -191,7 +229,7 @@ extension _RichTextLeafMarkableWidget on RichTextLeafMarkable {
         contentData.onTapLink,
         (onTapLink) => mapIfNotNull(
           link?.link,
-          (link) => TapGestureRecognizer()..onTap = () => onTapLink(link),
+          (link) => contentData.tapRecognizer(this, () => onTapLink(link)),
         ),
       ),
       style: buildTextStyle().merge(contentData.textStyleOverrides?.call(this)),
