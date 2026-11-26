@@ -1,0 +1,66 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+      - 'code_generator-v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  publish-flutter-storyblok:
+    if: startsWith(github.ref_name, 'v')
+    runs-on: ubuntu-latest
+    environment: pub.dev
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.7'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Publish
+        run: dart pub publish --force
+
+  publish-code-generator:
+    if: startsWith(github.ref_name, 'code_generator-v')
+    runs-on: ubuntu-latest
+    environment: pub.dev
+    permissions:
+      id-token: write
+    defaults:
+      run:
+        working-directory: code_generator
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.7'
+          channel: 'stable'
+
+      - name: Remove local dependency override
+        run: yq -i 'del(.dependency_overrides)' pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: dart test
+
+      - name: Publish
+        run: dart pub publish --force
